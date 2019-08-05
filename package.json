@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nuxtjs/pwa": "^2.6.0",
+    "firebase": "^6.3.4",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2"
   },
