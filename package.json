@@ -23,7 +23,8 @@
     "@nuxtjs/pwa": "^2.6.0",
     "firebase": "^6.3.4",
     "nuxt": "^2.0.0",
-    "nuxt-buefy": "^0.3.2"
+    "nuxt-buefy": "^0.3.2",
+    "vuexfire": "3.0.0-alpha.14"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",
