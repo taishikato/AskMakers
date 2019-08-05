@@ -16,9 +16,21 @@
       <div class="columns is-mobile">
         <div class="column is-3">
           <card
-            name="Shun Yamada"
-            content="The maker of East Hackers"
-            image="/shun.jpg"
+            name="Taishi Kato"
+            content="The maker of Quorie"
+            image="/takato.jpeg"
+          >
+            Open source on
+            <a href="https://github.com/buefy/buefy">
+              GitHub
+            </a>
+          </card>
+        </div>
+        <div class="column is-3">
+          <card
+            name="Taishi Kato"
+            content="The maker of Quorie"
+            image="/takato.jpeg"
           >
             Open source on
             <a href="https://github.com/buefy/buefy">
