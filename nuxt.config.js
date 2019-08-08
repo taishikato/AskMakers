@@ -23,7 +23,18 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@/assets/css/bulma'],
+  css: [
+    '@/assets/css/bulma',
+    '@/assets/css/main',
+    '@fortawesome/fontawesome-free/css/fontawesome.css',
+    '@fortawesome/fontawesome-free/css/solid.min.css',
+    '@fortawesome/fontawesome-free/css/brands.min.css',
+    '@fortawesome/fontawesome-free/css/regular.min.css',
+    '@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg',
+    '@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg',
+    '@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg',
+    './node_modules/bulma-divider/dist/css/bulma-divider.min.css'
+  ],
   /*
    ** Plugins to load before mounting the App
    */

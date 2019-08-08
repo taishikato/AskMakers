@@ -874,6 +874,11 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.23.tgz#a0df05b210ff03c65ecb3589390095631b95e1f8"
   integrity sha512-BJqOF51sPQjmRoX+WFMbZ5mhuy53JrFN0t1KY+HffcvDRb+82+vkFatKnwG3wTCKV183vJW5tGQIytb4T8pUBg==
 
+"@fortawesome/fontawesome-free@^5.10.1":
+  version "5.10.1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.1.tgz#dec28ee02c3fc51da46d53ce4da9d5787312fbd7"
+  integrity sha512-PYncBhgN1l02mwHmczukexmu4yRTjRDAAdcK62jdWSAW8epcnZ9K2win/7rMrffiv/c7XLVDA8vD+yi6WyvbGQ==
+
 "@grpc/proto-loader@^0.5.0":
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.5.1.tgz#48492b53cdda353110b51a4b02f465974729c76f"
@@ -2483,6 +2488,11 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
+
+bulma-divider@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/bulma-divider/-/bulma-divider-0.2.0.tgz#a9b4d9fe8b270c7cb7573023c575062bc62616f3"
+  integrity sha512-REe3k56GECRfDaqFjC8cwLhV4RxXmV0RubuzDJqwior9wlJcdHlN0qfW0tvUX+qphikaTQegIeRuhjRIAqkjkw==
 
 bulma@0.7.5:
   version "0.7.5"
