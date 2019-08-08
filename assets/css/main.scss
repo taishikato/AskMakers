@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,600,700,900&display=swap');
+$borderRadius: 4px;
+$fontFamily: 'Poppins', Helvetica, Arial, sans-serif;
+$thinBorder: 1px solid #e8e0e0 !important;
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.pd-15rem {
+    padding: 1.5rem;
+}
+
+.radius-box {
+    border-radius: $borderRadius;
+}
+
+.sp-font {
+    font-family: $fontFamily !important;
+}
+
+.weight-900 {
+    font-weight: 900 !important;
+}
+
+.weight-800 {
+    font-weight: 800 !important;
+}
+
+.weight-700 {
+    font-weight: 700 !important;
+}
+
+.color-white {
+    color: #ffffff;
+    &:hover {
+        color: #ffffff;
+    }
+}
+
+.twitter {
+    border-color: #00aced;
+    background-color: #00aced;
+    &:hover {
+        border-color: #00aced;
+    }
+}
+
+.google {
+    color: #363636;
+    background-color: #ffffff;
+    &:hover {
+        color: #363636;
+    }
+}

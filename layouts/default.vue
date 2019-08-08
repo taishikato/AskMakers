@@ -3,9 +3,12 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io">
-            AMA
-          </a>
+          <n-link
+            class="navbar-item sp-font weight-700 has-text-success"
+            to="/"
+          >
+            AskMakers
+          </n-link>
 
           <a
             role="button"
@@ -18,6 +21,14 @@
             <span aria-hidden="true"></span>
           </a>
         </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <login-modal />
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -26,22 +37,11 @@
 </template>
 
 <script>
+import LoginModal from './components/LoginModal'
 export default {
-  data() {
-    return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
-        },
-        {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' }
-        }
-      ]
-    }
+  // middleware: ['setLoginUser'],
+  components: {
+    LoginModal
   }
 }
 </script>
