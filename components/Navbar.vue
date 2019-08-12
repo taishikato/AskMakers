@@ -39,6 +39,14 @@
                   You
                 </span>
               </n-link>
+              <n-link class="navbar-item weight-800" to="/users/products/id">
+                <span class="icon">
+                  <i class="fas fa-rocket"></i>
+                </span>
+                <span>
+                  Products
+                </span>
+              </n-link>
               <n-link class="navbar-item weight-800" to="/users/settings">
                 <span class="icon">
                   <i class="fas fa-tools"></i>
