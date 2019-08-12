@@ -1,7 +1,10 @@
 <template>
   <div>
-    <a class="button" @click.prevent="showModal">
-      Log In
+    <a
+      class="button is-success is-rounded is-outlined"
+      @click.prevent="showModal"
+    >
+      Log In / Sign Up
     </a>
 
     <b-modal :active.sync="isModalActive" :width="modalWidth">
@@ -12,9 +15,6 @@
           @click.prevent="twitterSignin"
         >
           Twitter
-        </button>
-        <button class="button google color-white weight-900 sp-font">
-          Google
         </button>
       </div>
     </b-modal>

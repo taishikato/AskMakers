@@ -11,6 +11,10 @@ $thinBorder: 1px solid #e8e0e0 !important;
     padding: 1.5rem;
 }
 
+img.is-rounded {
+    border-radius: 50%;
+}
+
 .radius-box {
     border-radius: $borderRadius;
 }
