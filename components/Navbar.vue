@@ -1,0 +1,96 @@
+<template>
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <n-link class="navbar-item sp-font weight-700 has-text-success" to="/">
+          AskMakers
+        </n-link>
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-end">
+          <div
+            v-if="$store.getters.getLoginStatus === true"
+            class="navbar-item has-dropdown is-hoverable"
+          >
+            <a class="navbar-link">
+              <img
+                id="nav-profile-image"
+                slot="trigger"
+                :src="$store.getters.getUserInfo.picture"
+                class="is-rounded"
+              />
+            </a>
+            <div class="navbar-dropdown">
+              <n-link class="navbar-item weight-800" to="/users/id">
+                <span class="icon">
+                  <i class="fas fa-user-circle"></i>
+                </span>
+                <span>
+                  You
+                </span>
+              </n-link>
+              <n-link class="navbar-item weight-800" to="/users/settings">
+                <span class="icon">
+                  <i class="fas fa-tools"></i>
+                </span>
+                <span>
+                  Settings
+                </span>
+              </n-link>
+              <a class="navbar-item weight-800" @click.prevent="signOut">
+                <span class="icon">
+                  <i class="fas fa-sign-out-alt"></i>
+                </span>
+                <span>
+                  Sign Out
+                </span>
+              </a>
+            </div>
+          </div>
+          <div v-else class="navbar-item">
+            <login-modal />
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</template>
+
+<script>
+import firebase from '~/plugins/firebase'
+import LoginModal from '~/components/LoginModal'
+
+// const twitterProvider = new firebase.auth.TwitterAuthProvider()
+export default {
+  name: 'Navbar',
+  components: {
+    LoginModal
+  },
+  methods: {
+    async signOut() {
+      await firebase.auth().signOut()
+      // Firestoreとアンバインド
+      await this.$store.dispatch('UNBIND_USER')
+      // CommitでVuexの値を変更
+      this.$store.commit('changeUser', {
+        user: {}
+      })
+      this.$store.commit('changeLoginStatus', {
+        status: false
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped></style>

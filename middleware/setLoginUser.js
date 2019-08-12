@@ -10,8 +10,6 @@ import firebase from '~/plugins/firebase'
 import 'firebase/firestore'
 const firestore = firebase.firestore()
 
-console.log('here')
-
 export default async ({ store, redirect }) => {
   const authUser = await auth()
   if (authUser === false) return
