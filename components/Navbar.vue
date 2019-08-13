@@ -31,7 +31,10 @@
               />
             </a>
             <div class="navbar-dropdown">
-              <n-link class="navbar-item weight-800" to="/users/id">
+              <n-link
+                class="navbar-item weight-800"
+                :to="`/users/${$store.getters.getUserInfo.uid}`"
+              >
                 <span class="icon">
                   <i class="fas fa-user-circle"></i>
                 </span>
@@ -39,14 +42,14 @@
                   You
                 </span>
               </n-link>
-              <n-link class="navbar-item weight-800" to="/users/products/id">
+              <!-- <n-link class="navbar-item weight-800" to="/users/products/id">
                 <span class="icon">
                   <i class="fas fa-rocket"></i>
                 </span>
                 <span>
                   Products
                 </span>
-              </n-link>
+              </n-link> -->
               <n-link class="navbar-item weight-800" to="/users/settings">
                 <span class="icon">
                   <i class="fas fa-tools"></i>

@@ -59,7 +59,6 @@ export default async ({ store, redirect }) => {
    * ログイン状態チェック
    */
   // Firestoreとバインド
-  console.log(authUser)
   await store.dispatch('BIND_USER', authUser)
   const user = await firestore
     .collection('users')
@@ -72,7 +71,6 @@ export default async ({ store, redirect }) => {
   store.commit('changeLoginStatus', {
     status: true
   })
-  console.log('here')
   // Userを変更
   // const usersRef = firestore.collection('users').doc(authUser.uid)
   // const getUserResult = await getDoc(usersRef)

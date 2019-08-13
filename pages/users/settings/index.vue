@@ -22,6 +22,18 @@
               </div>
 
               <div class="field">
+                <label class="label sp-font">Tagline</label>
+                <div class="control">
+                  <input
+                    v-model="userSettings.tagline"
+                    class="input"
+                    type="text"
+                    placeholder="Your tagline"
+                  />
+                </div>
+              </div>
+
+              <div class="field">
                 <label class="label sp-font">Website</label>
                 <div class="control">
                   <input
@@ -77,7 +89,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
-                          v-model="userSettings.twitter"
+                          v-model="userSettings.social.twitter"
                           class="input"
                           type="text"
                           placeholder="jack"
@@ -100,7 +112,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
-                          v-model="userSettings.productHunt"
+                          v-model="userSettings.social.productHunt"
                           class="input"
                           type="text"
                           placeholder="rrhoover"
@@ -123,7 +135,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
-                          v-model="userSettings.gitHub"
+                          v-model="userSettings.social.gitHub"
                           class="input"
                           type="text"
                           placeholder="defunkt"
@@ -146,7 +158,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
-                          v-model="userSettings.patreon"
+                          v-model="userSettings.social.patreon"
                           class="input"
                           type="text"
                           placeholder="jackconte"
@@ -203,12 +215,15 @@ export default {
       isLoading: false,
       userSettings: {
         customName: '',
+        tagline: '',
         website: '',
         picture: '',
-        twitter: '',
-        productHunt: '',
-        gitHub: '',
-        patreon: ''
+        social: {
+          twitter: '',
+          productHunt: '',
+          gitHub: '',
+          patreon: ''
+        }
       }
     }
   },
