@@ -10,23 +10,13 @@
 
             <div class="form-body">
               <div class="field">
-                <label class="label sp-font">First Name</label>
+                <label class="label sp-font">Name</label>
                 <div class="control">
                   <input
+                    v-model="userSettings.customName"
                     class="input"
                     type="text"
-                    placeholder="Your first name"
-                  />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label sp-font">Last Name</label>
-                <div class="control">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="Your last name"
+                    placeholder="Your Name"
                   />
                 </div>
               </div>
@@ -35,6 +25,7 @@
                 <label class="label sp-font">Website</label>
                 <div class="control">
                   <input
+                    v-model="userSettings.website"
                     class="input"
                     type="url"
                     placeholder="https://askmakers.co"
@@ -43,9 +34,20 @@
               </div>
 
               <label class="label sp-font">Profile Picture</label>
+              <img
+                v-if="imageData"
+                :src="imageData"
+                width="60px"
+                class="is-rounded"
+              />
               <div class="file is-boxed">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="picture"
+                    @change="onFileChange($event)"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -74,7 +76,12 @@
                         </a>
                       </p>
                       <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="jack" />
+                        <input
+                          v-model="userSettings.twitter"
+                          class="input"
+                          type="text"
+                          placeholder="jack"
+                        />
                       </p>
                     </div>
                   </div>
@@ -93,6 +100,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
+                          v-model="userSettings.productHunt"
                           class="input"
                           type="text"
                           placeholder="rrhoover"
@@ -115,6 +123,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
+                          v-model="userSettings.gitHub"
                           class="input"
                           type="text"
                           placeholder="defunkt"
@@ -137,6 +146,7 @@
                       </p>
                       <p class="control is-expanded">
                         <input
+                          v-model="userSettings.patreon"
                           class="input"
                           type="text"
                           placeholder="jackconte"
@@ -157,7 +167,18 @@
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <button class="button is-medium is-primary is-rounded">
+              <button
+                v-if="isLoading"
+                class="button is-primary is-loading is-medium is-rounded"
+                disabled
+              >
+                Save
+              </button>
+              <button
+                v-else
+                class="button is-medium is-primary is-rounded"
+                @click.prevent="update"
+              >
                 Save
               </button>
             </div>
@@ -169,7 +190,88 @@
 </template>
 
 <script>
-export default {}
+import updateDoc from '~/plugins/updateDoc'
+import firebase from '~/plugins/firebase'
+// Use firestore
+import 'firebase/firestore'
+const firestore = firebase.firestore()
+
+export default {
+  data() {
+    return {
+      imageData: '',
+      isLoading: false,
+      userSettings: {
+        customName: '',
+        website: '',
+        picture: '',
+        twitter: '',
+        productHunt: '',
+        gitHub: '',
+        patreon: ''
+      }
+    }
+  },
+  created() {
+    this.userSettings = this.$store.getters.getUserInfo
+  },
+  methods: {
+    async update() {
+      this.isLoading = true
+      try {
+        if (this.imageData !== '') {
+          this.userSettings.picture = await this.upload(
+            this.$store.getters.getUserInfo.uid
+          )
+        }
+        const userRef = firestore
+          .collection('users')
+          .doc(this.$store.getters.getUserInfo.uid)
+        await updateDoc(userRef, this.userSettings)
+        this.$toast.open({
+          message: 'Successfuly saved',
+          type: 'is-success',
+          duration: 4000
+        })
+      } catch (err) {
+        this.$toast.open({
+          message: 'Something went wrong...Please try again',
+          type: 'is-danger',
+          duration: 4000
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    onFileChange(e) {
+      this.imageData = ''
+      const files = e.target.files
+      // blob形式に変換
+      this.blob = new Blob(files, { type: 'image/png' })
+      if (files.length > 0) {
+        const file = files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.imageData = e.target.result
+        }
+        reader.readAsDataURL(file)
+      }
+    },
+    async upload(id) {
+      const updateDataConst = {}
+      // 画像処理
+      if (this.blob !== null) {
+        const storageRef = firebase.storage().ref()
+        const uploadRef = storageRef.child(`users/${id}.png`)
+        await uploadRef.put(this.blob)
+        const url = await uploadRef.getDownloadURL()
+        updateDataConst.picture = url
+        this.downloadURL = url
+        return url
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

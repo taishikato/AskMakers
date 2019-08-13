@@ -32,7 +32,9 @@ export default async ({ store, redirect }) => {
         email: userData.email,
         created: getUnixTime(),
         picture: userData.photoURL,
-        provider: [result.additionalUserInfo.providerId]
+        provider: [result.additionalUserInfo.providerId],
+        social: {},
+        website: ''
       }
       await saveDoc(usersRef, newUserData)
     } else {
@@ -55,19 +57,22 @@ export default async ({ store, redirect }) => {
    */
   /**
    * ログイン状態チェック
-   * すでにログインしている場合は、再度Vuexに設定する必要はないため終了
    */
-  const isLogin = store.getters.getLoginStatus
-  if (isLogin === true) return
-
-  console.log(authUser)
-
   // Firestoreとバインド
+  console.log(authUser)
   await store.dispatch('BIND_USER', authUser)
+  const user = await firestore
+    .collection('users')
+    .doc(authUser.uid)
+    .get()
+  store.commit('changeUser', {
+    user: user.data()
+  })
   // Login Statusを変更
   store.commit('changeLoginStatus', {
     status: true
   })
+  console.log('here')
   // Userを変更
   // const usersRef = firestore.collection('users').doc(authUser.uid)
   // const getUserResult = await getDoc(usersRef)
