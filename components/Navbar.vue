@@ -31,7 +31,10 @@
               />
             </a>
             <div class="navbar-dropdown">
-              <n-link class="navbar-item weight-800" to="/users/id">
+              <n-link
+                class="navbar-item weight-800"
+                :to="`/users/${$store.getters.getUserInfo.uid}`"
+              >
                 <span class="icon">
                   <i class="fas fa-user-circle"></i>
                 </span>

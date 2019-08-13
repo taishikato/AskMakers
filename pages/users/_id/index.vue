@@ -5,33 +5,77 @@
         <div class="columns">
           <div class="column is-3">
             <figure class="image">
-              <img src="/takato.jpeg" class="is-rounded" />
+              <img :src="user.picture" class="is-rounded" />
             </figure>
           </div>
           <div class="column">
-            <p class="title is-3 weight-800 sp-font">Taishi Kato</p>
-            <p>Hi, I am am Indie Maker based in Vancouver</p>
+            <p class="title is-3 weight-800 sp-font">{{ user.customName }}</p>
+            <p v-show="user.tagline !== undefined && user.tagline !== ''">
+              {{ user.tagline }}
+            </p>
             <div>
-              <a href="" class="icon twitter-icon" target="_blank">
+              <a
+                v-show="
+                  user.social.twitter !== undefined &&
+                    user.social.twitter !== ''
+                "
+                :href="`https://twitter.com/${user.social.twitter}`"
+                class="icon twitter-icon"
+                target="_blank"
+              >
                 <i class="fab fa-twitter fa-lg"></i>
               </a>
-              <a href="" class="icon ph-icon" target="_blank">
+              <a
+                v-show="
+                  user.social.productHunt !== undefined &&
+                    user.social.productHunt !== ''
+                "
+                :href="
+                  `https://www.producthunt.com/@${user.social.productHunt}`
+                "
+                class="icon ph-icon"
+                target="_blank"
+              >
                 <i class="fab fa-product-hunt fa-lg "></i>
               </a>
-              <a href="" class="icon gh-icon" target="_blank">
+              <a
+                v-show="
+                  user.social.gitHub !== undefined && user.social.gitHub !== ''
+                "
+                :href="`https://github.com/${user.social.gitHub}`"
+                class="icon gh-icon"
+                target="_blank"
+              >
                 <i class="fab fa-github fa-lg"></i>
               </a>
-              <a href="" class="icon patreon-icon" target="_blank">
+              <a
+                v-show="
+                  user.social.patreon !== undefined &&
+                    user.social.patreon !== ''
+                "
+                :href="`https://www.patreon.com/${user.social.patreon}`"
+                class="icon patreon-icon"
+                target="_blank"
+              >
                 <i class="fab fa-patreon fa-lg"></i>
               </a>
             </div>
-            <div id="website-btn">
-              <a class="button is-rounded is-success weight-800">
+            <div
+              v-if="user.website !== undefined && user.website !== ''"
+              id="website-btn"
+            >
+              <a
+                :href="user.website"
+                class="button is-rounded is-success weight-800"
+                target="_blank"
+              >
                 <span class="icon">
                   <i class="fas fa-external-link-alt"></i>
                 </span>
                 <span>
-                  taishikato.com
+                  {{
+                    user.website.match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/)[1]
+                  }}
                 </span>
               </a>
             </div>
@@ -83,9 +127,36 @@
 
 <script>
 import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
+import firebase from '~/plugins/firebase'
+// Use firestore
+import 'firebase/firestore'
+const firestore = firebase.firestore()
+
 export default {
   components: {
     AnsweredQuestionCard
+  },
+  data() {
+    return {
+      user: {
+        social: {},
+        website: ''
+      }
+    }
+  },
+  validate({ params }) {
+    if (params.id === undefined) {
+      return false
+    }
+    return true
+  },
+  async created() {
+    const userId = this.$route.params.id
+    const userInfo = await firestore
+      .collection('users')
+      .doc(userId)
+      .get()
+    this.user = userInfo.data()
   }
 }
 </script>
