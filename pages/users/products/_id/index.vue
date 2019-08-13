@@ -15,6 +15,7 @@
       <div class="columns is-multiline">
         <div v-for="product in products" :key="product.id" class="column is-4">
           <product-card
+            :id="product.name"
             :name="product.name"
             :pitch="product.pitch"
             :image="product.image"
