@@ -12,12 +12,24 @@
           class="field"
         >
           <div class="control">
-            <textarea class="textarea"></textarea>
+            <textarea v-model="answer" class="textarea"></textarea>
           </div>
         </div>
         <div id="answer-btn" class="field">
           <div class="control has-text-centered">
-            <button class="button is-success is-rounded is-medium">
+            <button
+              v-if="isSubmitting"
+              class="button is-success is-loading is-rounded is-medium"
+              disabled
+            >
+              Answer
+            </button>
+            <button
+              v-else
+              class="button is-success is-rounded is-medium"
+              :disabled="countAnswer === 0"
+              @click.prevent="answerQuestion"
+            >
               Answer
             </button>
           </div>
@@ -28,6 +40,8 @@
 </template>
 
 <script>
+import uuid from 'uuid/v4'
+import getUnixTime from '~/plugins/getUnixTime'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -37,7 +51,15 @@ export default {
   name: 'QId',
   data() {
     return {
-      question: {}
+      question: {},
+      qId: '',
+      answer: '',
+      isSubmitting: false
+    }
+  },
+  computed: {
+    countAnswer() {
+      return this.answer.length
     }
   },
   validate({ params }) {
@@ -47,12 +69,47 @@ export default {
     return true
   },
   async created() {
-    const qId = this.$route.params.id
+    this.qId = this.$route.params.id
     const questionData = await firestore
       .collection('questions')
-      .doc(qId)
+      .doc(this.qId)
       .get()
     this.question = questionData.data()
+  },
+  methods: {
+    async answerQuestion() {
+      this.isSubmitting = true
+      const id = uuid()
+        .split('-')
+        .join('')
+      try {
+        await firestore
+          .collection('answers')
+          .doc(id)
+          .set({
+            id,
+            questionId: this.qId,
+            answerUserId: this.$store.getters.getUserInfo.uid,
+            created: getUnixTime(),
+            content: this.answer
+          })
+        this.answer = ''
+        this.$toast.open({
+          message: 'Successfuly submitted',
+          type: 'is-success',
+          duration: 4000
+        })
+        this.$router.push(`/a/${id}?answered=true`)
+      } catch (err) {
+        this.$toast.open({
+          message: 'Something went wrong...Please try again',
+          type: 'is-danger',
+          duration: 4000
+        })
+      } finally {
+        this.isSubmitting = false
+      }
+    }
   }
 }
 </script>
