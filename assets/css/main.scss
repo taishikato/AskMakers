@@ -7,6 +7,15 @@ $thinBorder: 1px solid #e8e0e0 !important;
     background-color: #ffffff;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
 .pd-15rem {
     padding: 1.5rem;
 }
@@ -47,6 +56,16 @@ img.is-rounded {
     background-color: #00aced;
     &:hover {
         border-color: #00aced;
+    }
+}
+
+.facebook {
+    color: #ffffff;
+    border-color: #3C5A99;
+    background-color: #3C5A99;
+    &:hover {
+        color: #ffffff;
+        border-color: #3C5A99;
     }
 }
 
