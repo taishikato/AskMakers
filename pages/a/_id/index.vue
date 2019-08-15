@@ -3,14 +3,17 @@
     <div class="columns">
       <div class="column is-8 container">
         <p
-          v-show="showThankyouBox"
+          v-show="
+            showThankyouBox &&
+              answer.answerUserId === $store.getters.getUserInfo.uid
+          "
           class="title has-text-centered weight-800 sp-font"
         >
           Thank you for answering!
         </p>
         <div id="question-img" class="bg-white radius-box">
           <p id="answer-text">{{ answer.content }}</p>
-          <img src="/question-ex.jpg" />
+          <img :src="question.image" />
           <div class="is-divider"></div>
           <div id="share-wrappper">
             <p class="title is-4 weight-800 has-text-centered">
@@ -18,7 +21,11 @@
             </p>
             <ul class="flex-container flex-center">
               <li>
-                <a href="" class="button facebook is-rounded weight-700">
+                <a
+                  :href="`http://www.facebook.com/share.php?u=${shareUrl}`"
+                  class="button facebook is-rounded weight-700"
+                  target="_blank"
+                >
                   <span class="icon">
                     <i class="fab fa-facebook-f"></i>
                   </span>
@@ -28,7 +35,10 @@
                 </a>
               </li>
               <li>
-                <a href="" class="button is-rounded is-white weight-700">
+                <a
+                  class="button is-rounded is-white weight-700"
+                  @click.prevent="copyUrl"
+                >
                   <span class="icon">
                     <i class="fas fa-copy"></i>
                   </span>
@@ -51,13 +61,29 @@ import firebase from '~/plugins/firebase'
 import 'firebase/firestore'
 const firestore = firebase.firestore()
 
+const copyText = (string) => {
+  const temp = document.createElement('div')
+  temp.appendChild(document.createElement('pre')).textContent = string
+  const s = temp.style
+  s.position = 'fixed'
+  s.left = '-100%'
+  document.body.appendChild(temp)
+  document.getSelection().selectAllChildren(temp)
+  const result = document.execCommand('copy')
+  document.body.removeChild(temp)
+  // true なら実行できている falseなら失敗か対応していないか
+  return result
+}
+
 export default {
   name: 'AId',
   data() {
     return {
       answer: {},
+      question: {},
       aId: '',
-      showThankyouBox: false
+      showThankyouBox: false,
+      shareUrl: ''
     }
   },
   validate({ params }) {
@@ -73,10 +99,15 @@ export default {
       .doc(this.aId)
       .get()
     this.answer = answerData.data()
+    this.shareUrl = `https://askmakers.co/s/${this.answer.id}`
+    const questionData = await firestore
+      .collection('questions')
+      .doc(this.answer.questionId)
+      .get()
+    this.question = questionData.data()
   },
   mounted() {
     const answeredParam = this.getParam('answered')
-    console.log(answeredParam)
     if (answeredParam === 'true') {
       this.showThankyouBox = true
     }
@@ -90,6 +121,9 @@ export default {
       if (!results) return null
       if (!results[2]) return ''
       return decodeURIComponent(results[2].replace(/\+/g, ' '))
+    },
+    copyUrl() {
+      copyText(this.shareUrl)
     }
   }
 }
