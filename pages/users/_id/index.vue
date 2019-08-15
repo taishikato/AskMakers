@@ -140,18 +140,18 @@
         </div>
         <div class="is-divider"></div>
         <div id="answered-question-list">
-          <h3 class="title is-5 sp-font">Answered Questions</h3>
-          <ul>
-            <li>
+          <h3 class="title is-5 weight-800 sp-font">Answered Questions</h3>
+          <p v-show="answeredQuestions.length === 0" class="weight-700">
+            No answered questions… yet!
+          </p>
+          <ul v-show="answeredQuestions.length > 0">
+            <li
+              v-for="answeredQuestion in answeredQuestions"
+              :key="answeredQuestion.id"
+            >
               <answered-question-card
-                image="/question-ex.jpg"
-                answer="質問ありがとうございます😊 基本的にはEast Hackersサロン( easthackers.com )入ってくれた方に限定で、案内や現地のことについてお話しさせて頂くくつもりです🙌"
-              />
-            </li>
-            <li>
-              <answered-question-card
-                image="/question-ex.jpg"
-                answer="質問ありがとうございます😊 基本的にはEast Hackersサロン( easthackers.com )入ってくれた方に限定で、案内や現地のことについてお話しさせて頂くくつもりです🙌"
+                :image="answeredQuestion.question.image"
+                :answer="answeredQuestion.answer.content"
               />
             </li>
           </ul>
@@ -184,7 +184,8 @@ export default {
       },
       newQuestion: '',
       userId: '',
-      isSaving: false
+      isSaving: false,
+      answeredQuestions: []
     }
   },
   computed: {
@@ -205,6 +206,27 @@ export default {
       .doc(this.userId)
       .get()
     this.user = userInfo.data()
+
+    // 回答済み回答習得
+    const answerData = await firestore
+      .collection('answers')
+      .where('answerUserId', '==', this.userId)
+      .orderBy('created', 'desc')
+      .get()
+    this.answeredQuestions = await Promise.all(
+      answerData.docs.map(async (doc) => {
+        const answer = doc.data()
+        const questionData = await firestore
+          .collection('questions')
+          .doc(answer.questionId)
+          .get()
+        return {
+          answer,
+          question: questionData.data()
+        }
+      })
+    )
+    console.log(this.answeredQuestions)
   },
   methods: {
     askAQustion() {
@@ -215,7 +237,7 @@ export default {
             .split('-')
             .join('')
           const sRef = firebase.storage().ref()
-          const fileRef = sRef.child(`${id}.png`)
+          const fileRef = sRef.child(`questions/${id}.png`)
           // Firebase Cloud Storageにアップロード
           await fileRef.putString(data, 'data_url')
           const url = await fileRef.getDownloadURL()
