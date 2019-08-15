@@ -159,7 +159,6 @@ export default {
         this.newProduct = {}
         this.isAddProductModalActive = false
       } catch (err) {
-        console.log(err)
         this.$toast.open({
           message: 'Something went wrong...Please try again',
           type: 'is-danger',

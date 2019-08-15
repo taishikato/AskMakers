@@ -86,9 +86,34 @@
     <div id="profile-main-body" class="columns">
       <div class="column is-9">
         <h3 class="title is-5 sp-font">Ask A Question</h3>
+        <svg
+          ref="svgCard"
+          width="1200px"
+          height="630px"
+          viewBox="0 0  860 520"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <rect
+            id="svgEditorBackground"
+            x="0"
+            y="0"
+            width="1200"
+            height="630"
+            style="fill: none; stroke: none; fill: #ffffff;"
+          />
+          <text
+            id="e1_texte"
+            style="fill:black;font-family:Arial;font-size:50px;"
+            x="56"
+            y="46"
+          >
+            {{ newQuestion }}
+          </text>
+        </svg>
         <div class="field">
           <div class="control">
             <textarea
+              v-model="newQuestion"
               class="textarea"
               placeholder="What do you do when you have no power"
             ></textarea>
@@ -96,7 +121,21 @@
         </div>
         <div class="field">
           <div class="control">
-            <button class="button is-primary is-rounded">Submit</button>
+            <button
+              v-if="isSaving"
+              class="button is-primary is-loading is-rounded"
+              disabled
+            >
+              Ask a Question
+            </button>
+            <button
+              v-else
+              class="button is-primary is-rounded"
+              :disabled="countNewQuestion === 0"
+              @click.prevent="askAQustion"
+            >
+              Ask a Question
+            </button>
           </div>
         </div>
         <div class="is-divider"></div>
@@ -126,6 +165,7 @@
 </template>
 
 <script>
+import uuid from 'uuid/v4'
 import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -141,7 +181,15 @@ export default {
       user: {
         social: {},
         website: ''
-      }
+      },
+      newQuestion: '',
+      userId: '',
+      isSaving: false
+    }
+  },
+  computed: {
+    countNewQuestion() {
+      return this.newQuestion.length
     }
   },
   validate({ params }) {
@@ -151,12 +199,74 @@ export default {
     return true
   },
   async created() {
-    const userId = this.$route.params.id
+    this.userId = this.$route.params.id
     const userInfo = await firestore
       .collection('users')
-      .doc(userId)
+      .doc(this.userId)
       .get()
     this.user = userInfo.data()
+  },
+  methods: {
+    askAQustion() {
+      this.isSaving = true
+      this.svg2imageData(this.$refs.svgCard, async (data) => {
+        try {
+          const id = uuid()
+            .split('-')
+            .join('')
+          const sRef = firebase.storage().ref()
+          const fileRef = sRef.child(`${id}.png`)
+          // Firebase Cloud Storageにアップロード
+          await fileRef.putString(data, 'data_url')
+          const url = await fileRef.getDownloadURL()
+          // Firestoreに保存
+          await firestore
+            .collection('questions')
+            .doc(id)
+            .set({
+              id,
+              image: url,
+              text: this.newQuestion,
+              fromUserId: this.$store.getters.getUserInfo.uid,
+              toUserId: this.userId
+            })
+          this.$toast.open({
+            message: 'Successfuly submitted',
+            type: 'is-success',
+            duration: 4000
+          })
+          this.newQuestion = ''
+          this.$router.push(`/q/${id}`)
+        } catch (err) {
+          this.$toast.open({
+            message: 'Something went wrong...Please try again',
+            type: 'is-danger',
+            duration: 4000
+          })
+        } finally {
+          this.isSaving = false
+        }
+      })
+    },
+    // pngに変換
+    svg2imageData(svgElement, successCallback, errorCallback) {
+      const canvas = document.createElement('canvas')
+      canvas.width = 600
+      canvas.height = 315
+      const ctx = canvas.getContext('2d')
+      const image = new Image()
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0, 600, 315)
+        successCallback(canvas.toDataURL())
+      }
+      image.onerror = (e) => {
+        errorCallback(e)
+      }
+      const svgData = new XMLSerializer().serializeToString(svgElement)
+      image.src =
+        'data:image/svg+xml;charset=utf-8;base64,' +
+        btoa(unescape(encodeURIComponent(svgData)))
+    }
   }
 }
 </script>
