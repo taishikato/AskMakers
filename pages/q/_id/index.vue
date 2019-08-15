@@ -3,15 +3,19 @@
     <div class="columns">
       <div class="column is-8 container">
         <div id="question-img" class="bg-white radius-box">
-          <img src="/question-ex.jpg" />
+          <img :src="question.image" />
         </div>
 
-        <div id="answer-wrapper" class="field">
+        <div
+          v-if="question.toUserId === $store.getters.getUserInfo.uid"
+          id="answer-wrapper"
+          class="field"
+        >
           <div class="control">
             <textarea class="textarea"></textarea>
           </div>
         </div>
-        <div class="field">
+        <div id="answer-btn" class="field">
           <div class="control has-text-centered">
             <button class="button is-success is-rounded is-medium">
               Answer
@@ -24,8 +28,32 @@
 </template>
 
 <script>
+import firebase from '~/plugins/firebase'
+// Use firestore
+import 'firebase/firestore'
+const firestore = firebase.firestore()
+
 export default {
-  name: 'QId'
+  name: 'QId',
+  data() {
+    return {
+      question: {}
+    }
+  },
+  validate({ params }) {
+    if (params.id === undefined) {
+      return false
+    }
+    return true
+  },
+  async created() {
+    const qId = this.$route.params.id
+    const questionData = await firestore
+      .collection('questions')
+      .doc(qId)
+      .get()
+    this.question = questionData.data()
+  }
 }
 </script>
 
@@ -36,5 +64,9 @@ export default {
 
 #answer-wrapper {
   margin-top: 20px;
+}
+
+#answer-btn {
+  margin-top: 10px;
 }
 </style>
