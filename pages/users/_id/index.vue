@@ -203,7 +203,7 @@ export default {
   async created() {
     this.userId = this.$route.params.id
     const userInfo = await firestore
-      .collection('users')
+      .collection('publicUsers')
       .doc(this.userId)
       .get()
     this.user = userInfo.data()
@@ -227,7 +227,6 @@ export default {
         }
       })
     )
-    console.log(this.answeredQuestions)
   },
   methods: {
     askAQustion() {
