@@ -173,6 +173,7 @@ import 'firebase/firestore'
 const firestore = firebase.firestore()
 
 export default {
+  name: 'UserId',
   components: {
     AnsweredQuestionCard
   },

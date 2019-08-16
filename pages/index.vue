@@ -14,7 +14,7 @@
     </section>
     <section class="section">
       <div class="column is-9 container">
-        <div class="columns is-mobile">
+        <div class="columns">
           <div class="column is-4">
             <card
               name="Taishi Kato"
@@ -42,6 +42,16 @@
         </div>
       </div>
     </section>
+    <footer>
+      <div class="flex-container flex-center">
+        <div class="is-size-7 copy-right">
+          © AskMakers
+        </div>
+        <n-link to="/terms-privacy" class="is-size-7 has-text-grey-light">
+          Terms of Service & Privacy
+        </n-link>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -56,3 +66,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.copy-right {
+  margin-right: 10px;
+}
+</style>
