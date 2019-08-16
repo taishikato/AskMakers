@@ -4,7 +4,7 @@ import { firebaseMutations, firebaseAction } from 'vuexfire'
 import firebase from '~/plugins/firebase'
 import 'firebase/firestore'
 const firestore = firebase.firestore()
-const usersRef = firestore.collection('users')
+const usersRef = firestore.collection('publicUsers')
 
 Vue.use(Vuex)
 
@@ -33,10 +33,10 @@ const store = () =>
     },
     actions: {
       BIND_USER: firebaseAction(({ bindFirebaseRef }, user) => {
-        bindFirebaseRef('user', usersRef.doc(user.uid))
+        bindFirebaseRef('users', usersRef.doc(user.uid))
       }),
       UNBIND_USER: firebaseAction(({ unbindFirebaseRef }) => {
-        unbindFirebaseRef('user')
+        unbindFirebaseRef('users')
       })
     }
   })

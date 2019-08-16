@@ -240,7 +240,7 @@ export default {
           )
         }
         const userRef = firestore
-          .collection('users')
+          .collection('publicUsers')
           .doc(this.$store.getters.getUserInfo.uid)
         await updateDoc(userRef, this.userSettings)
         this.$toast.open({

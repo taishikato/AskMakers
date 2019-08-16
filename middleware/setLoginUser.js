@@ -19,35 +19,63 @@ export default async ({ store, redirect }) => {
    */
   const result = await getRedirectResult()
   if (result.user !== null) {
-    const usersRef = firestore.collection('users').doc(result.user.uid)
+    // 公開情報と秘密情報を分けて保存
+    // 公開
+    const publicUsersRef = firestore
+      .collection('publicUsers')
+      .doc(result.user.uid)
+    // 秘密
+    const secretUsersRef = firestore
+      .collection('secretUsers')
+      .doc(result.user.uid)
     if (result.additionalUserInfo.isNewUser === true) {
       // Sign Up
       const userData = result.user
       const userUid = userData.uid
-      const newUserData = {
+      const newPublicUserData = {
+        uid: userUid,
+        customName: userData.displayName,
+        picture: userData.photoURL,
+        social: {}
+      }
+      const newSecretUserData = {
         uid: userUid,
         displayName: userData.displayName,
-        customName: userData.displayName,
         email: userData.email,
         created: getUnixTime(),
-        picture: userData.photoURL,
-        provider: [result.additionalUserInfo.providerId],
-        social: {},
-        website: ''
+        provider: [result.additionalUserInfo.providerId]
       }
-      await saveDoc(usersRef, newUserData)
+      await Promise.all([
+        saveDoc(publicUsersRef, newPublicUserData),
+        saveDoc(secretUsersRef, newSecretUserData)
+      ])
+      store.commit('changeUser', {
+        user: {
+          uid: userUid,
+          customName: userData.displayName,
+          picture: userData.photoURL,
+          social: {}
+        }
+      })
+
+      await store.dispatch('BIND_USER', authUser)
     } else {
       // Log In
       const changeItem = {
         lastLogin: getUnixTime()
       }
-      await updateDoc(usersRef, changeItem)
+      await updateDoc(secretUsersRef, changeItem)
+      const userData = await publicUsersRef.get()
+      store.commit('changeUser', {
+        user: userData.data()
+      })
     }
-    await store.dispatch('BIND_USER', authUser)
     // Login Statusを変更
     store.commit('changeLoginStatus', {
       status: true
     })
+
+    location.reload()
     return
   }
 
@@ -60,7 +88,7 @@ export default async ({ store, redirect }) => {
   // Firestoreとバインド
   await store.dispatch('BIND_USER', authUser)
   const user = await firestore
-    .collection('users')
+    .collection('publicUsers')
     .doc(authUser.uid)
     .get()
   store.commit('changeUser', {
