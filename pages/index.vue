@@ -14,7 +14,7 @@
     </section>
     <section class="section">
       <div class="column is-9 container">
-        <div class="columns is-mobile">
+        <div class="columns">
           <div class="column is-4">
             <card
               name="Taishi Kato"
