@@ -21,7 +21,6 @@ export default async ({ store, redirect }) => {
   if (result.user !== null) {
     const usersRef = firestore.collection('users').doc(result.user.uid)
     if (result.additionalUserInfo.isNewUser === true) {
-      console.log(result)
       // Sign Up
       const userData = result.user
       const userUid = userData.uid

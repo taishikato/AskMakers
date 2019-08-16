@@ -68,7 +68,7 @@
 
           <p class="has-text-weight-bold is-size-5">E-mail</p>
           <p>
-            AskMakers has the right to e-mail users with what Sarahah sees
+            AskMakers has the right to e-mail users with what AskMakers sees
             adequate with the option to unsubscribe from notification e-mails
           </p>
 
