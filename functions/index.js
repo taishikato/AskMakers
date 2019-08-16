@@ -56,7 +56,7 @@ const genHtml = (image_url) => `
   <body>
     <script>
       // クローラーにはメタタグを解釈させて、人間は任意のページに飛ばす
-      // location.href = '/share';
+      location.href = '/s/';
     </script>
   </body>
 </html>

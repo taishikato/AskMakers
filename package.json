@@ -9,7 +9,9 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "deploy-hosting": "yarn build && firebase deploy --only hosting",
+    "deploy-db-rule": "firebase deploy --only firestore:rules"
   },
   "lint-staged": {
     "*.{js,vue}": "yarn lint"
@@ -20,6 +22,7 @@
     }
   },
   "dependencies": {
+    "@nuxtjs/google-analytics": "^2.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "bulma-divider": "^0.2.0",
     "firebase": "^6.3.4",
