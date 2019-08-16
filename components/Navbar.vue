@@ -81,7 +81,6 @@
 import firebase from '~/plugins/firebase'
 import LoginModal from '~/components/LoginModal'
 
-// const twitterProvider = new firebase.auth.TwitterAuthProvider()
 export default {
   name: 'Navbar',
   components: {
@@ -99,6 +98,7 @@ export default {
       this.$store.commit('changeLoginStatus', {
         status: false
       })
+      this.$router.push('/')
     }
   }
 }
