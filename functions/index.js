@@ -28,7 +28,7 @@ const tw_description = 'プログラミング情報共有サイトです。'
 const tw_site = ''
 const tw_creator = ''
 
-const genHtml = (image_url) => `
+const genHtml = (question, answer) => `
 <!DOCTYPE html>
 <html>
   <head>
@@ -42,7 +42,7 @@ const genHtml = (image_url) => `
     <meta property="og:title" content="${title}">
     <meta property="og:site_name" content="${site_name}">
     <meta property="og:description" content="${og_description}">
-    <meta property="og:image" content="${image_url}">
+    <meta property="og:image" content="${question.image}">
     <meta property="og:image:width" content="${og_image_width}">
     <meta property="og:image:height" content="${og_image_height}">
     <meta property="fb:app_id" content="${fb_appid}">
@@ -56,7 +56,7 @@ const genHtml = (image_url) => `
   <body>
     <script>
       // クローラーにはメタタグを解釈させて、人間は任意のページに飛ばす
-      location.href = '/s/';
+      location.href = '/a/${answer.id}';
     </script>
   </body>
 </html>
@@ -80,13 +80,13 @@ router.get('/s/:id', async (ctx) => {
     .doc(answer.questionId)
     .get()
   const question = questionData.data()
-  const html = genHtml(question.image)
+  const html = genHtml(question, answer)
   ctx.res.set('cache-control', 'public, max-age=3600')
   ctx.response.status = 200
   ctx.body = html
 })
 
-exports.s = functions.https.onRequest(koaFirebase(app))
+exports.share = functions.https.onRequest(koaFirebase(app))
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions

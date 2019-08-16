@@ -11,7 +11,9 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "deploy-hosting": "yarn build && firebase deploy --only hosting",
-    "deploy-db-rule": "firebase deploy --only firestore:rules"
+    "deploy-db-rule": "firebase deploy --only firestore:rules",
+    "deploy-func": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   },
   "lint-staged": {
     "*.{js,vue}": "yarn lint"

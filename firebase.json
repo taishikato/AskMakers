@@ -18,7 +18,11 @@
     "rewrites": [
       {
         "source": "/s/**",
-        "function": "s"
+        "function": "share"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   },
