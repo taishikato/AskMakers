@@ -43,7 +43,11 @@ export default async ({ store, redirect }) => {
         displayName: userData.displayName,
         email: userData.email,
         created: getUnixTime(),
-        provider: [result.additionalUserInfo.providerId]
+        provider: [result.additionalUserInfo.providerId],
+        twitter: {
+          accessToken: result.credential.accessToken,
+          secret: result.credential.secret
+        }
       }
       await Promise.all([
         saveDoc(publicUsersRef, newPublicUserData),
@@ -62,7 +66,11 @@ export default async ({ store, redirect }) => {
     } else {
       // Log In
       const changeItem = {
-        lastLogin: getUnixTime()
+        lastLogin: getUnixTime(),
+        twitter: {
+          accessToken: result.credential.accessToken,
+          secret: result.credential.secret
+        }
       }
       await updateDoc(secretUsersRef, changeItem)
       const userData = await publicUsersRef.get()
