@@ -10,6 +10,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "serve": "yarn build && firebase serve",
     "deploy-all": "yarn build && firebase deploy",
     "deploy-hosting": "yarn build && firebase deploy --only hosting",
     "deploy-db-rule": "firebase deploy --only firestore:rules",
@@ -25,6 +26,7 @@
     }
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.5.4",
     "@nuxtjs/google-analytics": "^2.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "bulma-divider": "^0.2.0",

@@ -11,11 +11,18 @@
           id="answer-wrapper"
           class="field"
         >
-          <div class="control">
+          <div
+            v-if="question.toUserId === $store.getters.getUserInfo.uid"
+            class="control"
+          >
             <textarea v-model="answer" class="textarea"></textarea>
           </div>
         </div>
-        <div id="answer-btn" class="field">
+        <div
+          v-if="question.toUserId === $store.getters.getUserInfo.uid"
+          id="answer-btn"
+          class="field"
+        >
           <div class="control has-text-centered">
             <button
               v-if="isSubmitting"
@@ -93,6 +100,12 @@ export default {
             created: getUnixTime(),
             content: this.answer
           })
+        // TODO あとで本番ドメインに書き換え
+        try {
+          await this.$axios.get(`http://localhost:5000/tweet/${id}`)
+        } catch (err) {
+          console.log(err)
+        }
         this.answer = ''
         this.$toast.open({
           message: 'Successfuly submitted',
