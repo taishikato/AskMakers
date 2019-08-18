@@ -8,6 +8,8 @@ const Router = require('koa-router')
 const router = new Router()
 const admin = require('firebase-admin')
 
+const Twitter = require('twitter')
+
 app.use(router.routes())
 app.use(router.allowedMethods())
 
@@ -86,7 +88,72 @@ router.get('/s/:id', async (ctx) => {
   ctx.body = html
 })
 
-exports.share = functions.https.onRequest(koaFirebase(app))
+router.get('/tweet/:answerId', async (ctx) => {
+  if (ctx.params.answerId === undefined || ctx.params.answerId === '') {
+    ctx.response.status = 400
+    ctx.body = { result: 'Bad request' }
+    return
+  }
+  const answerData = await db
+    .collection('answers')
+    .doc(ctx.params.answerId)
+    .get()
+  if (!answerData.exists) {
+    ctx.response.status = 400
+    ctx.body = { result: 'Bad request' }
+    return
+  }
+  const answer = answerData.data()
+
+  if (answer.tweeted === true) {
+    ctx.response.status = 403
+    ctx.body = {
+      result: 'Bad request'
+    }
+    return
+  }
+
+  const [questionData, userData] = await Promise.all([
+    // 質問データ取得
+    db
+      .collection('questions')
+      .doc(answer.questionId)
+      .get(),
+    db
+      .collection('secretUsers')
+      .doc(answer.answerUserId)
+      .get()
+  ])
+  const question = questionData.data()
+  const user = userData.data()
+  const client = new Twitter({
+    consumer_key: '50Eg1RYdG3sqJLE3qJ5JEQ4bR',
+    consumer_secret: 'YzxlrsppT6sjEw1EcEvKAY1M8fjohEDVeqNHOXn5onksa8URvU',
+    access_token_key: user.twitter.accessToken,
+    access_token_secret: user.twitter.secret
+  })
+  const urlLength = 11.5
+  const tweetLimit = 280 - urlLength
+  let answerContent = answer.content
+  if (answerContent > tweetLimit) {
+    answerContent = answerContent.substr(0, tweetLimit - 3)
+    answerContent += '…'
+  }
+  const tweetText = `${answerContent}\nhttps://ask-makers.firebaseapp.com/s/${answer.id}`
+  await client.post('statuses/update', { status: tweetText })
+
+  // answerに対してtweeted = trueを設定
+  await db
+    .collection('answers')
+    .doc(ctx.params.answerId)
+    .update({
+      tweeted: true
+    })
+  ctx.response.status = 200
+  ctx.body = { result: 'success' }
+})
+
+exports.func = functions.https.onRequest(koaFirebase(app))
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
