@@ -10,9 +10,9 @@ function onlyIdentityUser(userId) {
 }
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /secretUsers/{user} {
+    match /secretUsers/{userId} {
       allow read: if false;
-      allow write: if isLogin();
+      allow write: if onlyIdentityUser(userId);
     }
     match /publicUsers/{userId} {
       allow read: if true;
