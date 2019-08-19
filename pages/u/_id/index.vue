@@ -197,7 +197,7 @@
               <textarea
                 v-model="newQuestion"
                 class="textarea is-success"
-                placeholder="Why do you make Instagram?"
+                placeholder="You need to start a new line when your texts go out of the frame"
               ></textarea>
             </div>
           </div>
