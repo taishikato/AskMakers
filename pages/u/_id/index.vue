@@ -233,6 +233,7 @@
               :key="answeredQuestion.id"
             >
               <answered-question-card
+                :id="answeredQuestion.question.id"
                 :image="answeredQuestion.question.image"
                 :answer="answeredQuestion.answer.content"
               />

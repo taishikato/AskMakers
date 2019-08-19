@@ -1,6 +1,8 @@
 <template>
   <div class="bg-white pd-15rem radius-box">
-    <img :src="image" />
+    <n-link :to="`/q/${id}`">
+      <img :src="image" />
+    </n-link>
     <p class="answer-wrapper">{{ answer }}</p>
   </div>
 </template>
@@ -15,6 +17,10 @@ export default {
     },
     answer: {
       type: String,
+      required: true
+    },
+    id: {
+      type: Number,
       required: true
     }
   }
