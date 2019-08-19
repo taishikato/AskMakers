@@ -189,7 +189,7 @@
               <textarea
                 v-model="newQuestion"
                 class="textarea is-success"
-                placeholder="What do you do when you have no power"
+                placeholder="Why do you make Instagram?"
               ></textarea>
             </div>
           </div>
