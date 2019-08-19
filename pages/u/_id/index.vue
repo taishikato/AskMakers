@@ -86,7 +86,10 @@
     <div id="profile-main-body" class="columns">
       <div class="column">
         <h3
-          v-if="userId !== $store.getters.getUserInfo.uid"
+          v-if="
+            userId !== $store.getters.getUserInfo.uid &&
+              $store.getters.getLoginStatus === true
+          "
           class="title is-5 weight-800"
         >
           Ask A Question
@@ -183,13 +186,18 @@
             />
           </svg>
         </div>
-        <div v-if="userId !== $store.getters.getUserInfo.uid">
+        <div
+          v-if="
+            userId !== $store.getters.getUserInfo.uid &&
+              $store.getters.getLoginStatus === true
+          "
+        >
           <div class="field">
             <div class="control">
               <textarea
                 v-model="newQuestion"
                 class="textarea is-success"
-                placeholder="What do you do when you have no power"
+                placeholder="Why do you make Instagram?"
               ></textarea>
             </div>
           </div>
@@ -197,14 +205,14 @@
             <div class="control has-text-centered">
               <button
                 v-if="isSaving"
-                class="button is-success is-loading is-rounded is-outlined weight-700"
+                class="button is-success is-loading is-rounded is-outlined weight-700 is-medium"
                 disabled
               >
                 Ask a Question
               </button>
               <button
                 v-else
-                class="button is-success is-rounded is-outlined weight-700"
+                class="button is-success is-rounded is-outlined weight-700 is-medium"
                 :disabled="countNewQuestion === 0"
                 @click.prevent="askAQustion"
               >
@@ -225,6 +233,7 @@
               :key="answeredQuestion.id"
             >
               <answered-question-card
+                :id="answeredQuestion.question.id"
                 :image="answeredQuestion.question.image"
                 :answer="answeredQuestion.answer.content"
               />

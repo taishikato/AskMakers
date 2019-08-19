@@ -120,7 +120,6 @@ export default {
       .collection('answers')
       .where('questionId', '==', this.question.id)
       .get()
-    console.log(answerData)
     if (answerData.empty === true) {
       return true
     }
