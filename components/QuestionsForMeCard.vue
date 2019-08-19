@@ -57,9 +57,11 @@ export default {
       .where('toUserId', '==', this.$store.getters.getUserInfo.uid)
       .orderBy('created', 'desc')
       .get()
-    // TODO 回答した質問は除く
-    this.questions = questionData.docs.map((doc) => {
+    const questionsArray = questionData.docs.map((doc) => {
       return doc.data()
+    })
+    this.questions = questionsArray.filter((question) => {
+      return question.isAnswered !== true
     })
   }
 }
