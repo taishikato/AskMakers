@@ -1,14 +1,9 @@
 <template>
   <div v-if="questions.length > 0">
     <p class="title weight-800 is-4">The questions for you</p>
-    <div class="columns">
-      <div class="column is-4">
-        <div
-          v-for="question in questions"
-          id="accepted-questions-wrapper"
-          :key="question.id"
-          class="card radius-box"
-        >
+    <div class="columns is-multiline">
+      <div v-for="question in questions" :key="question.id" class="column is-4">
+        <div id="accepted-questions-wrapper" class="card radius-box">
           <div class="card-image">
             <figure class="image">
               <n-link :to="`/q/${question.id}`">
@@ -54,6 +49,9 @@ export default {
     }
   },
   async created() {
+    if (this.$store.getters.getLoginStatus === false) {
+      return
+    }
     const questionData = await firestore
       .collection('questions')
       .where('toUserId', '==', this.$store.getters.getUserInfo.uid)

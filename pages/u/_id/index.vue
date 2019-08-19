@@ -86,7 +86,10 @@
     <div id="profile-main-body" class="columns">
       <div class="column">
         <h3
-          v-if="userId !== $store.getters.getUserInfo.uid"
+          v-if="
+            userId !== $store.getters.getUserInfo.uid &&
+              $store.getters.getLoginStatus === true
+          "
           class="title is-5 weight-800"
         >
           Ask A Question
@@ -183,7 +186,12 @@
             />
           </svg>
         </div>
-        <div v-if="userId !== $store.getters.getUserInfo.uid">
+        <div
+          v-if="
+            userId !== $store.getters.getUserInfo.uid &&
+              $store.getters.getLoginStatus === true
+          "
+        >
           <div class="field">
             <div class="control">
               <textarea
