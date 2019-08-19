@@ -227,6 +227,12 @@ export default {
       }
     }
   },
+  validate({ store }) {
+    if (store.getters.getLoginStatus === true) {
+      return true
+    }
+    return false
+  },
   created() {
     this.userSettings = this.$store.getters.getUserInfo
   },
