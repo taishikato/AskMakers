@@ -85,7 +85,12 @@
     </div>
     <div id="profile-main-body" class="columns">
       <div class="column is-9">
-        <h3 class="title is-5 sp-font">Ask A Question</h3>
+        <h3
+          v-if="userId !== $store.getters.getUserInfo.uid"
+          class="title is-5 weight-800"
+        >
+          Ask A Question
+        </h3>
         <div
           v-show="newQuestion.length > 0"
           id="question-svg"
@@ -96,8 +101,6 @@
             ref="svgCard"
             data-name="レイヤー 1"
             xmlns="http://www.w3.org/2000/svg"
-            width="600"
-            height="315"
             viewBox="0 0 1200 630"
           >
             <defs>
@@ -180,37 +183,39 @@
             />
           </svg>
         </div>
-        <div class="field">
-          <div class="control">
-            <textarea
-              v-model="newQuestion"
-              class="textarea"
-              placeholder="What do you do when you have no power"
-            ></textarea>
+        <div v-if="userId !== $store.getters.getUserInfo.uid">
+          <div class="field">
+            <div class="control">
+              <textarea
+                v-model="newQuestion"
+                class="textarea is-success"
+                placeholder="What do you do when you have no power"
+              ></textarea>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            <button
-              v-if="isSaving"
-              class="button is-primary is-loading is-rounded"
-              disabled
-            >
-              Ask a Question
-            </button>
-            <button
-              v-else
-              class="button is-primary is-rounded"
-              :disabled="countNewQuestion === 0"
-              @click.prevent="askAQustion"
-            >
-              Ask a Question
-            </button>
+          <div id="question-btn" class="field">
+            <div class="control has-text-right">
+              <button
+                v-if="isSaving"
+                class="button is-success is-loading is-rounded is-outlined weight-700"
+                disabled
+              >
+                Ask a Question
+              </button>
+              <button
+                v-else
+                class="button is-success is-rounded is-outlined weight-700"
+                :disabled="countNewQuestion === 0"
+                @click.prevent="askAQustion"
+              >
+                Ask a Question
+              </button>
+            </div>
           </div>
+          <div class="is-divider"></div>
         </div>
-        <div class="is-divider"></div>
         <div id="answered-question-list">
-          <h3 class="title is-5 weight-800 sp-font">Answered Questions</h3>
+          <h3 class="title is-5 weight-800">Answered Questions</h3>
           <p v-show="answeredQuestions.length === 0" class="weight-700">
             No answered questions… yet!
           </p>
@@ -427,6 +432,19 @@ export default {
   #answered-question-list {
     li {
       margin-top: 1.5rem;
+    }
+  }
+}
+
+textarea.is-success {
+  border-width: 2px;
+}
+
+#question-btn {
+  .is-outlined {
+    background-color: #ffffff;
+    &:hover {
+      background-color: #23d160;
     }
   }
 }
