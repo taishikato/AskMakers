@@ -1,5 +1,5 @@
 <template>
-  <div id="users-id" class="section column is-9 container">
+  <div id="users-id" class="section column is-8 container">
     <div class="columns">
       <div class="column bg-white pd-15rem radius-box">
         <div class="columns">
@@ -84,7 +84,7 @@
       </div>
     </div>
     <div id="profile-main-body" class="columns">
-      <div class="column is-9">
+      <div class="column">
         <h3
           v-if="userId !== $store.getters.getUserInfo.uid"
           class="title is-5 weight-800"
@@ -194,7 +194,7 @@
             </div>
           </div>
           <div id="question-btn" class="field">
-            <div class="control has-text-right">
+            <div class="control has-text-centered">
               <button
                 v-if="isSaving"
                 class="button is-success is-loading is-rounded is-outlined weight-700"
@@ -232,9 +232,9 @@
           </ul>
         </div>
       </div>
-      <div id="sidebar" class="column pd-15rem bg-white radius-box">
+      <!-- <div id="sidebar" class="column pd-15rem bg-white radius-box">
         <p class="title is-5 sp-font">Product</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
