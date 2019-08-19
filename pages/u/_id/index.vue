@@ -197,14 +197,14 @@
             <div class="control has-text-centered">
               <button
                 v-if="isSaving"
-                class="button is-success is-loading is-rounded is-outlined weight-700"
+                class="button is-success is-loading is-rounded is-outlined weight-700 is-medium"
                 disabled
               >
                 Ask a Question
               </button>
               <button
                 v-else
-                class="button is-success is-rounded is-outlined weight-700"
+                class="button is-success is-rounded is-outlined weight-700 is-medium"
                 :disabled="countNewQuestion === 0"
                 @click.prevent="askAQustion"
               >
