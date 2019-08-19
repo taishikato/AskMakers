@@ -28,6 +28,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.5.4",
     "@nuxtjs/google-analytics": "^2.2.0",
+    "@nuxtjs/moment": "^1.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "bulma-divider": "^0.2.0",
     "firebase": "^6.3.4",

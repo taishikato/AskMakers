@@ -241,6 +241,7 @@
 
 <script>
 import uuid from 'uuid/v4'
+import getUnixTime from '~/plugins/getUnixTime'
 import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -348,7 +349,8 @@ export default {
               image: url,
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
-              toUserId: this.userId
+              toUserId: this.userId,
+              created: getUnixTime()
             })
           this.$toast.open({
             message: 'Successfuly submitted',

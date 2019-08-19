@@ -13,37 +13,33 @@
       </div>
     </section>
     <section class="section">
-      <div class="column is-9 container">
-        <div class="columns">
-          <div class="column is-4">
-            <card
-              name="Taishi Kato"
-              content="The maker of Quorie"
-              image="/takato.jpeg"
-            >
-              Open source on
-              <a href="https://github.com/buefy/buefy">
-                GitHub
-              </a>
-            </card>
-          </div>
-          <div class="column is-4">
-            <card
-              name="Taishi Kato"
-              content="The maker of Quorie"
-              image="/takato.jpeg"
-            >
-              Open source on
-              <a href="https://github.com/buefy/buefy">
-                GitHub
-              </a>
-            </card>
+      <questions-for-me-card />
+      <div class="columns">
+        <div class="column is-8">
+          <p class="title weight-800 is-4">Makers</p>
+          <div class="columns">
+            <div class="column is-6">
+              <card
+                name="Taishi Kato"
+                content="The maker of Quorie"
+                image="/takato.jpeg"
+              >
+              </card>
+            </div>
+            <div class="column is-6">
+              <card
+                name="Taishi Kato"
+                content="The maker of Quorie"
+                image="/takato.jpeg"
+              >
+              </card>
+            </div>
           </div>
         </div>
       </div>
     </section>
     <footer>
-      <div class="flex-container flex-center">
+      <div class="flex-container flex-center flex-justify-center">
         <div class="is-size-7 copy-right">
           © AskMakers
         </div>
@@ -57,12 +53,14 @@
 
 <script>
 import Card from '~/components/Card'
+import QuestionsForMeCard from '~/components/QuestionsForMeCard'
 
 export default {
   name: 'HomePage',
 
   components: {
-    Card
+    Card,
+    QuestionsForMeCard
   }
 }
 </script>
@@ -70,5 +68,9 @@ export default {
 <style lang="scss" scoped>
 .copy-right {
   margin-right: 10px;
+}
+
+footer {
+  margin-bottom: 20px;
 }
 </style>

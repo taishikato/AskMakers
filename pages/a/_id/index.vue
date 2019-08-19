@@ -19,8 +19,8 @@
             <p class="title is-4 weight-800 has-text-centered">
               Share the answer
             </p>
-            <ul class="flex-container flex-center">
-              <li>
+            <ul class="columns">
+              <li class="column has-text-centered">
                 <a
                   :href="`http://www.facebook.com/share.php?u=${shareUrl}`"
                   class="button facebook is-rounded weight-700"
@@ -34,7 +34,7 @@
                   </span>
                 </a>
               </li>
-              <li>
+              <li class="column has-text-centered">
                 <a
                   class="button is-rounded is-white weight-700"
                   @click.prevent="copyUrl"
@@ -43,7 +43,7 @@
                     <i class="fas fa-copy"></i>
                   </span>
                   <span>
-                    Copy Sharing URL
+                    Copy a sharing URL
                   </span>
                 </a>
               </li>
@@ -99,12 +99,12 @@ export default {
       .doc(this.aId)
       .get()
     this.answer = answerData.data()
-    this.shareUrl = `https://askmakers.co/s/${this.answer.id}`
     const questionData = await firestore
       .collection('questions')
       .doc(this.answer.questionId)
       .get()
     this.question = questionData.data()
+    this.shareUrl = `https://askmakers.co/s/${this.question.id}`
   },
   mounted() {
     const answeredParam = this.getParam('answered')
@@ -136,10 +136,6 @@ export default {
 
 #question-img {
   padding: 10px;
-}
-
-.facebook {
-  margin-right: 20px;
 }
 
 #share-wrappper {

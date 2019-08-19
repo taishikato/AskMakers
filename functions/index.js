@@ -33,7 +33,7 @@ const tw_description = og_description
 const tw_site = ''
 const tw_creator = ''
 
-const genHtml = (question, answer) => `
+const genHtml = (question) => `
 <!DOCTYPE html>
 <html>
   <head>
@@ -41,9 +41,9 @@ const genHtml = (question, answer) => `
     <title>${title}</title>
     <meta name="description" content="${meta_description}">
     <meta name="keywords" content="${meta_keywords.join(',')}">
-    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale" content="en_CA">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://askmakers.co/s/${answer.id}">
+    <meta property="og:url" content="https://askmakers.co/s/${question.id}">
     <meta property="og:title" content="${title}">
     <meta property="og:site_name" content="${site_name}">
     <meta property="og:description" content="${og_description}">
@@ -60,31 +60,31 @@ const genHtml = (question, answer) => `
   </head>
   <body>
     <script>
-      location.href = '/a/${answer.id}';
+      location.href = '/q/${question.id}';
     </script>
   </body>
 </html>
 `
 
 router.get('/s/:id', async (ctx) => {
-  const answerData = await db
-    .collection('answers')
-    .doc(ctx.params.id)
-    .get()
-  if (!answerData.exists) {
-    ctx.response.status = 404
-    ctx.body = '404 Not Found'
-    return
-  }
-  const answer = answerData.data()
+  // const answerData = await db
+  //   .collection('answers')
+  //   .doc(ctx.params.id)
+  //   .get()
+  // if (!answerData.exists) {
+  //   ctx.response.status = 404
+  //   ctx.body = '404 Not Found'
+  //   return
+  // }
+  // const answer = answerData.data()
 
   // 質問データ取得
   const questionData = await db
     .collection('questions')
-    .doc(answer.questionId)
+    .doc(ctx.params.id)
     .get()
   const question = questionData.data()
-  const html = genHtml(question, answer)
+  const html = genHtml(question)
   ctx.res.set('cache-control', 'public, max-age=3600')
   ctx.response.status = 200
   ctx.body = html
@@ -150,7 +150,7 @@ router.get('/tweet/:answerId', async (ctx) => {
     access_token_key: user.twitter.accessToken,
     access_token_secret: user.twitter.secret
   })
-  const tweetText = `${answerContent} https://askmakers.co/s/${answer.id}`
+  const tweetText = `${answerContent} https://askmakers.co/s/${question.id}`
   try {
     await client.post('statuses/update', { status: tweetText })
   } catch (err) {

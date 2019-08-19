@@ -96,6 +96,7 @@ export default {
     'nuxt-buefy',
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    '@nuxtjs/moment',
     [
       '@nuxtjs/google-analytics',
       {
