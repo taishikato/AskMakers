@@ -30,7 +30,7 @@
                     <i class="fab fa-facebook-f"></i>
                   </span>
                   <span>
-                    Facebbok
+                    Facebook
                   </span>
                 </a>
               </li>

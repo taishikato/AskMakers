@@ -7,6 +7,8 @@ const app = new Koa()
 const Router = require('koa-router')
 const router = new Router()
 const admin = require('firebase-admin')
+const twitterText = require('twitter-text')
+const axios = require('axios')
 
 const Twitter = require('twitter')
 
@@ -17,16 +19,17 @@ admin.initializeApp(functions.config().firebase)
 
 const db = admin.firestore()
 
-const url = 'https://qiita.com/'
-const site_name = 'Qiita'
-const title = 'Qiita'
-const meta_description = 'プログラミング情報共有サイトです。'
-const meta_keywords = ['プログラミング']
-const og_description = 'プログラミング情報共有サイトです。'
+const site_name = 'AskMakers'
+const title = 'AskMakers'
+const meta_description = 'Ask experienced makers a question'
+const meta_keywords = [
+  'Indie makers, indie hackers, personal project, quora, question'
+]
+const og_description = meta_description
 const og_image_width = 1200
 const og_image_height = 630
 const fb_appid = ''
-const tw_description = 'プログラミング情報共有サイトです。'
+const tw_description = og_description
 const tw_site = ''
 const tw_creator = ''
 
@@ -40,7 +43,7 @@ const genHtml = (question, answer) => `
     <meta name="keywords" content="${meta_keywords.join(',')}">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="${url}">
+    <meta property="og:url" content="https://askmakers.co/s/${answer.id}">
     <meta property="og:title" content="${title}">
     <meta property="og:site_name" content="${site_name}">
     <meta property="og:description" content="${og_description}">
@@ -51,13 +54,12 @@ const genHtml = (question, answer) => `
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${tw_description}">
-    <meta name="twitter:image" content="${url}">
+    <meta name="twitter:image" content="${question.image}">
     <meta name="twitter:site" content="${tw_site}">
     <meta name="twitter:creator" content="${tw_creator}">
   </head>
   <body>
     <script>
-      // クローラーにはメタタグを解釈させて、人間は任意のページに飛ばす
       location.href = '/a/${answer.id}';
     </script>
   </body>
@@ -126,21 +128,34 @@ router.get('/tweet/:answerId', async (ctx) => {
   ])
   const question = questionData.data()
   const user = userData.data()
+  const urlLength = 80
+  const tweetLimit = 280 - urlLength
+  let answerContent = answer.content
+  if (answerContent.length > tweetLimit) {
+    answerContent = answerContent.substr(0, tweetLimit - 3)
+    answerContent += '…'
+  }
+  // TODO そのうちBitlyでやる？
+  // try {
+  //   const bitlyApi = `https://api-ssl.bitly.com/v4/shorten?access_token=1ef850edebd29655e0d7d5f7a7ab632d1df02f78&longUrl=https://ask-makers.firebaseapp.com/s/${answer.id}`
+  //   const { data } = await axios.get(bitlyApi)
+  //   console.log(data)
+  // } catch (err) {
+  //   console.error('hey')
+  //   console.error(err)
+  // }
   const client = new Twitter({
     consumer_key: '50Eg1RYdG3sqJLE3qJ5JEQ4bR',
     consumer_secret: 'YzxlrsppT6sjEw1EcEvKAY1M8fjohEDVeqNHOXn5onksa8URvU',
     access_token_key: user.twitter.accessToken,
     access_token_secret: user.twitter.secret
   })
-  const urlLength = 11.5
-  const tweetLimit = 280 - urlLength
-  let answerContent = answer.content
-  if (answerContent > tweetLimit) {
-    answerContent = answerContent.substr(0, tweetLimit - 3)
-    answerContent += '…'
+  const tweetText = `${answerContent} https://askmakers.co/s/${answer.id}`
+  try {
+    await client.post('statuses/update', { status: tweetText })
+  } catch (err) {
+    console.error(err)
   }
-  const tweetText = `${answerContent}\nhttps://ask-makers.firebaseapp.com/s/${answer.id}`
-  await client.post('statuses/update', { status: tweetText })
 
   // answerに対してtweeted = trueを設定
   await db

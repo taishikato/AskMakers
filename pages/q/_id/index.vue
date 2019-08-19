@@ -102,7 +102,7 @@ export default {
           })
         // TODO あとで本番ドメインに書き換え
         try {
-          await this.$axios.get(`http://localhost:5000/tweet/${id}`)
+          await this.$axios.get(`https://askmakers.co/tweet/${id}`)
         } catch (err) {
           console.log(err)
         }
