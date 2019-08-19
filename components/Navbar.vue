@@ -10,13 +10,14 @@
           class="navbar-burger"
           aria-label="menu"
           aria-expanded="false"
+          @click="toggleBurger"
         >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
-      <div id="navbarBasicExample" class="navbar-menu">
+      <div id="nabvar-top" class="navbar-menu">
         <div class="navbar-end">
           <div
             v-if="$store.getters.getLoginStatus === true"
@@ -99,6 +100,12 @@ export default {
         status: false
       })
       this.$router.push('/')
+    },
+    toggleBurger() {
+      const burgerIcon = document.querySelector('.navbar-burger')
+      const dropMenu = document.getElementById('nabvar-top')
+      burgerIcon.classList.toggle('is-active')
+      dropMenu.classList.toggle('is-active')
     }
   }
 }
