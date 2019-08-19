@@ -1,17 +1,59 @@
+const title = 'AskMakers - Ask experienced makers questions'
+const url = 'https://askmakers.co'
+const description =
+  "The best place to ask experienced and successful makers questions. Let's get together Indie Makers!"
+
 export default {
   mode: 'spa',
   /*
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
+        content: description
+      },
+      {
+        hid: 'keywords',
+        name: 'keywords',
+        content:
+          'Indie Maker,Startup,question,social network,product hunt,creative,maker,creation'
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: title
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: description
+      },
+      {
+        hid: 'og:site_name',
+        property: 'og:site_name',
+        content: title
+      },
+      { hid: 'og:url', property: 'og:url', content: url },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: `${url}/ogimage.png`
+      },
+      {
+        hid: 'twitter:card',
+        property: 'twitter:card',
+        content: 'summary_large_image'
+      },
+      {
+        hid: 'twitter:site',
+        property: 'twitter:site',
+        content: '@taishikat0'
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
