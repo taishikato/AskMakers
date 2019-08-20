@@ -26,5 +26,9 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isLogin();
     }
+    match /bookmarks/{bookmarkId} {
+      allow read: if isLogin();
+      allow write: if isLogin();
+    }
   }
 }

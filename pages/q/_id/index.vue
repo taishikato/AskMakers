@@ -2,8 +2,69 @@
   <div id="users-id" class="section column is-9 container">
     <div class="columns">
       <div class="column is-8 container">
-        <div id="question-img" class="bg-white radius-box">
-          <img :src="question.image" />
+        <div id="question-img" class="">
+          <div class="card radius-box">
+            <div class="card-image">
+              <figure class="image">
+                <img :src="question.image" :alt="question.text" />
+              </figure>
+            </div>
+            <div v-if="hasexistingAnswer" class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <n-link :to="`/u/${existingAnswerUser.uid}`">
+                      <img
+                        :src="existingAnswerUser.picture"
+                        alt="existingAnswerUser.customName"
+                        class="is-rounded"
+                      />
+                    </n-link>
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <n-link :to="`/u/${existingAnswerUser.uid}`">
+                    <p class="title is-4">
+                      {{ existingAnswerUser.customName }}
+                    </p>
+                    <!-- <p class="subtitle is-6">@johnsmith</p> -->
+                  </n-link>
+                </div>
+              </div>
+
+              <div class="content">
+                <p id="answer-text" class="is-size-5">
+                  {{ existingAnswer.content }}
+                </p>
+                <time
+                  class="is-size-7 has-text-grey"
+                  :datetime="
+                    $moment.unix(existingAnswer.created).format('YYYY-MM-DD')
+                  "
+                >
+                  {{
+                    $moment
+                      .unix(existingAnswer.created)
+                      .format('YYYY/MM/DD H:mm')
+                  }}
+                </time>
+              </div>
+              <div>
+                <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
+                  <span class="icon is-medium">
+                    <i class="fas fa-bookmark fa-lg"></i>
+                  </span>
+                </a>
+                <a v-else @click.prevent="bookmark(question.id)">
+                  <span class="icon is-medium">
+                    <i class="far fa-bookmark fa-lg"></i>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- <img :src="question.image" />
 
           <div v-if="hasexistingAnswer" id="answer-user-wrapper">
             <div class="flex-container flex-center">
@@ -24,7 +85,7 @@
             <p id="answer-text" class="is-size-5">
               {{ existingAnswer.content }}
             </p>
-          </div>
+          </div> -->
         </div>
 
         <div
@@ -88,6 +149,7 @@ export default {
       question: {},
       qId: '',
       answer: '',
+      isBookmarked: false,
       isSubmitting: false,
       existingAnswer: {},
       hasexistingAnswer: false,
@@ -130,6 +192,15 @@ export default {
       .doc(this.existingAnswer.answerUserId)
       .get()
     this.existingAnswerUser = existingAnswerUserData.data()
+
+    const bookmarkData = await firestore
+      .collection('bookmarks')
+      .where('questionId', '==', this.question.id)
+      .where('userId', '==', this.$store.getters.getUserInfo.uid)
+      .get()
+    if (bookmarkData.empty === false) {
+      this.isBookmarked = true
+    }
   },
   methods: {
     async answerQuestion() {
@@ -168,6 +239,42 @@ export default {
         })
       } finally {
         this.isSubmitting = false
+      }
+    },
+    async bookmark(questionId) {
+      const bookmarkId = uuid()
+        .split('-')
+        .join('')
+      try {
+        await firestore
+          .collection('bookmarks')
+          .doc()
+          .set({
+            id: bookmarkId,
+            questionId,
+            answerId: this.existingAnswer.id,
+            userId: this.$store.getters.getUserInfo.uid,
+            answerUserId: this.existingAnswerUser.uid
+          })
+        this.isBookmarked = true
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async unbookmark() {
+      try {
+        const bookmarkData = await firestore
+          .collection('bookmarks')
+          .where('questionId', '==', this.qId)
+          .where('userId', '==', this.$store.getters.getUserInfo.uid)
+          .get()
+        await firestore
+          .collection('bookmarks')
+          .doc(bookmarkData.docs[0].id)
+          .delete()
+        this.isBookmarked = false
+      } catch (err) {
+        console.log(err)
       }
     }
   }

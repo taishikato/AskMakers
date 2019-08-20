@@ -51,6 +51,14 @@
                   Products
                 </span>
               </n-link> -->
+              <n-link class="navbar-item weight-800" to="/bookmarks">
+                <span class="icon">
+                  <i class="fas fa-bookmark"></i>
+                </span>
+                <span>
+                  Bookmarks
+                </span>
+              </n-link>
               <n-link class="navbar-item weight-800" to="/u/settings">
                 <span class="icon">
                   <i class="fas fa-tools"></i>
