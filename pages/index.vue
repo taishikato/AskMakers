@@ -21,7 +21,7 @@
             <div class="column is-6">
               <card
                 name="Justin Jackson"
-                user-id="NOmUokm7wWgWi9Pdfz9hvry4j3k2"
+                username="mijustin"
                 content="The maker of Transistor.fm and Megamaker"
                 image="/img/justin.png"
               >
