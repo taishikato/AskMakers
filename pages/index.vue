@@ -20,17 +20,10 @@
           <div class="columns">
             <div class="column is-6">
               <card
-                name="Taishi Kato"
-                content="The maker of Quorie"
-                image="/takato.jpeg"
-              >
-              </card>
-            </div>
-            <div class="column is-6">
-              <card
-                name="Taishi Kato"
-                content="The maker of Quorie"
-                image="/takato.jpeg"
+                name="Justin Jackson"
+                user-id="NOmUokm7wWgWi9Pdfz9hvry4j3k2"
+                content="The maker of Transistor.fm and Megamaker"
+                image="/img/justin.png"
               >
               </card>
             </div>
