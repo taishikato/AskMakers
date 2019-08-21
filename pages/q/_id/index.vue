@@ -193,6 +193,10 @@ export default {
       .get()
     this.existingAnswerUser = existingAnswerUserData.data()
 
+    if (this.$store.getters.getLoginStatus === false) {
+      return
+    }
+
     const bookmarkData = await firestore
       .collection('bookmarks')
       .where('questionId', '==', this.question.id)
