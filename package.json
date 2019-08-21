@@ -34,6 +34,7 @@
     "firebase": "^6.3.4",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "0.3.8",
+    "sanitize-html": "^1.20.1",
     "uuid": "^3.3.2",
     "vuexfire": "3.0.0-alpha.14"
   },

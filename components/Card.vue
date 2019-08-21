@@ -12,7 +12,10 @@
       </div>
     </div>
     <div class="ask-btn has-text-centered">
-      <n-link to="" class="button is-success is-rounded has-text-weight-bold">
+      <n-link
+        :to="`/u/${userId}`"
+        class="button is-success is-rounded has-text-weight-bold"
+      >
         Ask A Question
       </n-link>
     </div>
@@ -31,6 +34,10 @@ export default {
       required: true
     },
     image: {
+      type: String,
+      required: true
+    },
+    userId: {
       type: String,
       required: true
     }
