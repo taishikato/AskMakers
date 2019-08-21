@@ -39,9 +39,7 @@
                   v-html="
                     sanitizeHtml(existingAnswer.content).replace(/\n/g, '<br/>')
                   "
-                >
-                  <!-- {{ existingAnswer.content }} -->
-                </p>
+                ></p>
                 <time
                   class="is-size-7 has-text-grey"
                   :datetime="

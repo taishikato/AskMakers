@@ -185,6 +185,9 @@
               transform="translate(0.06 -0.001)"
             />
           </svg>
+          <span class="tag is-warning">
+            You need to make a new line when your text goes out of the frame
+          </span>
         </div>
         <div
           v-if="
@@ -197,7 +200,7 @@
               <textarea
                 v-model="newQuestion"
                 class="textarea is-success"
-                placeholder="You need to start a new line when your texts go out of the frame"
+                placeholder="You need to make a new line when your text goes out of the frame"
               ></textarea>
             </div>
           </div>
