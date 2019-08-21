@@ -33,8 +33,14 @@
               </div>
 
               <div class="content">
-                <p id="answer-text" class="is-size-5">
-                  {{ existingAnswer.content }}
+                <p
+                  id="answer-text"
+                  class="is-size-5"
+                  v-html="
+                    sanitizeHtml(existingAnswer.content).replace(/\n/g, '<br/>')
+                  "
+                >
+                  <!-- {{ existingAnswer.content }} -->
                 </p>
                 <time
                   class="is-size-7 has-text-grey"
@@ -136,6 +142,7 @@
 
 <script>
 import uuid from 'uuid/v4'
+import sanitizeHTML from 'sanitize-html'
 import getUnixTime from '~/plugins/getUnixTime'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -207,6 +214,9 @@ export default {
     }
   },
   methods: {
+    sanitizeHtml(text) {
+      return sanitizeHTML(text)
+    },
     async answerQuestion() {
       this.isSubmitting = true
       const id = uuid()
