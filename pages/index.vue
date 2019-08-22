@@ -34,7 +34,10 @@
     <footer>
       <div class="flex-container flex-center flex-justify-center">
         <div class="is-size-7 copy-right">
-          © AskMakers
+          © AskMakers by
+          <a href="https://twitter.com/taishikat0" target="_blank">
+            taishikat0
+          </a>
         </div>
         <n-link to="/terms-privacy" class="is-size-7 has-text-grey-light">
           Terms of Service & Privacy

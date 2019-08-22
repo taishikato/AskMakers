@@ -227,10 +227,18 @@
         </div>
         <div id="answered-question-list">
           <h3 class="title is-5 weight-800">Answered Questions</h3>
-          <p v-show="answeredQuestions.length === 0" class="weight-700">
+          <div v-show="isLoading" class="has-text-centered">
+            <span class="icon is-large">
+              <i class="fas fa-spinner fa-3x fa-spin"></i>
+            </span>
+          </div>
+          <p
+            v-show="isLoading === false && answeredQuestions.length === 0"
+            class="weight-700"
+          >
             No answered questions… yet!
           </p>
-          <ul v-show="answeredQuestions.length > 0">
+          <ul v-show="isLoading === false && answeredQuestions.length > 0">
             <li
               v-for="answeredQuestion in answeredQuestions"
               :key="answeredQuestion.id"
@@ -279,7 +287,8 @@ export default {
       newQuestion: '',
       userId: '',
       isSaving: false,
-      answeredQuestions: []
+      answeredQuestions: [],
+      isLoading: true
     }
   },
   computed: {
@@ -348,6 +357,7 @@ export default {
         }
       })
     )
+    this.isLoading = false
   },
   methods: {
     askAQustion() {
