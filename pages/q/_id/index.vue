@@ -27,7 +27,6 @@
                     <p class="title is-4">
                       {{ existingAnswerUser.customName }}
                     </p>
-                    <!-- <p class="subtitle is-6">@johnsmith</p> -->
                   </n-link>
                 </div>
               </div>

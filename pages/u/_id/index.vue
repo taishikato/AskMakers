@@ -87,7 +87,7 @@
       <div class="column">
         <h3
           v-if="
-            userId !== $store.getters.getUserInfo.uid &&
+            userId !== $store.getters.getUserInfo.username &&
               $store.getters.getLoginStatus === true
           "
           class="title is-5 weight-800"
@@ -191,7 +191,7 @@
         </div>
         <div
           v-if="
-            userId !== $store.getters.getUserInfo.uid &&
+            userId !== $store.getters.getUserInfo.username &&
               $store.getters.getLoginStatus === true
           "
         >
