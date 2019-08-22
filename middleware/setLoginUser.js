@@ -36,7 +36,8 @@ export default async ({ store, redirect }) => {
         uid: userUid,
         customName: userData.displayName,
         picture: userData.photoURL,
-        social: {}
+        social: {},
+        username: result.additionalUserInfo.username
       }
       const newSecretUserData = {
         uid: userUid,

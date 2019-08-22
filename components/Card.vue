@@ -2,7 +2,9 @@
   <div class="card">
     <div class="card-image">
       <figure class="image is-4by4">
-        <img :src="image" class="is-rounded" alt="Placeholder image" />
+        <n-link :to="`/u/${username}`">
+          <img :src="image" class="is-rounded" alt="Placeholder image" />
+        </n-link>
       </figure>
     </div>
     <div class="card-content">
@@ -13,7 +15,7 @@
     </div>
     <div class="ask-btn has-text-centered">
       <n-link
-        :to="`/u/${userId}`"
+        :to="`/u/${username}`"
         class="button is-success is-rounded has-text-weight-bold"
       >
         Ask A Question
@@ -37,7 +39,7 @@ export default {
       type: String,
       required: true
     },
-    userId: {
+    username: {
       type: String,
       required: true
     }

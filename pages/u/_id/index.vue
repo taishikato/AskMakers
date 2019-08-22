@@ -311,17 +311,28 @@ export default {
     return true
   },
   async created() {
+    // maybe slug
     this.userId = this.$route.params.id
-    const userInfo = await firestore
+    // Slugとして扱ってDBを走査
+    let userInfo = await firestore
       .collection('publicUsers')
-      .doc(this.userId)
+      .where('username', '==', this.userId)
       .get()
-    this.user = userInfo.data()
+    if (userInfo.empty === true) {
+      // Sluが存在ない場合、UUIDとして扱う
+      userInfo = await firestore
+        .collection('publicUsers')
+        .doc(this.userId)
+        .get()
+      this.user = userInfo.data()
+    } else {
+      this.user = userInfo.docs[0].data()
+    }
 
     // 回答済み回答習得
     const answerData = await firestore
       .collection('answers')
-      .where('answerUserId', '==', this.userId)
+      .where('answerUserId', '==', this.user.uid)
       .orderBy('created', 'desc')
       .get()
     this.answeredQuestions = await Promise.all(
@@ -361,7 +372,7 @@ export default {
               image: url,
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
-              toUserId: this.userId,
+              toUserId: this.user.uid,
               created: getUnixTime()
             })
           this.$toast.open({

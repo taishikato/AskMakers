@@ -13,7 +13,7 @@
               <div class="media">
                 <div class="media-left">
                   <figure class="image is-48x48">
-                    <n-link :to="`/u/${existingAnswerUser.uid}`">
+                    <n-link :to="`/u/${existingAnswerUser.username}`">
                       <img
                         :src="existingAnswerUser.picture"
                         alt="existingAnswerUser.customName"
@@ -23,7 +23,7 @@
                   </figure>
                 </div>
                 <div class="media-content">
-                  <n-link :to="`/u/${existingAnswerUser.uid}`">
+                  <n-link :to="`/u/${existingAnswerUser.username}`">
                     <p class="title is-4">
                       {{ existingAnswerUser.customName }}
                     </p>
