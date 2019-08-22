@@ -67,17 +67,6 @@ const genHtml = (question) => `
 `
 
 router.get('/s/:id', async (ctx) => {
-  // const answerData = await db
-  //   .collection('answers')
-  //   .doc(ctx.params.id)
-  //   .get()
-  // if (!answerData.exists) {
-  //   ctx.response.status = 404
-  //   ctx.body = '404 Not Found'
-  //   return
-  // }
-  // const answer = answerData.data()
-
   // 質問データ取得
   const questionData = await db
     .collection('questions')
@@ -129,7 +118,8 @@ router.get('/tweet/:answerId', async (ctx) => {
   const question = questionData.data()
   const user = userData.data()
   const urlLength = 80
-  const tweetLimit = 280 - urlLength
+  const hashTagLength = '#AskMakers'.length
+  const tweetLimit = 280 - urlLength - hashTagLength
   let answerContent = answer.content
   if (answerContent.length > tweetLimit) {
     answerContent = answerContent.substr(0, tweetLimit - 3)

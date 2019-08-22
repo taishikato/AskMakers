@@ -1,7 +1,12 @@
 <template>
   <div id="users-id" class="section column is-9 container">
     <div class="columns">
-      <div class="column is-8 container">
+      <div v-show="isLoading" class="column has-text-centered">
+        <span class="icon is-large">
+          <i class="fas fa-spinner fa-3x fa-spin"></i>
+        </span>
+      </div>
+      <div v-show="isLoading === false" class="column is-8 container">
         <div id="question-img" class="">
           <div class="card radius-box">
             <div class="card-image">
@@ -66,29 +71,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <img :src="question.image" />
-
-          <div v-if="hasexistingAnswer" id="answer-user-wrapper">
-            <div class="flex-container flex-center">
-              <n-link :to="`/u/${existingAnswerUser.uid}`">
-                <img
-                  :src="existingAnswerUser.picture"
-                  class="is-rounded"
-                  width="50px"
-                  height="50px"
-                />
-              </n-link>
-              <p class="is-size-5 weight-800 answer-user-name">
-                <n-link :to="`/u/${existingAnswerUser.uid}`">
-                  {{ existingAnswerUser.customName }}
-                </n-link>
-              </p>
-            </div>
-            <p id="answer-text" class="is-size-5">
-              {{ existingAnswer.content }}
-            </p>
-          </div> -->
         </div>
 
         <div
@@ -157,7 +139,8 @@ export default {
       isSubmitting: false,
       existingAnswer: {},
       hasexistingAnswer: false,
-      existingAnswerUser: {}
+      existingAnswerUser: {},
+      isLoading: true
     }
   },
   computed: {
@@ -187,6 +170,7 @@ export default {
       .where('questionId', '==', this.question.id)
       .get()
     if (answerData.empty === true) {
+      this.isLoading = false
       return true
     }
     this.hasexistingAnswer = true
@@ -198,6 +182,7 @@ export default {
     this.existingAnswerUser = existingAnswerUserData.data()
 
     if (this.$store.getters.getLoginStatus === false) {
+      this.isLoading = false
       return
     }
 
@@ -209,6 +194,7 @@ export default {
     if (bookmarkData.empty === false) {
       this.isBookmarked = true
     }
+    this.isLoading = false
   },
   methods: {
     sanitizeHtml(text) {

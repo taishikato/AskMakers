@@ -17,7 +17,7 @@
             <div class="media">
               <div class="media-left">
                 <figure class="image is-48x48">
-                  <n-link :to="`/u/${bookmark.user.uid}`">
+                  <n-link :to="`/u/${bookmark.user.username}`">
                     <img
                       :src="bookmark.user.picture"
                       :alt="bookmark.user.customName"
@@ -27,7 +27,7 @@
                 </figure>
               </div>
               <div class="media-content">
-                <n-link :to="`/u/${bookmark.user.uid}`">
+                <n-link :to="`/u/${bookmark.user.username}`">
                   <p class="title is-4">
                     {{ bookmark.user.customName }}
                   </p>
