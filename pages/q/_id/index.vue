@@ -57,7 +57,7 @@
                   }}
                 </time>
               </div>
-              <div>
+              <div v-if="$store.getters.getLoginStatus">
                 <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
                   <span class="icon is-medium">
                     <i class="fas fa-bookmark fa-lg"></i>
@@ -206,16 +206,24 @@ export default {
         .split('-')
         .join('')
       try {
-        await firestore
-          .collection('answers')
-          .doc(id)
-          .set({
-            id,
-            questionId: this.qId,
-            answerUserId: this.$store.getters.getUserInfo.uid,
-            created: getUnixTime(),
-            content: this.answer
-          })
+        await Promise.all([
+          firestore
+            .collection('answers')
+            .doc(id)
+            .set({
+              id,
+              questionId: this.qId,
+              answerUserId: this.$store.getters.getUserInfo.uid,
+              created: getUnixTime(),
+              content: this.answer
+            }),
+          firestore
+            .collection('questions')
+            .doc(this.qId)
+            .update({
+              isAnswered: true
+            })
+        ])
         try {
           await this.$axios.get(`https://askmakers.co/tweet/${id}`)
         } catch (err) {

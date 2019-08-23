@@ -118,7 +118,8 @@ router.get('/tweet/:answerId', async (ctx) => {
   const question = questionData.data()
   const user = userData.data()
   const urlLength = 80
-  const hashTagLength = '#AskMakers'.length
+  const hashTag = ' #AskMakers'
+  const hashTagLength = hashTag.length
   const tweetLimit = 280 - urlLength - hashTagLength
   let answerContent = answer.content
   if (answerContent.length > tweetLimit) {
@@ -140,7 +141,7 @@ router.get('/tweet/:answerId', async (ctx) => {
     access_token_key: user.twitter.accessToken,
     access_token_secret: user.twitter.secret
   })
-  const tweetText = `${answerContent} https://askmakers.co/s/${question.id}`
+  const tweetText = `${answerContent} https://askmakers.co/s/${question.id}${hashTag}`
   try {
     await client.post('statuses/update', { status: tweetText })
   } catch (err) {

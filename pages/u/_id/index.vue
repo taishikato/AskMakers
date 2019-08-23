@@ -2,7 +2,7 @@
   <div id="users-id" class="section column is-8 container">
     <div class="columns">
       <div class="column bg-white pd-15rem radius-box">
-        <div class="columns">
+        <div class="columns is-mobile">
           <div class="column is-3">
             <figure class="image">
               <img :src="user.picture" class="is-rounded" />
@@ -238,10 +238,14 @@
           >
             No answered questions… yet!
           </p>
-          <ul v-show="isLoading === false && answeredQuestions.length > 0">
+          <ul
+            v-show="isLoading === false && answeredQuestions.length > 0"
+            class="columns is-multiline"
+          >
             <li
               v-for="answeredQuestion in answeredQuestions"
               :key="answeredQuestion.id"
+              class="column is-6"
             >
               <answered-question-card
                 :id="answeredQuestion.question.id"

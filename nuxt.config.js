@@ -1,7 +1,7 @@
-const title = 'AskMakers - Ask experienced makers questions'
+const title = 'AskMakers - Ask experienced makers questions anonymously'
 const url = 'https://askmakers.co'
 const description =
-  "The best place to ask experienced and successful makers questions. Let's get together Indie Makers!"
+  "The best place to ask experienced and successful makers questions anonymously. Let's get together Indie Makers!"
 
 export default {
   mode: 'spa',
