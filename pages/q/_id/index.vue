@@ -57,17 +57,33 @@
                   }}
                 </time>
               </div>
-              <div v-if="$store.getters.getLoginStatus">
-                <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
-                  <span class="icon is-medium">
-                    <i class="fas fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
-                <a v-else @click.prevent="bookmark(question.id)">
-                  <span class="icon is-medium">
-                    <i class="far fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
+              <!-- Footer -->
+              <div class="flex-container">
+                <div v-if="$store.getters.getLoginStatus">
+                  <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
+                    <span class="icon is-medium">
+                      <i class="fas fa-bookmark fa-lg"></i>
+                    </span>
+                  </a>
+                  <a v-else @click.prevent="bookmark(question.id)">
+                    <span class="icon is-medium">
+                      <i class="far fa-bookmark fa-lg"></i>
+                    </span>
+                  </a>
+                </div>
+                <div>
+                  <a
+                    :href="
+                      `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=Answer by @${existingAnswerUser.username} ${existingAnswer.content}`
+                    "
+                    class="twitter-share"
+                    target="_blank"
+                  >
+                    <span class="icon is-medium">
+                      <i class="fab fa-twitter fa-lg"></i>
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -288,7 +304,6 @@ export default {
 
 <style lang="scss" scoped>
 #question-img {
-  padding: 10px;
   #answer-user-wrapper {
     margin-top: 10px;
     padding: 5px;
@@ -307,5 +322,16 @@ export default {
 
 #answer-btn {
   margin-top: 10px;
+}
+
+.twitter-share {
+  color: #00aced;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .section {
+    padding: 3rem 0.75rem;
+  }
 }
 </style>
