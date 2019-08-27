@@ -78,7 +78,14 @@
             </div>
           </div>
           <div v-else class="navbar-item">
-            <login-modal />
+            <span
+              v-if="isCommingSoon"
+              id="csMessage"
+              class="weight-800 has-text-warning sp-font"
+            >
+              Coming Soon!
+            </span>
+            <login-modal v-else />
           </div>
         </div>
       </div>
@@ -89,11 +96,23 @@
 <script>
 import firebase from '~/plugins/firebase'
 import LoginModal from '~/components/LoginModal'
+import getParam from '~/plugins/getParam'
 
 export default {
   name: 'Navbar',
   components: {
     LoginModal
+  },
+  data() {
+    return {
+      isCommingSoon: true
+    }
+  },
+  mounted() {
+    const presignup = getParam('presignup')
+    if (presignup === 'true') {
+      this.isCommingSoon = false
+    }
   },
   methods: {
     async signOut() {

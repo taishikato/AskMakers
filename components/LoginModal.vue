@@ -1,7 +1,7 @@
 <template>
   <div>
     <a
-      class="button is-success is-rounded is-outlined"
+      class="button is-success is-rounded weight-800"
       @click.prevent="showModal"
     >
       Log In / Sign Up
@@ -9,7 +9,7 @@
 
     <b-modal :active.sync="isModalActive" :width="modalWidth">
       <div id="login-modal" class="has-text-centered">
-        <h3 class="title weight-900 sp-font">Log In</h3>
+        <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
         <button
           class="button twitter color-white weight-900 sp-font"
           @click.prevent="twitterSignin"

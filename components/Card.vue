@@ -10,7 +10,7 @@
     <div class="card-content">
       <div class="content">
         <p class="title is-4 has-text-centered">{{ name }}</p>
-        <p class="subtitle is-6 has-text-centered">{{ content }}s</p>
+        <p class="subtitle is-6 has-text-centered">{{ content }}</p>
       </div>
     </div>
     <div class="ask-btn has-text-centered">
