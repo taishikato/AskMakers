@@ -200,7 +200,7 @@ export default {
 
     this.shareText = `Answer by @${this.existingAnswerUser.username}
 ${this.existingAnswer.content}
-${encodeURIComponent('#AskMakers #AskMakersco')}`
+${encodeURIComponent(' #AskMakers #AskMakersco')}`
 
     if (this.$store.getters.getLoginStatus === false) {
       this.isLoading = false
