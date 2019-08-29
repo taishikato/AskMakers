@@ -74,7 +74,7 @@
                 <div>
                   <a
                     :href="
-                      `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=Answer by @${existingAnswerUser.username} ${existingAnswer.content}`
+                      `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
                     "
                     class="twitter-share"
                     target="_blank"
@@ -156,7 +156,8 @@ export default {
       existingAnswer: {},
       hasexistingAnswer: false,
       existingAnswerUser: {},
-      isLoading: true
+      isLoading: true,
+      shareText: ''
     }
   },
   computed: {
@@ -196,6 +197,10 @@ export default {
       .doc(this.existingAnswer.answerUserId)
       .get()
     this.existingAnswerUser = existingAnswerUserData.data()
+
+    this.shareText = `Answer by @${this.existingAnswerUser.username}
+${this.existingAnswer.content}
+${encodeURIComponent('#AskMakers #AskMakersco')}`
 
     if (this.$store.getters.getLoginStatus === false) {
       this.isLoading = false
