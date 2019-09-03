@@ -141,6 +141,15 @@
           <div class="columns">
             <div class="column is-6">
               <card
+                name="Amie Chen"
+                username="hyper_yolo"
+                content="The maker of Spider Pro"
+                image="/img/amie.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-6">
+              <card
                 name="Hari Krishna Dulipudi"
                 username="1HaKr"
                 content="The maker of VisaList and many products"
