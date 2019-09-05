@@ -37,7 +37,8 @@ export default async ({ store, redirect }) => {
         customName: userData.displayName,
         picture: userData.photoURL,
         social: {},
-        username: result.additionalUserInfo.username
+        username: result.additionalUserInfo.username,
+        isEmailNewQuestionNotification: true
       }
       const newSecretUserData = {
         uid: userUid,
