@@ -161,9 +161,31 @@ router.get('/tweet/:answerId', async (ctx) => {
 
 exports.func = functions.https.onRequest(koaFirebase(app))
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+/**
+ * 質問新規追加
+ * 質問を送られたユーザーにメールを送信
+ */
+exports.onQuestionCreated = functions.firestore
+  .document('questions/{questionsId}')
+  .onCreate(async (snap, context) => {
+    // Get the note document
+    const questions = snap.data()
+
+    // 質問を送られたユーザー情報を取得
+    const toUserId = questions.toUserId
+    const toUserData = await db
+      .collection('publicUsers')
+      .doc(toUserId)
+      .get()
+    const toUser = toUserData.data()
+    if (toUser.isEmailNewQuestionNotification === false) {
+      return
+    }
+
+    const toUserSecretData = await db
+      .collection('secretUsers')
+      .doc(toUserId)
+      .get()
+    const toSecretUser = toUserSecretData.data()
+    console.log(toSecretUser.email)
+  })
