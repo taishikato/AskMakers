@@ -52,7 +52,7 @@
                 width="60px"
                 class="is-rounded"
               />
-              <div class="file is-boxed">
+              <div class="field file is-boxed">
                 <label class="file-label">
                   <input
                     class="file-input"
@@ -68,6 +68,17 @@
                       Choose a file…
                     </span>
                   </span>
+                </label>
+              </div>
+
+              <div class="field">
+                <label class="label sp-font">Emeil Notification</label>
+                <label class="checkbox">
+                  <input
+                    type="checkbox"
+                    v-model="userSettings.isEmailNewQuestionNotification"
+                  />
+                  Send email when you get a new question
                 </label>
               </div>
             </div>
