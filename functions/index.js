@@ -10,6 +10,12 @@ const admin = require('firebase-admin')
 const twitterText = require('twitter-text')
 const axios = require('axios')
 
+// Mailgun
+const mailgun = require('mailgun-js')
+const mailgunApiKey = '219024a0364649fd1f6e1369ca1fe5c6-19f318b0-8ec2ab52'
+const mailgunDomain = 'mail.askmakers.co'
+const mg = mailgun({ apiKey: mailgunApiKey, domain: mailgunDomain })
+
 const Twitter = require('twitter')
 
 app.use(router.routes())
@@ -179,6 +185,7 @@ exports.onQuestionCreated = functions.firestore
       .get()
     const toUser = toUserData.data()
     if (toUser.isEmailNewQuestionNotification === false) {
+      console.log('User opt-outs email notification')
       return
     }
 
@@ -187,5 +194,20 @@ exports.onQuestionCreated = functions.firestore
       .doc(toUserId)
       .get()
     const toSecretUser = toUserSecretData.data()
-    console.log(toSecretUser.email)
+
+    const data = {
+      from: 'AskMakers <info@mail.askmakers.co>',
+      to: [toSecretUser.email],
+      subject: "You've gotten a new question 😺",
+      text: `You've gotten a new question 👍 Please check it out! https://askmakers.co/q/${questions.id}`,
+      html: `<p><strong>You've gotten a new question 👍</strong></p>
+      <p>Please check it out!</p>
+      <a href="https://askmakers.co/q/${questions.id}">https://askmakers.co/q/${questions.id}</a>`
+    }
+    const res = await mg.messages().send(data, (err, body) => {
+      console.log(body)
+      if (err) {
+        console.error(err)
+      }
+    })
   })
