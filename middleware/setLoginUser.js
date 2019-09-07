@@ -65,7 +65,16 @@ export default async ({ store, redirect }) => {
       })
 
       await store.dispatch('BIND_USER', authUser)
+
+      // Login Statusを変更
+      store.commit('changeLoginStatus', {
+        status: true
+      })
+
+      redirect('/welcome')
+      return
     } else {
+      console.log('login')
       // Log In
       const changeItem = {
         lastLogin: getUnixTime(),
@@ -79,14 +88,14 @@ export default async ({ store, redirect }) => {
       store.commit('changeUser', {
         user: userData.data()
       })
-    }
-    // Login Statusを変更
-    store.commit('changeLoginStatus', {
-      status: true
-    })
+      // Login Statusを変更
+      store.commit('changeLoginStatus', {
+        status: true
+      })
 
-    location.reload()
-    return
+      location.reload()
+      return
+    }
   }
 
   /**

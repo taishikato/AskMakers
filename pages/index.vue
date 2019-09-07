@@ -199,7 +199,7 @@ export default {
   },
   data() {
     return {
-      isCommingSoon: true
+      isCommingSoon: false
     }
   },
   mounted() {
