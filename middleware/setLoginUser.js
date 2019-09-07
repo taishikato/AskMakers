@@ -35,7 +35,7 @@ export default async ({ store, redirect }) => {
       const newPublicUserData = {
         uid: userUid,
         customName: userData.displayName,
-        picture: userData.photoURL,
+        picture: userData.photoURL.replace('_normal', ''),
         social: {},
         username: result.additionalUserInfo.username,
         isEmailNewQuestionNotification: true
@@ -74,7 +74,6 @@ export default async ({ store, redirect }) => {
       redirect('/welcome')
       return
     } else {
-      console.log('login')
       // Log In
       const changeItem = {
         lastLogin: getUnixTime(),
