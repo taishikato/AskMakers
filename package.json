@@ -36,6 +36,7 @@
     "nuxt-buefy": "0.3.8",
     "sanitize-html": "^1.20.1",
     "uuid": "^3.3.2",
+    "vue-content-loader": "^0.2.2",
     "vuexfire": "3.0.0-alpha.14"
   },
   "devDependencies": {
