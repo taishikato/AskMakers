@@ -138,7 +138,7 @@
       <recent-answers />
       <div class="columns">
         <div class="column is-8">
-          <p class="title weight-800 is-4">Makers</p>
+          <p class="title weight-800 is-4">Pro Makers</p>
           <div class="columns">
             <div class="column is-6">
               <card
