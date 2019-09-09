@@ -135,6 +135,7 @@
     </section>
     <section class="section">
       <questions-for-me-card />
+      <recent-answers />
       <div class="columns">
         <div class="column is-8">
           <p class="title weight-800 is-4">Makers</p>
@@ -189,13 +190,15 @@
 <script>
 import Card from '~/components/Card'
 import QuestionsForMeCard from '~/components/QuestionsForMeCard'
+import RecentAnswers from '~/components/RecentAnswers'
 import getParam from '~/plugins/getParam'
 
 export default {
   name: 'HomePage',
   components: {
     Card,
-    QuestionsForMeCard
+    QuestionsForMeCard,
+    RecentAnswers
   },
   data() {
     return {

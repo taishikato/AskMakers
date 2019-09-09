@@ -2192,6 +2192,11 @@ babel-extract-comments@^1.0.0:
   dependencies:
     babylon "^6.18.0"
 
+babel-helper-vue-jsx-merge-props@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-2.0.3.tgz#22aebd3b33902328e513293a8e4992b384f9f1b6"
+  integrity sha512-gsLiKK7Qrb7zYJNgiXKpXblxbV5ffSwR0f5whkPAaBAR4fhi6bwRZxX9wBlIc5M/v8CCkXUbXZL4N/nSE97cqg==
+
 babel-loader@^8.0.6:
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.6.tgz#e33bdb6f362b03f4bb141a0c21ab87c501b70dfb"
@@ -9791,6 +9796,13 @@ vue-analytics@^5.16.2:
   version "5.17.0"
   resolved "https://registry.yarnpkg.com/vue-analytics/-/vue-analytics-5.17.0.tgz#c9530b82b9b4acd111c9cba7d249adf4089746b3"
   integrity sha512-1Cn/v06cGjmGDfRlG2hc0RF0sc2rNC88shOeLGNIlllSFv5GDZ9kLXGTPB9z9I+WyvFewyUONPIdQnpOls6h6w==
+
+vue-content-loader@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/vue-content-loader/-/vue-content-loader-0.2.2.tgz#c093b656edac3f2a2e3215eaa198ba1852ad6b7b"
+  integrity sha512-8jcb0dJFiVAz7EPwpQjOd/GnswUiSDeKihEABkq/iAYxAI2MHSS7+VWlRblQDH3D1rm3Lewt7fDJoOpJKbYHjw==
+  dependencies:
+    babel-helper-vue-jsx-merge-props "^2.0.3"
 
 vue-eslint-parser@^5.0.0:
   version "5.0.0"
