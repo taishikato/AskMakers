@@ -7,138 +7,233 @@
         </span>
       </div>
       <div v-show="isLoading === false" class="column is-8 container">
-        <div id="question-img" class="">
-          <div class="card radius-box">
-            <div class="card-image">
-              <figure class="image">
-                <img :src="question.image" :alt="question.text" />
-              </figure>
-            </div>
-            <div v-if="hasexistingAnswer" class="card-content">
-              <div class="media">
-                <div class="media-left">
-                  <figure class="image is-48x48">
+        <div class="margin-bttm">
+          <div id="question-img" class="">
+            <div class="card radius-box">
+              <div class="card-image">
+                <figure class="image">
+                  <img :src="question.image" :alt="question.text" />
+                </figure>
+              </div>
+              <div v-if="hasexistingAnswer" class="card-content">
+                <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-48x48">
+                      <n-link :to="`/u/${existingAnswerUser.username}`">
+                        <img
+                          :src="existingAnswerUser.picture"
+                          alt="existingAnswerUser.customName"
+                          class="is-rounded"
+                        />
+                      </n-link>
+                    </figure>
+                  </div>
+                  <div class="media-content">
                     <n-link :to="`/u/${existingAnswerUser.username}`">
-                      <img
-                        :src="existingAnswerUser.picture"
-                        alt="existingAnswerUser.customName"
-                        class="is-rounded"
-                      />
+                      <p class="title is-4">
+                        {{ existingAnswerUser.customName }}
+                      </p>
                     </n-link>
-                  </figure>
+                  </div>
                 </div>
-                <div class="media-content">
-                  <n-link :to="`/u/${existingAnswerUser.username}`">
-                    <p class="title is-4">
-                      {{ existingAnswerUser.customName }}
-                    </p>
-                  </n-link>
-                </div>
-              </div>
 
-              <div class="content">
-                <p
-                  id="answer-text"
-                  class="is-size-5"
-                  v-html="
-                    sanitizeHtml(existingAnswer.content).replace(/\n/g, '<br/>')
-                  "
-                ></p>
-                <time
-                  class="is-size-7 has-text-grey"
-                  :datetime="
-                    $moment.unix(existingAnswer.created).format('YYYY-MM-DD')
-                  "
-                >
-                  {{
-                    $moment
-                      .unix(existingAnswer.created)
-                      .format('YYYY/MM/DD H:mm')
-                  }}
-                </time>
-              </div>
-              <!-- Footer -->
-              <div class="flex-container">
-                <div v-if="$store.getters.getLoginStatus">
-                  <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
-                    <span class="icon is-medium">
-                      <i class="fas fa-bookmark fa-lg"></i>
-                    </span>
-                  </a>
-                  <a v-else @click.prevent="bookmark(question.id)">
-                    <span class="icon is-medium">
-                      <i class="far fa-bookmark fa-lg"></i>
-                    </span>
-                  </a>
-                </div>
-                <div>
-                  <a
-                    :href="
-                      `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
+                <div class="content">
+                  <p
+                    id="answer-text"
+                    class="is-size-5"
+                    v-html="
+                      sanitizeHtml(existingAnswer.content).replace(
+                        /\n/g,
+                        '<br/>'
+                      )
                     "
-                    class="twitter-share"
-                    target="_blank"
+                  ></p>
+                  <time
+                    class="is-size-7 has-text-grey"
+                    :datetime="
+                      $moment.unix(existingAnswer.created).format('YYYY-MM-DD')
+                    "
                   >
-                    <span class="icon is-medium">
-                      <i class="fab fa-twitter fa-lg"></i>
-                    </span>
-                  </a>
+                    {{
+                      $moment
+                        .unix(existingAnswer.created)
+                        .format('YYYY/MM/DD H:mm')
+                    }}
+                  </time>
+                </div>
+                <!-- Footer -->
+                <div class="flex-container">
+                  <div v-if="$store.getters.getLoginStatus">
+                    <a
+                      v-if="isBookmarked === true"
+                      @click.prevent="unbookmark()"
+                    >
+                      <span class="icon is-medium">
+                        <i class="fas fa-bookmark fa-lg"></i>
+                      </span>
+                    </a>
+                    <a v-else @click.prevent="bookmark(question.id)">
+                      <span class="icon is-medium">
+                        <i class="far fa-bookmark fa-lg"></i>
+                      </span>
+                    </a>
+                  </div>
+                  <div>
+                    <a
+                      :href="
+                        `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
+                      "
+                      class="twitter-share"
+                      target="_blank"
+                    >
+                      <span class="icon is-medium">
+                        <i class="fab fa-twitter fa-lg"></i>
+                      </span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div
-          v-if="question.toUserId === $store.getters.getUserInfo.uid"
-          id="answer-wrapper"
-          class="field"
-        >
+          <div
+            v-if="question.toUserId === $store.getters.getUserInfo.uid"
+            id="answer-wrapper"
+            class="field"
+          >
+            <div
+              v-if="
+                question.toUserId === $store.getters.getUserInfo.uid &&
+                  hasexistingAnswer === false
+              "
+              class="control has-text-centered"
+            >
+              <textarea v-model="answer" class="textarea"></textarea>
+              <label class="checkbox">
+                <input
+                  type="checkbox"
+                  @change="onCheckBoxChange()"
+                  v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
+                />
+                Share on
+                <span class="icon is-medium">
+                  <i class="fab fa-twitter fa-lg"></i>
+                </span>
+              </label>
+            </div>
+          </div>
           <div
             v-if="
               question.toUserId === $store.getters.getUserInfo.uid &&
                 hasexistingAnswer === false
             "
-            class="control has-text-centered"
+            id="answer-btn"
+            class="field"
           >
-            <textarea v-model="answer" class="textarea"></textarea>
-            <label class="checkbox">
-              <input
-                type="checkbox"
-                @change="onCheckBoxChange()"
-                v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
-              />
-              Share on
-              <span class="icon is-medium">
-                <i class="fab fa-twitter fa-lg"></i>
-              </span>
-            </label>
+            <div class="control has-text-centered">
+              <button
+                v-if="isSubmitting"
+                class="button is-success is-loading is-rounded is-medium"
+                disabled
+              >
+                Answer
+              </button>
+              <button
+                v-else
+                class="button is-success is-rounded is-medium"
+                :disabled="countAnswer === 0"
+                @click.prevent="answerQuestion"
+              >
+                Answer
+              </button>
+            </div>
           </div>
         </div>
-        <div
-          v-if="
-            question.toUserId === $store.getters.getUserInfo.uid &&
-              hasexistingAnswer === false
-          "
-          id="answer-btn"
-          class="field"
-        >
-          <div class="control has-text-centered">
-            <button
-              v-if="isSubmitting"
-              class="button is-success is-loading is-rounded is-medium"
-              disabled
-            >
-              Answer
-            </button>
-            <button
-              v-else
-              class="button is-success is-rounded is-medium"
-              :disabled="countAnswer === 0"
-              @click.prevent="answerQuestion"
-            >
-              Answer
-            </button>
+        <!-- Begin Other Answers Section -->
+        <div v-show="hasOtherAnswers">
+          <p class="title is-4 sp-font weight-700">
+            Other Answers from {{ existingAnswerUser.customName }}
+          </p>
+          <div
+            v-for="otherAnswer in otherAnswers"
+            :key="otherAnswer.answer.id"
+            class="other-answer-wrapper"
+          >
+            <div class="card radius-box">
+              <div class="card-image">
+                <n-link :to="`/q/${otherAnswer.question.id}`">
+                  <figure class="image">
+                    <img
+                      :src="otherAnswer.question.image"
+                      :alt="otherAnswer.question.text"
+                    />
+                  </figure>
+                </n-link>
+              </div>
+              <div v-if="hasexistingAnswer" class="card-content">
+                <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-48x48">
+                      <n-link :to="`/u/${existingAnswerUser.username}`">
+                        <img
+                          :src="existingAnswerUser.picture"
+                          alt="existingAnswerUser.customName"
+                          class="is-rounded"
+                        />
+                      </n-link>
+                    </figure>
+                  </div>
+                  <div class="media-content">
+                    <n-link :to="`/u/${existingAnswerUser.username}`">
+                      <p class="title is-4">
+                        {{ existingAnswerUser.customName }}
+                      </p>
+                    </n-link>
+                  </div>
+                </div>
+
+                <div class="content">
+                  <p
+                    id="answer-text"
+                    class="is-size-5"
+                    v-html="
+                      sanitizeHtml(otherAnswer.answer.content).replace(
+                        /\n/g,
+                        '<br/>'
+                      )
+                    "
+                  ></p>
+                </div>
+                <!-- Footer -->
+                <!-- <div class="flex-container">
+                  <div v-if="$store.getters.getLoginStatus">
+                    <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
+                      <span class="icon is-medium">
+                        <i class="fas fa-bookmark fa-lg"></i>
+                      </span>
+                    </a>
+                    <a v-else @click.prevent="bookmark(question.id)">
+                      <span class="icon is-medium">
+                        <i class="far fa-bookmark fa-lg"></i>
+                      </span>
+                    </a>
+                  </div>
+                  <div>
+                    <a
+                      :href="
+                        `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
+                      "
+                      class="twitter-share"
+                      target="_blank"
+                    >
+                      <span class="icon is-medium">
+                        <i class="fab fa-twitter fa-lg"></i>
+                      </span>
+                    </a>
+                  </div>
+                </div> -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -168,7 +263,9 @@ export default {
       hasexistingAnswer: false,
       existingAnswerUser: {},
       isLoading: true,
-      shareText: ''
+      shareText: '',
+      otherAnswers: [],
+      hasOtherAnswers: false
     }
   },
   computed: {
@@ -228,6 +325,39 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
       this.isBookmarked = true
     }
     this.isLoading = false
+
+    // 他の回答を取得
+    const otherAnswerData = await firestore
+      .collection('answers')
+      .where('answerUserId', '==', this.existingAnswer.answerUserId)
+      .limit(3)
+      .get()
+    if (otherAnswerData.empty === true) {
+      return
+    }
+    let otherAnswers = otherAnswerData.docs.map((doc) => {
+      return doc.data()
+    })
+    otherAnswers = otherAnswers.filter((answer) => {
+      return answer.questionId !== this.qId
+    })
+    if (otherAnswers.length === 0) {
+      return
+    }
+
+    this.otherAnswers = await Promise.all(
+      otherAnswers.map(async (answer) => {
+        const questionData = await firestore
+          .collection('questions')
+          .doc(answer.questionId)
+          .get()
+        return {
+          answer,
+          question: questionData.data()
+        }
+      })
+    )
+    this.hasOtherAnswers = true
   },
   methods: {
     async onCheckBoxChange() {
@@ -340,6 +470,14 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
       margin-left: 10px;
     }
   }
+}
+
+.margin-bttm {
+  margin-bottom: 30px;
+}
+
+.other-answer-wrapper {
+  margin-bottom: 15px;
 }
 
 #answer-wrapper {
