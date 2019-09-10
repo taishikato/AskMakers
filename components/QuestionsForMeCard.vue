@@ -1,5 +1,5 @@
 <template>
-  <div v-if="questions.length > 0">
+  <div v-if="questions.length > 0" id="questions-for-me-card">
     <p class="title weight-800 is-4">The questions for you</p>
     <div class="columns is-multiline">
       <div v-for="question in questions" :key="question.id" class="column is-4">
@@ -68,6 +68,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#questions-for-me-card {
+  margin-bottom: 20px;
+}
+
 .card-header {
   background-color: hsl(0, 0%, 96%);
 }

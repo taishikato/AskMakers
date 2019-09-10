@@ -99,9 +99,20 @@
               question.toUserId === $store.getters.getUserInfo.uid &&
                 hasexistingAnswer === false
             "
-            class="control"
+            class="control has-text-centered"
           >
             <textarea v-model="answer" class="textarea"></textarea>
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                @change="onCheckBoxChange()"
+                v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
+              />
+              Share on
+              <span class="icon is-medium">
+                <i class="fab fa-twitter fa-lg"></i>
+              </span>
+            </label>
           </div>
         </div>
         <div
@@ -219,6 +230,15 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
     this.isLoading = false
   },
   methods: {
+    async onCheckBoxChange() {
+      await firestore
+        .collection('publicUsers')
+        .doc(this.$store.getters.getUserInfo.uid)
+        .update({
+          isEnabletoShareOnTwitter: this.$store.getters.getUserInfo
+            .isEnabletoShareOnTwitter
+        })
+    },
     sanitizeHtml(text) {
       return sanitizeHTML(text)
     },
@@ -330,7 +350,8 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
   margin-top: 10px;
 }
 
-.twitter-share {
+.twitter-share,
+.fa-twitter {
   color: #00aced;
 }
 
