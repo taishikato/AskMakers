@@ -110,6 +110,20 @@ router.get('/tweet/:answerId', async (ctx) => {
     return
   }
 
+  const publicUserData = await db
+    .collection('publicUsers')
+    .doc(answer.answerUserId)
+    .get()
+  const publicUser = publicUserData.data()
+  if (publicUser.isEnabletoShareOnTwitter !== true) {
+    console.log('User opt-outs tweet sharing')
+    ctx.response.status = 403
+    ctx.body = {
+      result: 'Bad request'
+    }
+    return
+  }
+
   const [questionData, userData] = await Promise.all([
     // 質問データ取得
     db

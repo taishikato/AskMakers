@@ -37,13 +37,13 @@
               </div>
             </div>
             <div class="content">
-              <p
-                id="answer-text"
-                class="is-size-5"
-                v-html="
-                  sanitizeHtml(answer.answer.content).replace(/\n/g, '<br/>')
-                "
-              ></p>
+              <p id="answer-text" class="is-size-5">
+                {{
+                  answer.answer.content.length > 140
+                    ? `${answer.answer.content.substr(0, 140)}…`
+                    : answer.answer.content
+                }}
+              </p>
             </div>
             <!-- Footer -->
             <div class="flex-container">

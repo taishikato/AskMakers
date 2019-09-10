@@ -38,7 +38,8 @@ export default async ({ store, redirect }) => {
         picture: userData.photoURL.replace('_normal', ''),
         social: {},
         username: result.additionalUserInfo.username,
-        isEmailNewQuestionNotification: true
+        isEmailNewQuestionNotification: true,
+        isEnabletoShareOnTwitter: true
       }
       const newSecretUserData = {
         uid: userUid,
