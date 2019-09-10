@@ -149,10 +149,25 @@
             </div>
           </div>
         </div>
+        <!-- Begin No Other Answer -->
+        <div v-show="noOtherAnswer">
+          <p class="title is-4 weight-700">
+            <span class="sp-font">
+              No Other Answers from
+            </span>
+            {{ existingAnswerUser.customName }}
+          </p>
+          <p class="has-text-centered">
+            <img src="~/assets/img/thinking.svg" width="100px" />
+          </p>
+        </div>
         <!-- Begin Other Answers Section -->
         <div v-show="hasOtherAnswers">
-          <p class="title is-4 sp-font weight-700">
-            Other Answers from {{ existingAnswerUser.customName }}
+          <p class="title is-4 weight-700">
+            <span class="sp-font">
+              Other Answers from
+            </span>
+            {{ existingAnswerUser.customName }}
           </p>
           <div
             v-for="otherAnswer in otherAnswers"
@@ -170,7 +185,7 @@
                   </figure>
                 </n-link>
               </div>
-              <div v-if="hasexistingAnswer" class="card-content">
+              <div class="card-content">
                 <div class="media">
                   <div class="media-left">
                     <figure class="image is-48x48">
@@ -265,7 +280,8 @@ export default {
       isLoading: true,
       shareText: '',
       otherAnswers: [],
-      hasOtherAnswers: false
+      hasOtherAnswers: false,
+      noOtherAnswer: false
     }
   },
   computed: {
@@ -288,6 +304,47 @@ export default {
       .get()
     this.question = questionData.data()
 
+    // 質問されたユーザーの情報を取得
+    const toUserData = await firestore
+      .collection('publicUsers')
+      .doc(this.question.toUserId)
+      .get()
+    this.existingAnswerUser = toUserData.data()
+
+    // 他の回答を取得
+    const otherAnswerData = await firestore
+      .collection('answers')
+      .where('answerUserId', '==', this.question.toUserId)
+      .limit(3)
+      .get()
+    if (otherAnswerData.empty === true) {
+      this.noOtherAnswer = true
+      this.isLoading = false
+      return
+    }
+    let otherAnswers = otherAnswerData.docs.map((doc) => {
+      return doc.data()
+    })
+    otherAnswers = otherAnswers.filter((answer) => {
+      return answer.questionId !== this.qId
+    })
+
+    if (otherAnswers.length !== 0) {
+      this.otherAnswers = await Promise.all(
+        otherAnswers.map(async (answer) => {
+          const questionData = await firestore
+            .collection('questions')
+            .doc(answer.questionId)
+            .get()
+          return {
+            answer,
+            question: questionData.data()
+          }
+        })
+      )
+      this.hasOtherAnswers = true
+    }
+
     // 回答データがあるか確認
     // あれば表示
     const answerData = await firestore
@@ -300,11 +357,6 @@ export default {
     }
     this.hasexistingAnswer = true
     this.existingAnswer = answerData.docs[0].data()
-    const existingAnswerUserData = await firestore
-      .collection('publicUsers')
-      .doc(this.existingAnswer.answerUserId)
-      .get()
-    this.existingAnswerUser = existingAnswerUserData.data()
 
     this.shareText = `
 Answer by @${this.existingAnswerUser.username} ${this.existingAnswer.content}
@@ -325,39 +377,6 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
       this.isBookmarked = true
     }
     this.isLoading = false
-
-    // 他の回答を取得
-    const otherAnswerData = await firestore
-      .collection('answers')
-      .where('answerUserId', '==', this.existingAnswer.answerUserId)
-      .limit(3)
-      .get()
-    if (otherAnswerData.empty === true) {
-      return
-    }
-    let otherAnswers = otherAnswerData.docs.map((doc) => {
-      return doc.data()
-    })
-    otherAnswers = otherAnswers.filter((answer) => {
-      return answer.questionId !== this.qId
-    })
-    if (otherAnswers.length === 0) {
-      return
-    }
-
-    this.otherAnswers = await Promise.all(
-      otherAnswers.map(async (answer) => {
-        const questionData = await firestore
-          .collection('questions')
-          .doc(answer.questionId)
-          .get()
-        return {
-          answer,
-          question: questionData.data()
-        }
-      })
-    )
-    this.hasOtherAnswers = true
   },
   methods: {
     async onCheckBoxChange() {
@@ -473,7 +492,7 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
 }
 
 .margin-bttm {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .other-answer-wrapper {
