@@ -15,6 +15,9 @@
               <p>
                 My dream is to make AskMakers the Quora for makers.
               </p>
+              <p>
+                I hope that AskMakers becomes your source of knowledge.
+              </p>
             </div>
             <div id="team" class="column">
               <h3 class="title">
