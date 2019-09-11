@@ -5,6 +5,12 @@
         <n-link class="navbar-item sp-font weight-700 has-text-success" to="/">
           AskMakers
         </n-link>
+        <n-link
+          to="/about"
+          class="navbar-item sp-font has-text-weight-semibold"
+        >
+          About
+        </n-link>
         <a
           role="button"
           class="navbar-burger"
