@@ -1,5 +1,18 @@
 <template>
   <div id="users-id" class="section column is-9 container">
+    <!-- Login Modal -->
+    <b-modal :active.sync="isModalActive" :width="modalWidth">
+      <div id="login-modal" class="has-text-centered">
+        <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
+        <button
+          class="button twitter color-white weight-900 sp-font"
+          @click.prevent="twitterSignin"
+        >
+          Twitter
+        </button>
+      </div>
+    </b-modal>
+    <!-- Login Modal End -->
     <div class="columns">
       <div v-show="isLoading" class="column has-text-centered">
         <span class="icon is-large">
@@ -63,7 +76,7 @@
                 </div>
                 <!-- Footer -->
                 <div class="flex-container">
-                  <div v-if="$store.getters.getLoginStatus">
+                  <div>
                     <a
                       v-if="isBookmarked === true"
                       @click.prevent="unbookmark()"
@@ -264,6 +277,7 @@ import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
 const firestore = firebase.firestore()
+const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export default {
   name: 'QId',
@@ -281,7 +295,9 @@ export default {
       shareText: '',
       otherAnswers: [],
       hasOtherAnswers: false,
-      noOtherAnswer: false
+      noOtherAnswer: false,
+      isModalActive: false,
+      modalWidth: '500px'
     }
   },
   computed: {
@@ -379,6 +395,9 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
     this.isLoading = false
   },
   methods: {
+    twitterSignin() {
+      firebase.auth().signInWithRedirect(twitterProvider)
+    },
     async onCheckBoxChange() {
       await firestore
         .collection('publicUsers')
@@ -438,6 +457,11 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
       }
     },
     async bookmark(questionId) {
+      if (this.$store.getters.getLoginStatus !== true) {
+        console.log('not logged in')
+        this.isModalActive = true
+        return
+      }
       const bookmarkId = uuid()
         .split('-')
         .join('')
@@ -510,6 +534,18 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
 .twitter-share,
 .fa-twitter {
   color: #00aced;
+}
+
+#login-modal {
+  color: #ffffff;
+  .title {
+    color: #ffffff;
+  }
+  .button {
+    width: 200px;
+    display: block;
+    margin: 10px auto;
+  }
 }
 
 @media only screen and (max-width: 768px) {
