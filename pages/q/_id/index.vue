@@ -302,6 +302,13 @@ export default {
       .collection('questions')
       .doc(this.qId)
       .get()
+    // 質問が存在しない場合は404
+    if (questionData.exists !== true) {
+      return this.$nuxt.error({
+        statusCode: 404,
+        message: 'This page could not be found'
+      })
+    }
     this.question = questionData.data()
 
     // 質問されたユーザーの情報を取得
