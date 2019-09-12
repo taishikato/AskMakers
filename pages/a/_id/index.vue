@@ -11,6 +11,12 @@
         >
           Thank you for answering!
         </p>
+        <p class="title has-text-centered weight-700">
+          Please contanct me if you have something to tell😁
+          <a href="https://twitter.com/taishikat0" target="_blank">
+            @taishikat0
+          </a>
+        </p>
         <div id="question-img" class="bg-white radius-box">
           <p id="answer-text">{{ answer.content }}</p>
           <img :src="question.image" />
