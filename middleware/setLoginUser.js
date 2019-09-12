@@ -29,6 +29,7 @@ export default async ({ store, redirect }) => {
       .collection('secretUsers')
       .doc(result.user.uid)
     if (result.additionalUserInfo.isNewUser === true) {
+      const created = getUnixTime()
       // Sign Up
       const userData = result.user
       const userUid = userData.uid
@@ -39,13 +40,14 @@ export default async ({ store, redirect }) => {
         social: {},
         username: result.additionalUserInfo.username,
         isEmailNewQuestionNotification: true,
-        isEnabletoShareOnTwitter: true
+        isEnabletoShareOnTwitter: true,
+        created
       }
       const newSecretUserData = {
         uid: userUid,
         displayName: userData.displayName,
         email: userData.email,
-        created: getUnixTime(),
+        created,
         provider: [result.additionalUserInfo.providerId],
         twitter: {
           accessToken: result.credential.accessToken,
