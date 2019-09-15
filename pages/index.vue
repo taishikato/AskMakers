@@ -134,39 +134,60 @@
       </div>
     </section>
     <section class="section">
-      <questions-for-me-card />
-      <recent-answers />
       <div class="columns">
-        <div class="column is-8">
-          <p class="title weight-800 is-4">Pro Makers</p>
+        <div class="column is-9">
+          <questions-for-me-card />
+          <recent-answers />
           <div class="columns">
-            <div class="column is-6">
-              <card
-                name="Amie Chen"
-                username="hyper_yolo"
-                content="The maker of Spider Pro"
-                image="/img/amie.jpg"
-              >
-              </card>
+            <div class="column is-8">
+              <p class="title weight-800 is-4">Pro Makers</p>
+              <div class="columns">
+                <div class="column is-6">
+                  <card
+                    name="Amie Chen"
+                    username="hyper_yolo"
+                    content="The maker of Spider Pro"
+                    image="/img/amie.jpg"
+                  >
+                  </card>
+                </div>
+                <div class="column is-6">
+                  <card
+                    name="Hari Krishna Dulipudi"
+                    username="1HaKr"
+                    content="The maker of VisaList and many products"
+                    image="/img/hari.jpg"
+                  >
+                  </card>
+                </div>
+                <div class="column is-6">
+                  <card
+                    name="Justin Jackson"
+                    username="mijustin"
+                    content="The maker of Transistor.fm and Megamaker"
+                    image="/img/justin.jpg"
+                  >
+                  </card>
+                </div>
+              </div>
             </div>
-            <div class="column is-6">
-              <card
-                name="Hari Krishna Dulipudi"
-                username="1HaKr"
-                content="The maker of VisaList and many products"
-                image="/img/hari.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-6">
-              <card
-                name="Justin Jackson"
-                username="mijustin"
-                content="The maker of Transistor.fm and Megamaker"
-                image="/img/justin.jpg"
-              >
-              </card>
-            </div>
+          </div>
+        </div>
+        <div class="column">
+          <users />
+          <div id="ph-widget" class="column has-text-centered">
+            <a
+              href="https://www.producthunt.com/posts/askmakers?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-askmakers"
+              target="_blank"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=167850&theme=light"
+                alt="AskMakers - Aggregated place for Q&A with experienced makers💡 | Product Hunt Embed"
+                style="width: 250px; height: 54px;"
+                width="250px"
+                height="54px"
+              />
+            </a>
           </div>
         </div>
       </div>
@@ -188,6 +209,7 @@
 </template>
 
 <script>
+import Users from '~/components/Users'
 import Card from '~/components/Card'
 import QuestionsForMeCard from '~/components/QuestionsForMeCard'
 import RecentAnswers from '~/components/RecentAnswers'
@@ -196,6 +218,7 @@ import getParam from '~/plugins/getParam'
 export default {
   name: 'HomePage',
   components: {
+    Users,
     Card,
     QuestionsForMeCard,
     RecentAnswers
@@ -221,5 +244,9 @@ export default {
 
 footer {
   margin-bottom: 20px;
+}
+
+#ph-widget {
+  margin-top: 20px;
 }
 </style>
