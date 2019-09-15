@@ -1,5 +1,6 @@
 <template>
   <div id="users">
+    <p class="title weight-800 is-4">Joined Recently</p>
     <contentLoader v-show="isLoadng" />
     <div id="users-wrapper" class="columns is-multiline is-mobile">
       <div v-for="user in users" :key="user.uid" class="column is-3">
@@ -34,6 +35,7 @@ export default {
     const usersData = await db
       .collection('publicUsers')
       .orderBy('created', 'desc')
+      .limit(8)
       .get()
     this.users = usersData.docs.map((doc) => {
       return doc.data()

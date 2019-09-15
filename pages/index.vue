@@ -175,6 +175,20 @@
         </div>
         <div class="column">
           <users />
+          <div id="ph-widget" class="column has-text-centered">
+            <a
+              href="https://www.producthunt.com/posts/askmakers?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-askmakers"
+              target="_blank"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=167850&theme=light"
+                alt="AskMakers - Aggregated place for Q&A with experienced makers💡 | Product Hunt Embed"
+                style="width: 250px; height: 54px;"
+                width="250px"
+                height="54px"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -230,5 +244,9 @@ export default {
 
 footer {
   margin-bottom: 20px;
+}
+
+#ph-widget {
+  margin-top: 20px;
 }
 </style>
