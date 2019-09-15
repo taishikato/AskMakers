@@ -1,6 +1,6 @@
 <template>
   <div id="recent-answers">
-    <p class="title weight-800 is-4">Recent Asnwers</p>
+    <p class="title weight-800 is-4">Recent Answers</p>
     <div v-show="isLoading === false" class="columns is-multiline">
       <div
         v-for="answer in answers"
