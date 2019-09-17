@@ -360,20 +360,18 @@ export default {
     // maybe slug
     this.userId = this.$route.params.id
     // Slugとして扱ってDBを走査
-    let userInfo = await firestore
+    const userInfo = await firestore
       .collection('publicUsers')
       .where('username', '==', this.userId)
       .get()
+    // ユーザーが存在しない場合は404
     if (userInfo.empty === true) {
-      // Sluが存在ない場合、UUIDとして扱う
-      userInfo = await firestore
-        .collection('publicUsers')
-        .doc(this.userId)
-        .get()
-      this.user = userInfo.data()
-    } else {
-      this.user = userInfo.docs[0].data()
+      return this.$nuxt.error({
+        statusCode: 404,
+        message: 'This page could not be found'
+      })
     }
+    this.user = userInfo.docs[0].data()
 
     // 回答済み回答習得
     const answerData = await firestore
