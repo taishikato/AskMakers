@@ -186,7 +186,7 @@
             />
           </svg>
           <span class="tag is-warning">
-            You need to make a new line when your text goes out of the frame
+            Max length is 280
           </span>
         </div>
         <div
@@ -200,7 +200,6 @@
               <textarea
                 v-model="newQuestion"
                 class="textarea is-success"
-                placeholder="You need to make a new line when your text goes out of the frame"
               ></textarea>
             </div>
           </div>
@@ -216,7 +215,11 @@
               <button
                 v-else
                 class="button is-success is-rounded is-outlined weight-700 is-medium"
-                :disabled="countNewQuestion === 0"
+                :disabled="
+                  countNewQuestion === 0 ||
+                    countNewQuestion > 280 ||
+                    tooMuchLine === true
+                "
                 @click.prevent="askAQustion"
               >
                 Ask a Question
@@ -292,7 +295,8 @@ export default {
       userId: '',
       isSaving: false,
       answeredQuestions: [],
-      isLoading: true
+      isLoading: true,
+      tooMuchLine: false
     }
   },
   computed: {
@@ -302,18 +306,47 @@ export default {
   },
   watch: {
     newQuestion(val) {
+      this.tooMuchLine = false
       const textList = inproveText(val)
       const elm = document.getElementById('newquestion-text')
       const x = 120
       let i = 0
       elm.innerHTML = ''
       textList.forEach((text) => {
-        const y = 150 + 60 * i
-        elm.insertAdjacentHTML(
-          'beforeend',
-          `<tspan x="${x}" y="${y}">${text}</tspan>`
-        )
-        i++
+        this.tooMuchLine = false
+        const limitText = 40
+        const lineCount = text.length / limitText
+        let y = 0
+        if (lineCount >= 1) {
+          for (let k = 0; k < lineCount; k++) {
+            y = 150 + 60 * i
+            let slicedText = text.substr(limitText * k, limitText)
+            if (slicedText.slice(0, 1) === ' ') {
+              slicedText = slicedText.slice(1)
+            }
+            elm.insertAdjacentHTML(
+              'beforeend',
+              `<tspan x="${x}" y="${y}">${slicedText}</tspan>`
+            )
+            i++
+            if (i > 7) {
+              this.tooMuchLine = true
+            }
+          }
+        } else {
+          if (text.slice(0, 1) === ' ') {
+            text = text.slice(1)
+          }
+          y = 150 + 60 * i
+          elm.insertAdjacentHTML(
+            'beforeend',
+            `<tspan x="${x}" y="${y}">${text}</tspan>`
+          )
+          i++
+          if (i > 7) {
+            this.tooMuchLine = true
+          }
+        }
       })
     }
   },
