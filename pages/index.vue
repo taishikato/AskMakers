@@ -140,7 +140,7 @@
           <recent-answers />
           <div class="columns">
             <div class="column is-8">
-              <p class="title weight-800 is-4">Pro Makers</p>
+              <p class="title weight-800 is-4">Featured Makers</p>
               <div class="columns">
                 <div class="column is-6">
                   <card
@@ -166,6 +166,15 @@
                     username="mijustin"
                     content="The maker of Transistor.fm and Megamaker"
                     image="/img/justin.jpg"
+                  >
+                  </card>
+                </div>
+                <div class="column is-6">
+                  <card
+                    name="Jonathan Bull"
+                    username="jonathanbull"
+                    content="The maker of EmailOctopus"
+                    image="https://pbs.twimg.com/profile_images/860439311879155713/szwSvKLt.jpg"
                   >
                   </card>
                 </div>
