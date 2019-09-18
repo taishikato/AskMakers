@@ -37,7 +37,9 @@ export default async ({ store, redirect }) => {
         uid: userUid,
         customName: userData.displayName,
         picture: userData.photoURL.replace('_normal', ''),
-        social: {},
+        social: {
+          twitter: result.additionalUserInfo.username
+        },
         username: result.additionalUserInfo.username,
         isEmailNewQuestionNotification: true,
         isEnabletoShareOnTwitter: true,
