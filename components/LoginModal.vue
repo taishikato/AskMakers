@@ -16,7 +16,7 @@
         >
           Twitter
         </button>
-        We'll never post to your twitter account without your permission.
+        We'll never post to your Twitter account without your permission.
       </div>
     </b-modal>
   </div>
