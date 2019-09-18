@@ -1,5 +1,8 @@
 <template>
-  <div v-if="questions.length > 0" id="questions-for-me-card">
+  <div
+    v-if="questions.length > 0 && $store.getters.getLoginStatus"
+    id="questions-for-me-card"
+  >
     <p class="title weight-800 is-4">The questions for you</p>
     <div class="columns is-multiline">
       <div v-for="question in questions" :key="question.id" class="column is-4">
