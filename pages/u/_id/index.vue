@@ -228,6 +228,12 @@
           </div>
           <div class="is-divider"></div>
         </div>
+        <p
+          v-show="$store.getters.getLoginStatus === false"
+          class="login-message"
+        >
+          <login-modal-no-button />
+        </p>
         <div id="answered-question-list">
           <h3 class="title is-5 weight-800">Answered Questions</h3>
           <div v-show="isLoading" class="has-text-centered">
@@ -268,6 +274,7 @@
 
 <script>
 import uuid from 'uuid/v4'
+import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
 import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
@@ -283,7 +290,8 @@ const inproveText = (text) => {
 export default {
   name: 'UserId',
   components: {
-    AnsweredQuestionCard
+    AnsweredQuestionCard,
+    LoginModalNoButton
   },
   data() {
     return {
@@ -462,6 +470,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.login-message {
+  margin-bottom: 1.5rem;
+}
 .twitter-icon {
   color: #00aced;
   &:hover {
