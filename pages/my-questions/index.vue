@@ -26,6 +26,12 @@ const firestore = firebase.firestore()
 
 export default {
   name: 'MyQuestions',
+  validate({ store }) {
+    if (store.getters.getLoginStatus === false) {
+      return false
+    }
+    return true
+  },
   async asyncData({ store }) {
     const questionsData = await firestore
       .collection('questions')
