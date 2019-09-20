@@ -72,6 +72,65 @@ const genHtml = (question) => `
 </html>
 `
 
+const getProfileHtml = (data) => {
+  const description = `Let's ask ${data.customName} your question💫`
+  const image =
+    'https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/AskMakers-profile.png?alt=media&token=425482ed-13e5-48cf-8d26-7891954a6652'
+  const siteName = `${data.customName}'s profile on AskMakers`
+  const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>${data.customName}'s profile on AskMakers</title>
+      <meta name="description" content="${description}">
+      <meta name="keywords" content="${meta_keywords.join(',')}">
+      <meta property="og:locale" content="en_CA">
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://askmakers.co/sp/${
+        data.username
+      }">
+      <meta property="og:title" content="${siteName}">
+      <meta property="og:site_name" content="${siteName}">
+      <meta property="og:description" content="${description}">
+      <meta property="og:image" content="${image}">
+      <meta property="og:image:width" content="${og_image_width}">
+      <meta property="og:image:height" content="${og_image_height}">
+      <meta property="fb:app_id" content="${fb_appid}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${siteName}">
+      <meta name="twitter:description" content="${description}">
+      <meta name="twitter:image" content="${image}">
+      <meta name="twitter:site" content="${tw_site}">
+      <meta name="twitter:creator" content="${tw_creator}">
+    </head>
+    <body>
+      <script>
+        location.href = '/u/${data.username}';
+      </script>
+    </body>
+  </html>
+  `
+  return html
+}
+
+router.get('/sp/:id', async (ctx) => {
+  // ユーザーデータ取得
+  try {
+    const userData = await db
+      .collection('publicUsers')
+      .where('username', '==', ctx.params.id)
+      .get()
+    const user = userData.docs[0].data()
+    const html = getProfileHtml(user)
+    ctx.res.set('cache-control', 'public, max-age=3600')
+    ctx.response.status = 200
+    ctx.body = html
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 router.get('/s/:id', async (ctx) => {
   // 質問データ取得
   const questionData = await db

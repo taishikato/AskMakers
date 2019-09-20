@@ -25,6 +25,10 @@
         "function": "func"
       },
       {
+        "source": "/sp/**",
+        "function": "func"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
