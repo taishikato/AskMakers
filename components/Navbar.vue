@@ -57,6 +57,14 @@
                   Products
                 </span>
               </n-link> -->
+              <n-link class="navbar-item weight-800" to="/my-questions">
+                <span class="icon">
+                  <i class="fas fa-question"></i>
+                </span>
+                <span>
+                  My Questions
+                </span>
+              </n-link>
               <n-link class="navbar-item weight-800" to="/bookmarks">
                 <span class="icon">
                   <i class="fas fa-bookmark"></i>
