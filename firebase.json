@@ -29,6 +29,10 @@
         "function": "func"
       },
       {
+        "source": "/sp-sample/**",
+        "function": "func"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

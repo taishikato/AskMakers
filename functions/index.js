@@ -9,6 +9,7 @@ const router = new Router()
 const admin = require('firebase-admin')
 const twitterText = require('twitter-text')
 const axios = require('axios')
+const Canvas = require('canvas-prebuilt')
 
 // Mailgun
 const mailgun = require('mailgun-js')
@@ -113,6 +114,128 @@ const getProfileHtml = (data) => {
   `
   return html
 }
+
+const getSampleProfileHtml = (data) => {
+  const description = `Let's ask ${data.customName} your question💫`
+  const image = data.ogpImageUrl
+  const siteName = `${data.customName}'s profile on AskMakers`
+  const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>${data.customName}'s profile on AskMakers</title>
+      <meta name="description" content="${description}">
+      <meta name="keywords" content="${meta_keywords.join(',')}">
+      <meta property="og:locale" content="en_CA">
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://askmakers.co/sp/${
+        data.username
+      }">
+      <meta property="og:title" content="${siteName}">
+      <meta property="og:site_name" content="${siteName}">
+      <meta property="og:description" content="${description}">
+      <meta property="og:image" content="${image}">
+      <meta property="og:image:width" content="${og_image_width}">
+      <meta property="og:image:height" content="${og_image_height}">
+      <meta property="fb:app_id" content="${fb_appid}">
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="${siteName}">
+      <meta name="twitter:description" content="${description}">
+      <meta name="twitter:image" content="${image}">
+      <meta name="twitter:site" content="${tw_site}">
+      <meta name="twitter:creator" content="${tw_creator}">
+    </head>
+    <body>
+      <script>
+        location.href = '/u/${data.username}';
+      </script>
+    </body>
+  </html>
+  `
+  return html
+}
+
+// const generateCanvas = (data) => {
+//   const canvas = new Canvas(2400, 1260)
+//   const ctx = canvas.getContext('2d')
+//   ctx.scale(2, 2)
+//   const bgImage = new Image()
+//   bgImage.src =
+//     'https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/ogp-background.png?alt=media&token=83dae083-fb8a-457a-a04b-156023130469'
+//   bgImage.onload = function() {
+//     ctx.drawImage(bgImage, 0, 0)
+//     const profileImage = new Image()
+//     profileImage.src = data.picture
+//     profileImage.onload = function() {
+//       ctx.save()
+//       ctx.beginPath()
+//       ctx.arc(405, 315, 150, 0, Math.PI * 2, true)
+//       ctx.closePath()
+//       ctx.clip()
+//       ctx.drawImage(profileImage, 230, 140, 350, 350)
+//       ctx.beginPath()
+//       ctx.arc(230, 140, 150, 0, Math.PI * 2, true)
+//       ctx.clip()
+//       ctx.closePath()
+//       ctx.restore()
+//       return canvas
+//     }
+//   }
+// }
+
+router.get('/sp-sample/:id', async (ctx) => {
+  // ユーザーデータ取得
+  try {
+    const userData = await db
+      .collection('publicUsers')
+      .where('username', '==', ctx.params.id)
+      .get()
+    const user = userData.docs[0].data()
+    if (user.ogpImage === '' || user.ogpImage === undefined) {
+      console.log('Generate canavs')
+      const canvas = new Canvas(2400, 1260)
+      const ctx = canvas.getContext('2d')
+      ctx.scale(2, 2)
+      const bgImage = new Image()
+      bgImage.src =
+        'https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/ogp-background.png?alt=media&token=83dae083-fb8a-457a-a04b-156023130469'
+      bgImage.onload = function() {
+        ctx.drawImage(bgImage, 0, 0)
+        const profileImage = new Image()
+        profileImage.src = data.picture
+        profileImage.onload = function() {
+          ctx.save()
+          ctx.beginPath()
+          ctx.arc(405, 315, 150, 0, Math.PI * 2, true)
+          ctx.closePath()
+          ctx.clip()
+          ctx.drawImage(profileImage, 230, 140, 350, 350)
+          ctx.beginPath()
+          ctx.arc(230, 140, 150, 0, Math.PI * 2, true)
+          ctx.clip()
+          ctx.closePath()
+          ctx.restore()
+          const canavs = generateCanvas()
+          return canvas.pngStream().pipe(ctx)
+        }
+      }
+      // await db
+      //   .collection('publicUsers')
+      //   .doc(user.uid)
+      //   .update({
+      //     ogpImageUrl
+      //   })
+      // user.ogpImageUrl = ogpImageUrl
+    }
+    const html = getSampleProfileHtml(user)
+    // ctx.res.set('cache-control', 'public, max-age=3600')
+    ctx.response.status = 200
+    ctx.body = html
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 router.get('/sp/:id', async (ctx) => {
   // ユーザーデータ取得

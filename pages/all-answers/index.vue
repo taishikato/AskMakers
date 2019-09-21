@@ -1,14 +1,7 @@
 <template>
-  <div id="recent-answers">
-    <p id="title-p">
-      <span class="title weight-800 is-4">
-        Recent Answers
-      </span>
-      <n-link id="see-all-link" to="/all-answers" class="has-text-grey">
-        See All
-      </n-link>
-    </p>
-    <div v-show="isLoading === false" class="columns is-multiline">
+  <section class="section">
+    <p class="title weight-800 is-4">All Answers</p>
+    <div class="columns is-multiline">
       <div
         v-for="answer in answers"
         :key="answer.answer.id"
@@ -54,18 +47,6 @@
             </div>
             <!-- Footer -->
             <div class="flex-container">
-              <!-- <div v-if="$store.getters.getLoginStatus">
-                <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
-                  <span class="icon is-medium">
-                    <i class="fas fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
-                <a v-else @click.prevent="bookmark(question.id)">
-                  <span class="icon is-medium">
-                    <i class="far fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
-              </div> -->
               <div>
                 <a
                   :href="
@@ -86,79 +67,48 @@ https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=
         </div>
       </div>
     </div>
-    <div v-show="isLoading === true" class="columns">
-      <div class="column is-4">
-        <content-loader />
-      </div>
-      <div class="column is-4">
-        <content-loader />
-      </div>
-      <div class="column is-4">
-        <content-loader />
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script>
-import sanitizeHTML from 'sanitize-html'
-import { ContentLoader } from 'vue-content-loader'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
 const firestore = firebase.firestore()
 
 export default {
-  name: 'RecentAnswers',
-  components: {
-    ContentLoader
-  },
-  data() {
-    return {
-      isLoading: true,
-      answers: []
-    }
-  },
-  async created() {
-    const answersData = await firestore
-      .collection('answers')
-      .orderBy('created', 'desc')
-      .limit(6)
-      .get()
-    this.answers = await Promise.all(
-      answersData.docs.map(async (doc) => {
-        const answer = doc.data()
-        const questionData = await firestore
-          .collection('questions')
-          .doc(answer.questionId)
-          .get()
-        const question = questionData.data()
-        const userData = await firestore
-          .collection('publicUsers')
-          .doc(question.toUserId)
-          .get()
-        return {
-          answer,
-          question,
-          user: userData.data()
-        }
-      })
-    )
-    this.isLoading = false
-  },
-  methods: {
-    sanitizeHtml(text) {
-      return sanitizeHTML(text)
+  name: 'UBookmarksId',
+  async asyncData({ error }) {
+    try {
+      const answersData = await firestore
+        .collection('answers')
+        .orderBy('created', 'desc')
+        .get()
+      const answers = await Promise.all(
+        answersData.docs.map(async (doc) => {
+          const answer = doc.data()
+          const questionData = await firestore
+            .collection('questions')
+            .doc(answer.questionId)
+            .get()
+          const question = questionData.data()
+          const userData = await firestore
+            .collection('publicUsers')
+            .doc(question.toUserId)
+            .get()
+          return {
+            answer,
+            question,
+            user: userData.data()
+          }
+        })
+      )
+      return { answers }
+    } catch (err) {
+      error({ statusCode: 500, message: 'An error occured. Please try again.' })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-#title-p {
-  margin-bottom: 1.5rem;
-}
-#see-all-link {
-  margin-left: 5px;
-}
-</style>
+<style lang="scss" scoped></style>
