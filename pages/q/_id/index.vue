@@ -1,122 +1,38 @@
 <template>
-  <div id="users-id" class="section column is-9 container">
-    <!-- Login Modal -->
-    <b-modal :active.sync="isModalActive" :width="modalWidth">
-      <div id="login-modal" class="has-text-centered">
-        <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
-        <button
-          class="button twitter color-white weight-900 sp-font"
-          @click.prevent="twitterSignin"
-        >
-          Twitter
-        </button>
-      </div>
-    </b-modal>
-    <!-- Login Modal End -->
+  <div id="users-id" class="section column is-10 container">
     <div class="columns">
-      <div v-show="isLoading" class="column has-text-centered">
-        <span class="icon is-large">
-          <i class="fas fa-spinner fa-3x fa-spin"></i>
-        </span>
+      <div v-show="isLoading" class="column is-10 container">
+        <div class="bg-white" style="padding: 15px">
+          <facebook-loader />
+        </div>
       </div>
-      <div v-show="isLoading === false" class="column is-8 container">
-        <div class="margin-bttm">
-          <div id="question-img" class="">
-            <div class="card radius-box">
-              <div class="card-image">
-                <figure class="image">
-                  <img :src="question.image" :alt="question.text" />
-                </figure>
-              </div>
-              <div v-if="hasexistingAnswer" class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <n-link :to="`/u/${existingAnswerUser.username}`">
-                        <img
-                          :src="existingAnswerUser.picture"
-                          alt="existingAnswerUser.customName"
-                          class="is-rounded"
-                        />
-                      </n-link>
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <n-link :to="`/u/${existingAnswerUser.username}`">
-                      <p class="title is-4">
-                        {{ existingAnswerUser.customName }}
-                      </p>
-                    </n-link>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p
-                    id="answer-text"
-                    class="is-size-5"
-                    v-html="
-                      sanitizeHtml(existingAnswer.content).replace(
-                        /\n/g,
-                        '<br/>'
-                      )
-                    "
-                  ></p>
-                  <time
-                    class="is-size-7 has-text-grey"
-                    :datetime="
-                      $moment.unix(existingAnswer.created).format('YYYY-MM-DD')
-                    "
-                  >
-                    {{
-                      $moment
-                        .unix(existingAnswer.created)
-                        .format('YYYY/MM/DD H:mm')
-                    }}
-                  </time>
-                </div>
-                <!-- Footer -->
-                <div class="flex-container">
-                  <div>
-                    <a
-                      v-if="isBookmarked === true"
-                      @click.prevent="unbookmark()"
-                    >
-                      <span class="icon is-medium">
-                        <i class="fas fa-bookmark fa-lg"></i>
-                      </span>
-                    </a>
-                    <a v-else @click.prevent="bookmark(question.id)">
-                      <span class="icon is-medium">
-                        <i class="far fa-bookmark fa-lg"></i>
-                      </span>
-                    </a>
-                  </div>
-                  <div>
-                    <a
-                      :href="
-                        `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
-                      "
-                      class="twitter-share"
-                      target="_blank"
-                    >
-                      <span class="icon is-medium">
-                        <i class="fab fa-twitter fa-lg"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div
+        v-if="isLoading === false && question.question !== undefined"
+        class="column is-10 container"
+      >
+        <p
+          v-if="question.question.toUserId === $store.getters.getUserInfo.uid"
+          id="question-for-you"
+          class="tag is-success"
+        >
+          The question for you
+        </p>
+        <article id="this-question">
+          <question-box
+            :question="question"
+            :simple-mode="false"
+            :has-bookmark-feature="true"
+            :is-bookmarked="isBookmarked"
+          />
 
           <div
-            v-if="question.toUserId === $store.getters.getUserInfo.uid"
+            v-if="question.question.toUserId === $store.getters.getUserInfo.uid"
             id="answer-wrapper"
             class="field"
           >
             <div
               v-if="
-                question.toUserId === $store.getters.getUserInfo.uid &&
+                question.question.toUserId === $store.getters.getUserInfo.uid &&
                   hasexistingAnswer === false
               "
               class="control has-text-centered"
@@ -124,9 +40,9 @@
               <textarea v-model="answer" class="textarea"></textarea>
               <label class="checkbox">
                 <input
+                  v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
                   type="checkbox"
                   @change="onCheckBoxChange()"
-                  v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
                 />
                 Share on
                 <span class="icon is-medium">
@@ -137,7 +53,7 @@
           </div>
           <div
             v-if="
-              question.toUserId === $store.getters.getUserInfo.uid &&
+              question.question.toUserId === $store.getters.getUserInfo.uid &&
                 hasexistingAnswer === false
             "
             id="answer-btn"
@@ -161,107 +77,31 @@
               </button>
             </div>
           </div>
-        </div>
+        </article>
         <!-- Begin No Other Answer -->
-        <div v-show="noOtherAnswer">
+        <div v-if="hasOtherAnswers === false">
           <p class="title is-4 weight-700">
-            <span class="sp-font">
-              No Other Answers from
-            </span>
-            {{ existingAnswerUser.customName }}
+            No Other Answers from {{ existingAnswerUser.customName }}
           </p>
           <p class="has-text-centered">
             <img src="~/assets/img/thinking.svg" width="100px" />
           </p>
         </div>
         <!-- Begin Other Answers Section -->
-        <div v-show="hasOtherAnswers">
-          <p class="title is-4 weight-700">
-            <span class="sp-font">
-              Other Answers from
-            </span>
-            {{ existingAnswerUser.customName }}
+        <div v-else>
+          <p class="title is-4">
+            Other Answers from {{ existingAnswerUser.customName }}
           </p>
           <div
             v-for="otherAnswer in otherAnswers"
             :key="otherAnswer.answer.id"
             class="other-answer-wrapper"
           >
-            <div class="card radius-box">
-              <div class="card-image">
-                <n-link :to="`/q/${otherAnswer.question.id}`">
-                  <figure class="image">
-                    <img
-                      :src="otherAnswer.question.image"
-                      :alt="otherAnswer.question.text"
-                    />
-                  </figure>
-                </n-link>
-              </div>
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-left">
-                    <figure class="image is-48x48">
-                      <n-link :to="`/u/${existingAnswerUser.username}`">
-                        <img
-                          :src="existingAnswerUser.picture"
-                          alt="existingAnswerUser.customName"
-                          class="is-rounded"
-                        />
-                      </n-link>
-                    </figure>
-                  </div>
-                  <div class="media-content">
-                    <n-link :to="`/u/${existingAnswerUser.username}`">
-                      <p class="title is-4">
-                        {{ existingAnswerUser.customName }}
-                      </p>
-                    </n-link>
-                  </div>
-                </div>
-
-                <div class="content">
-                  <p
-                    id="answer-text"
-                    class="is-size-5"
-                    v-html="
-                      sanitizeHtml(otherAnswer.answer.content).replace(
-                        /\n/g,
-                        '<br/>'
-                      )
-                    "
-                  ></p>
-                </div>
-                <!-- Footer -->
-                <!-- <div class="flex-container">
-                  <div v-if="$store.getters.getLoginStatus">
-                    <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
-                      <span class="icon is-medium">
-                        <i class="fas fa-bookmark fa-lg"></i>
-                      </span>
-                    </a>
-                    <a v-else @click.prevent="bookmark(question.id)">
-                      <span class="icon is-medium">
-                        <i class="far fa-bookmark fa-lg"></i>
-                      </span>
-                    </a>
-                  </div>
-                  <div>
-                    <a
-                      :href="
-                        `https://twitter.com/share?url=https://askmakers.co/s/${qId}&text=${shareText}`
-                      "
-                      class="twitter-share"
-                      target="_blank"
-                    >
-                      <span class="icon is-medium">
-                        <i class="fab fa-twitter fa-lg"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div> -->
-              </div>
-            </div>
+            <question-box
+              :question="otherAnswer"
+              :simple-mode="true"
+              :has-bookmark-feature="false"
+            />
           </div>
         </div>
       </div>
@@ -271,7 +111,9 @@
 
 <script>
 import uuid from 'uuid/v4'
+import { FacebookLoader } from 'vue-content-loader'
 import sanitizeHTML from 'sanitize-html'
+import QuestionBox from '~/components/QuestionBox'
 import getUnixTime from '~/plugins/getUnixTime'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -281,6 +123,10 @@ const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export default {
   name: 'QId',
+  components: {
+    QuestionBox,
+    FacebookLoader
+  },
   data() {
     return {
       question: {},
@@ -294,10 +140,7 @@ export default {
       isLoading: true,
       shareText: '',
       otherAnswers: [],
-      hasOtherAnswers: false,
-      noOtherAnswer: false,
-      isModalActive: false,
-      modalWidth: '500px'
+      hasOtherAnswers: false
     }
   },
   computed: {
@@ -325,23 +168,25 @@ export default {
         message: 'This page could not be found'
       })
     }
-    this.question = questionData.data()
+    this.question.question = questionData.data()
 
     // 質問されたユーザーの情報を取得
     const toUserData = await firestore
       .collection('publicUsers')
-      .doc(this.question.toUserId)
+      .doc(this.question.question.toUserId)
       .get()
-    this.existingAnswerUser = toUserData.data()
+    const toUser = toUserData.data()
+    this.existingAnswerUser = toUser
+    this.question.user = toUser
 
     // 他の回答を取得
     const otherAnswerData = await firestore
       .collection('answers')
-      .where('answerUserId', '==', this.question.toUserId)
+      .where('answerUserId', '==', this.question.question.toUserId)
       .limit(3)
       .get()
     if (otherAnswerData.empty === true) {
-      this.noOtherAnswer = true
+      // this.noOtherAnswer = true
       this.isLoading = false
       return
     }
@@ -360,6 +205,7 @@ export default {
             .doc(answer.questionId)
             .get()
           return {
+            user: toUser,
             answer,
             question: questionData.data()
           }
@@ -372,7 +218,7 @@ export default {
     // あれば表示
     const answerData = await firestore
       .collection('answers')
-      .where('questionId', '==', this.question.id)
+      .where('questionId', '==', this.question.question.id)
       .get()
     if (answerData.empty === true) {
       this.isLoading = false
@@ -380,7 +226,7 @@ export default {
     }
     this.hasexistingAnswer = true
     this.existingAnswer = answerData.docs[0].data()
-
+    this.question.answer = answerData.docs[0].data()
     this.shareText = `
 Answer by @${this.existingAnswerUser.username} ${this.existingAnswer.content}
 ${encodeURIComponent(' #AskMakers #AskMakersco')}
@@ -393,7 +239,7 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
 
     const bookmarkData = await firestore
       .collection('bookmarks')
-      .where('questionId', '==', this.question.id)
+      .where('answerId', '==', this.question.answer.id)
       .where('userId', '==', this.$store.getters.getUserInfo.uid)
       .get()
     if (bookmarkData.empty === false) {
@@ -522,6 +368,10 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
   }
 }
 
+#question-for-you {
+  margin-bottom: 0.5rem;
+}
+
 .margin-bttm {
   margin-bottom: 50px;
 }
@@ -538,21 +388,8 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
   margin-top: 10px;
 }
 
-.twitter-share,
-.fa-twitter {
-  color: #00aced;
-}
-
-#login-modal {
-  color: #ffffff;
-  .title {
-    color: #ffffff;
-  }
-  .button {
-    width: 200px;
-    display: block;
-    margin: 10px auto;
-  }
+#this-question {
+  margin-bottom: 2rem;
 }
 
 @media only screen and (max-width: 768px) {

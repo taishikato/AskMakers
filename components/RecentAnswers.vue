@@ -11,110 +11,11 @@
         :key="answer.answer.id"
         class="column is-12"
       >
-        <div class="answer-container">
-          <p class="content is-size-4">
-            <n-link
-              :to="`/q/${answer.question.id}`"
-              class="question-text-link has-text-black-bis"
-            >
-              {{ answer.question.text }}
-            </n-link>
-          </p>
-          <div class="flex-container flex-center">
-            <p>✍️ The answer by</p>
-            <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
-              <img
-                :src="answer.user.picture"
-                alt="existingAnswerUser.customName"
-                class="is-rounded"
-                width="35"
-              />
-            </n-link>
-            <n-link
-              :to="`/u/${answer.user.username}`"
-              class="profile-name-link has-text-grey-darker has-text-weight-semibold"
-            >
-              {{ answer.user.customName }}
-            </n-link>
-          </div>
-          <div class="content">
-            <p id="answer-text" class="is-size-5">
-              {{
-                answer.answer.content.length > 140
-                  ? `${answer.answer.content.substr(0, 140)}…`
-                  : answer.answer.content
-              }}
-            </p>
-          </div>
-          <div class="footer-container">
-            <a
-              :href="
-                `
-https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=Answer by @${answer.user.username} ${answer.answer.content}
-`
-              "
-              class="twitter-share"
-              target="_blank"
-            >
-              <span class="icon is-medium">
-                <i class="fab fa-twitter fa-lg"></i>
-              </span>
-            </a>
-          </div>
-        </div>
-        <!-- <div class="card radius-box">
-          <div class="card-image">
-            <n-link :to="`/q/${answer.question.id}`">
-              <figure class="image">
-                <img :src="answer.question.image" :alt="answer.question.text" />
-              </figure>
-            </n-link>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-left">
-                <figure class="image is-48x48">
-                  <n-link :to="`/u/${answer.user.username}`">
-                    <img
-                      :src="answer.user.picture"
-                      alt="existingAnswerUser.customName"
-                      class="is-rounded"
-                    />
-                  </n-link>
-                </figure>
-              </div>
-              <div class="media-content">
-                <n-link :to="`/u/${answer.user.username}`">
-                  <p class="title is-4">
-                    {{ answer.user.customName }}
-                  </p>
-                </n-link>
-              </div>
-            </div>
-            <div class="content">
-              <p id="answer-text" class="is-size-5">
-                {{
-                  answer.answer.content.length > 140
-                    ? `${answer.answer.content.substr(0, 140)}…`
-                    : answer.answer.content
-                }}
-              </p>
-            </div>
-            <div class="flex-container">
-              <div>
-                <a
-                  href=""
-                  class="twitter-share"
-                  target="_blank"
-                >
-                  <span class="icon is-medium">
-                    <i class="fab fa-twitter fa-lg"></i>
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div> -->
+        <question-box
+          :question="answer"
+          :simpleMode="true"
+          :hasBookmarkFeature="false"
+        />
       </div>
     </div>
     <div v-show="isLoading === true" class="columns">
@@ -138,6 +39,7 @@ https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=
 <script>
 import sanitizeHTML from 'sanitize-html'
 import { ContentLoader } from 'vue-content-loader'
+import QuestionBox from '~/components/QuestionBox'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -146,7 +48,8 @@ const firestore = firebase.firestore()
 export default {
   name: 'RecentAnswers',
   components: {
-    ContentLoader
+    ContentLoader,
+    QuestionBox
   },
   data() {
     return {
@@ -195,24 +98,5 @@ export default {
 }
 #see-all-link {
   margin-bottom: 2rem;
-}
-.answer-container {
-  background-color: white;
-  padding: 15px;
-  border-radius: 3px;
-  .question-text-link {
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  .profile-pic-link {
-    margin-left: 10px;
-  }
-  .profile-name-link {
-    margin-left: 5px;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
 }
 </style>
