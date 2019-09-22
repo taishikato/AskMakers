@@ -4,17 +4,65 @@
       <span class="title weight-800 is-4">
         Recent Answers
       </span>
-      <n-link id="see-all-link" to="/all-answers" class="has-text-grey">
-        See All
-      </n-link>
     </p>
     <div v-show="isLoading === false" class="columns is-multiline">
       <div
         v-for="answer in answers"
         :key="answer.answer.id"
-        class="column is-4"
+        class="column is-12"
       >
-        <div class="card radius-box">
+        <div class="answer-container">
+          <p class="content is-size-4">
+            <n-link
+              :to="`/q/${answer.question.id}`"
+              class="question-text-link has-text-black-bis"
+            >
+              {{ answer.question.text }}
+            </n-link>
+          </p>
+          <div class="flex-container flex-center">
+            <p>✍️ The answer by</p>
+            <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
+              <img
+                :src="answer.user.picture"
+                alt="existingAnswerUser.customName"
+                class="is-rounded"
+                width="35"
+              />
+            </n-link>
+            <n-link
+              :to="`/u/${answer.user.username}`"
+              class="profile-name-link has-text-grey-darker has-text-weight-semibold"
+            >
+              {{ answer.user.customName }}
+            </n-link>
+          </div>
+          <div class="content">
+            <p id="answer-text" class="is-size-5">
+              {{
+                answer.answer.content.length > 140
+                  ? `${answer.answer.content.substr(0, 140)}…`
+                  : answer.answer.content
+              }}
+            </p>
+          </div>
+          <div class="footer-container">
+            <a
+              :href="
+                `
+https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=Answer by @${answer.user.username} ${answer.answer.content}
+`
+              "
+              class="twitter-share"
+              target="_blank"
+            >
+              <span class="icon is-medium">
+                <i class="fab fa-twitter fa-lg"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+        <!-- <div class="card radius-box">
           <div class="card-image">
             <n-link :to="`/q/${answer.question.id}`">
               <figure class="image">
@@ -52,27 +100,10 @@
                 }}
               </p>
             </div>
-            <!-- Footer -->
             <div class="flex-container">
-              <!-- <div v-if="$store.getters.getLoginStatus">
-                <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
-                  <span class="icon is-medium">
-                    <i class="fas fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
-                <a v-else @click.prevent="bookmark(question.id)">
-                  <span class="icon is-medium">
-                    <i class="far fa-bookmark fa-lg"></i>
-                  </span>
-                </a>
-              </div> -->
               <div>
                 <a
-                  :href="
-                    `
-https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=Answer by @${answer.user.username} ${answer.answer.content}
-`
-                  "
+                  href=""
                   class="twitter-share"
                   target="_blank"
                 >
@@ -83,20 +114,24 @@ https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div v-show="isLoading === true" class="columns">
-      <div class="column is-4">
+      <div class="column is-12">
         <content-loader />
       </div>
-      <div class="column is-4">
-        <content-loader />
-      </div>
-      <div class="column is-4">
+      <div class="column is-12">
         <content-loader />
       </div>
     </div>
+    <n-link
+      id="see-all-link"
+      to="/all-answers"
+      class="button is-dark is-rounded"
+    >
+      See All
+    </n-link>
   </div>
 </template>
 
@@ -123,7 +158,7 @@ export default {
     const answersData = await firestore
       .collection('answers')
       .orderBy('created', 'desc')
-      .limit(6)
+      .limit(5)
       .get()
     this.answers = await Promise.all(
       answersData.docs.map(async (doc) => {
@@ -159,6 +194,25 @@ export default {
   margin-bottom: 1.5rem;
 }
 #see-all-link {
-  margin-left: 5px;
+  margin-bottom: 2rem;
+}
+.answer-container {
+  background-color: white;
+  padding: 15px;
+  border-radius: 3px;
+  .question-text-link {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .profile-pic-link {
+    margin-left: 10px;
+  }
+  .profile-name-link {
+    margin-left: 5px;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 </style>
