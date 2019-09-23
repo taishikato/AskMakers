@@ -1,7 +1,5 @@
 const functions = require('firebase-functions')
 const koaFirebase = require('koa-firebase-functions')
-// const express = require('express')
-// const app = express()
 const Koa = require('koa')
 const app = new Koa()
 const Router = require('koa-router')
@@ -9,7 +7,6 @@ const router = new Router()
 const admin = require('firebase-admin')
 const twitterText = require('twitter-text')
 const axios = require('axios')
-const Canvas = require('canvas-prebuilt')
 
 // Mailgun
 const mailgun = require('mailgun-js')
@@ -18,6 +15,7 @@ const mailgunDomain = 'mail.askmakers.co'
 const mg = mailgun({ apiKey: mailgunApiKey, domain: mailgunDomain })
 
 const Twitter = require('twitter')
+const sendAnswerNotification = require('./src/sendAnswerNotification')
 
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -183,59 +181,6 @@ const getSampleProfileHtml = (data) => {
 //     }
 //   }
 // }
-
-router.get('/sp-sample/:id', async (ctx) => {
-  // ユーザーデータ取得
-  try {
-    const userData = await db
-      .collection('publicUsers')
-      .where('username', '==', ctx.params.id)
-      .get()
-    const user = userData.docs[0].data()
-    if (user.ogpImage === '' || user.ogpImage === undefined) {
-      console.log('Generate canavs')
-      const canvas = new Canvas(2400, 1260)
-      const ctx = canvas.getContext('2d')
-      ctx.scale(2, 2)
-      const bgImage = new Image()
-      bgImage.src =
-        'https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/ogp-background.png?alt=media&token=83dae083-fb8a-457a-a04b-156023130469'
-      bgImage.onload = function() {
-        ctx.drawImage(bgImage, 0, 0)
-        const profileImage = new Image()
-        profileImage.src = data.picture
-        profileImage.onload = function() {
-          ctx.save()
-          ctx.beginPath()
-          ctx.arc(405, 315, 150, 0, Math.PI * 2, true)
-          ctx.closePath()
-          ctx.clip()
-          ctx.drawImage(profileImage, 230, 140, 350, 350)
-          ctx.beginPath()
-          ctx.arc(230, 140, 150, 0, Math.PI * 2, true)
-          ctx.clip()
-          ctx.closePath()
-          ctx.restore()
-          const canavs = generateCanvas()
-          return canvas.pngStream().pipe(ctx)
-        }
-      }
-      // await db
-      //   .collection('publicUsers')
-      //   .doc(user.uid)
-      //   .update({
-      //     ogpImageUrl
-      //   })
-      // user.ogpImageUrl = ogpImageUrl
-    }
-    const html = getSampleProfileHtml(user)
-    // ctx.res.set('cache-control', 'public, max-age=3600')
-    ctx.response.status = 200
-    ctx.body = html
-  } catch (err) {
-    console.log(err)
-  }
-})
 
 router.get('/sp/:id', async (ctx) => {
   // ユーザーデータ取得
@@ -406,4 +351,19 @@ exports.onQuestionCreated = functions.firestore
         console.error(err)
       }
     })
+  })
+
+/**
+ * 回答新規追加
+ * 質問をしたユーザーにメールを送信
+ */
+exports.onAnswerCreated = functions.firestore
+  .document('answers/{answerId}')
+  .onCreate(async (snap, context) => {
+    console.log('Start onAnswerCreated function')
+    try {
+      await sendAnswerNotification(db, mg, snap)
+    } catch (err) {
+      console.log(err)
+    }
   })
