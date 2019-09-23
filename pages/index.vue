@@ -174,7 +174,7 @@
                     name="Jonathan Bull"
                     username="jonathanbull"
                     content="The maker of EmailOctopus"
-                    image="https://pbs.twimg.com/profile_images/860439311879155713/szwSvKLt.jpg"
+                    image="/img/jonathan.jpg"
                   >
                   </card>
                 </div>
