@@ -1,6 +1,6 @@
 <template>
   <div class="card-component">
-    <div class="columns">
+    <div class="columns is-mobile">
       <div class="column is-4">
         <n-link :to="`/u/${username}`">
           <img :src="image" class="is-rounded" :title="name" :alt="name" />
@@ -54,6 +54,7 @@ export default {
   padding: 1.5rem;
   img {
     width: 100%;
+    max-width: 200px;
   }
 }
 </style>
