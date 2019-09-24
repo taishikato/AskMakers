@@ -68,18 +68,6 @@
         </div>
       </div>
       <div class="footer-container flex-container">
-        <div v-if="hasBookmarkFeature">
-          <a v-if="answerIsBookmarked === true" @click.prevent="unbookmark()">
-            <span class="icon is-medium">
-              <i class="fas fa-bookmark fa-lg"></i>
-            </span>
-          </a>
-          <a v-else @click.prevent="bookmark(question.question.id)">
-            <span class="icon is-medium">
-              <i class="far fa-bookmark fa-lg"></i>
-            </span>
-          </a>
-        </div>
         <a
           :href="
             `
@@ -93,6 +81,23 @@ https://twitter.com/share?url=https://askmakers.co/s/${question.question.id}&tex
             <i class="fab fa-twitter fa-lg"></i>
           </span>
         </a>
+        <a class="has-text-black-ter" @click.prevent="copy">
+          <span class="icon is-medium">
+            <i class="far fa-copy fa-lg"></i>
+          </span>
+        </a>
+        <div v-if="hasBookmarkFeature">
+          <a v-if="answerIsBookmarked === true" @click.prevent="unbookmark()">
+            <span class="icon is-medium">
+              <i class="fas fa-bookmark fa-lg"></i>
+            </span>
+          </a>
+          <a v-else @click.prevent="bookmark(question.question.id)">
+            <span class="icon is-medium">
+              <i class="far fa-bookmark fa-lg"></i>
+            </span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -106,6 +111,20 @@ import firebase from '~/plugins/firebase'
 import 'firebase/firestore'
 const firestore = firebase.firestore()
 const twitterProvider = new firebase.auth.TwitterAuthProvider()
+
+const copyText = (string) => {
+  const temp = document.createElement('div')
+  temp.appendChild(document.createElement('pre')).textContent = string
+  const s = temp.style
+  s.position = 'fixed'
+  s.left = '-100%'
+  document.body.appendChild(temp)
+  document.getSelection().selectAllChildren(temp)
+  const result = document.execCommand('copy')
+  document.body.removeChild(temp)
+  // true なら実行できている falseなら失敗か対応していないか
+  return result
+}
 
 export default {
   name: 'QuestionBox',
@@ -140,6 +159,14 @@ export default {
     this.answerIsBookmarked = this.isBookmarked
   },
   methods: {
+    copy() {
+      copyText(`https://askmakers.co/s/${this.question.question.id}`)
+      this.$toast.open({
+        duration: 3000,
+        message: 'Copied!',
+        type: 'is-success'
+      })
+    },
     sanitizeHtml(text) {
       return sanitizeHTML(text)
     },
