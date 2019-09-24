@@ -137,50 +137,46 @@
       <div class="columns">
         <div class="column is-9">
           <questions-for-me-card />
-          <recent-answers />
-          <div class="columns">
-            <div class="column is-8">
-              <p class="title weight-800 is-4">Featured Makers</p>
-              <div class="columns">
-                <div class="column is-6">
-                  <card
-                    name="Amie Chen"
-                    username="hyper_yolo"
-                    content="The maker of Spider Pro"
-                    image="/img/amie.jpg"
-                  >
-                  </card>
-                </div>
-                <div class="column is-6">
-                  <card
-                    name="Hari Krishna Dulipudi"
-                    username="1HaKr"
-                    content="The maker of VisaList and many products"
-                    image="/img/hari.jpg"
-                  >
-                  </card>
-                </div>
-                <div class="column is-6">
-                  <card
-                    name="Justin Jackson"
-                    username="mijustin"
-                    content="The maker of Transistor.fm and Megamaker"
-                    image="/img/justin.jpg"
-                  >
-                  </card>
-                </div>
-                <div class="column is-6">
-                  <card
-                    name="Jonathan Bull"
-                    username="jonathanbull"
-                    content="The maker of EmailOctopus"
-                    image="/img/jonathan.jpg"
-                  >
-                  </card>
-                </div>
-              </div>
+          <p class="title weight-800 is-4">Featured Makers</p>
+          <div class="columns is-multiline">
+            <div class="column is-6">
+              <card
+                name="Amie Chen"
+                username="hyper_yolo"
+                content="The maker of Spider Pro"
+                image="/img/amie.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-6">
+              <card
+                name="Hari Krishna Dulipudi"
+                username="1HaKr"
+                content="The maker of VisaList and many products"
+                image="/img/hari.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-6">
+              <card
+                name="Justin Jackson"
+                username="mijustin"
+                content="The maker of Transistor.fm and Megamaker"
+                image="/img/justin.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-6">
+              <card
+                name="Jonathan Bull"
+                username="jonathanbull"
+                content="The maker of EmailOctopus"
+                image="/img/jonathan.jpg"
+              >
+              </card>
             </div>
           </div>
+          <recent-answers />
         </div>
         <div class="column">
           <users />
