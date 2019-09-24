@@ -13,7 +13,7 @@
       </div>
     </b-modal>
     <!-- Login Modal End -->
-    <p class="content is-size-4">
+    <p class="content is-size-4 question-title">
       <n-link
         :to="`/q/${question.question.id}`"
         class="question-text-link has-text-black-bis"
@@ -21,7 +21,7 @@
         {{ question.question.text }}
       </n-link>
     </p>
-    <div v-if="question.answer !== undefined">
+    <div v-if="question.answer !== undefined" class="answer-content">
       <div class="flex-container flex-center">
         <p>✍️ The answer by</p>
         <n-link :to="`/u/${question.user.username}`" class="profile-pic-link">
@@ -193,12 +193,20 @@ export default {
 <style lang="scss" scoped>
 .question-box {
   background-color: white;
-  padding: 15px;
   border-radius: 3px;
-  .question-text-link {
-    &:hover {
-      text-decoration: underline;
+  .question-title {
+    background-color: hsl(0, 0%, 98%);
+    padding: 15px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    .question-text-link {
+      &:hover {
+        text-decoration: underline;
+      }
     }
+  }
+  .answer-content {
+    padding: 0 15px 15px;
   }
   .profile-pic-link {
     margin-left: 10px;

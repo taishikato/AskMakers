@@ -20,10 +20,9 @@
     </div>
     <div v-show="isLoading === true" class="columns">
       <div class="column is-12">
-        <content-loader />
-      </div>
-      <div class="column is-12">
-        <content-loader />
+        <div class="bg-white" style="padding: 15px">
+          <facebook-loader />
+        </div>
       </div>
     </div>
     <n-link
@@ -38,7 +37,7 @@
 
 <script>
 import sanitizeHTML from 'sanitize-html'
-import { ContentLoader } from 'vue-content-loader'
+import { FacebookLoader } from 'vue-content-loader'
 import QuestionBox from '~/components/QuestionBox'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -48,7 +47,7 @@ const firestore = firebase.firestore()
 export default {
   name: 'RecentAnswers',
   components: {
-    ContentLoader,
+    FacebookLoader,
     QuestionBox
   },
   data() {
