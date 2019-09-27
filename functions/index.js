@@ -318,6 +318,11 @@ exports.onQuestionCreated = functions.firestore
     // Get the note document
     const questions = snap.data()
 
+    if (questions.isGeneral === true) {
+      console.log('This is a general question')
+      return
+    }
+
     // 質問を送られたユーザー情報を取得
     const toUserId = questions.toUserId
     const toUserData = await db
