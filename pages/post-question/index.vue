@@ -264,6 +264,7 @@ export default {
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
               created: getUnixTime(),
+              mode: this.mode,
               topics: this.topicGroup,
               isGeneral: true
             })
