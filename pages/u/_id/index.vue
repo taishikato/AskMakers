@@ -265,9 +265,6 @@
           </ul>
         </div>
       </div>
-      <!-- <div id="sidebar" class="column pd-15rem bg-white radius-box">
-        <p class="title is-5 sp-font">Product</p>
-      </div> -->
     </div>
   </div>
 </template>
