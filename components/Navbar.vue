@@ -25,6 +25,11 @@
       </div>
       <div id="nabvar-top" class="navbar-menu">
         <div class="navbar-end">
+          <div class="navbar-item">
+            <n-link to="/post-question" class="button is-rounded">
+              Post a question
+            </n-link>
+          </div>
           <div
             v-if="$store.getters.getLoginStatus === true"
             class="navbar-item has-dropdown is-hoverable"
@@ -49,14 +54,6 @@
                   You
                 </span>
               </n-link>
-              <!-- <n-link class="navbar-item weight-800" to="/users/products/id">
-                <span class="icon">
-                  <i class="fas fa-rocket"></i>
-                </span>
-                <span>
-                  Products
-                </span>
-              </n-link> -->
               <n-link class="navbar-item weight-800" to="/my-questions">
                 <span class="icon">
                   <i class="fas fa-question"></i>
