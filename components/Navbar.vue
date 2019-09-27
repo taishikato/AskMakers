@@ -26,7 +26,7 @@
       <div id="nabvar-top" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            <n-link to="/post-question" class="button is-rounded">
+            <n-link to="/post-question" class="button is-success is-rounded">
               Post a question
             </n-link>
           </div>
