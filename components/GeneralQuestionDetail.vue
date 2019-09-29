@@ -69,10 +69,10 @@
         <article v-else>
           <section
             v-for="answer in answers"
-            :key="answer.id"
+            :key="answer.answer.id"
             class="answer-content"
           >
-            <answer-box :answer="answer" :questionId="qId" />
+            <answer-box :answer="answer" :answerId="answer.answer.id" />
           </section>
         </article>
       </section>

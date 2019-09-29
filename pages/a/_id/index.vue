@@ -1,8 +1,8 @@
 <template>
-  <div id="users-id" class="section column is-9 container">
+  <div id="users-id" class="section column is-10 container">
     <div class="columns">
-      <div class="column is-8 container">
-        <p
+      <div id="answer-container" class="column is-8 container">
+        <div
           v-show="
             showThankyouBox &&
               answer.answerUserId === $store.getters.getUserInfo.uid
@@ -10,14 +10,23 @@
           class="title has-text-centered weight-800 sp-font"
         >
           Thank you for answering!
-        </p>
-        <p class="title has-text-centered weight-700">
-          Please contanct me if you have something to tell😁
-          <a href="https://twitter.com/taishikat0" target="_blank">
-            @taishikat0
-          </a>
-        </p>
-        <div id="question-img" class="bg-white radius-box">
+          <p class="title has-text-centered weight-700">
+            Please contanct me if you have something to tell😁
+            <a href="https://twitter.com/taishikat0" target="_blank">
+              @taishikat0
+            </a>
+          </p>
+        </div>
+        <div v-if="isLoading" class="bg-white" style="padding: 15px">
+          <facebook-loader />
+        </div>
+        <answer-box
+          v-if="answer.answer !== undefined && isLoading === false"
+          :answer="answer"
+          :answer-id="aId"
+          :show-question="true"
+        />
+        <!-- <div id="question-img" class="bg-white radius-box">
           <p id="answer-text">{{ answer.content }}</p>
           <img :src="question.image" />
           <div class="is-divider"></div>
@@ -55,13 +64,15 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { FacebookLoader } from 'vue-content-loader'
+import AnswerBox from '~/components/AnswerBox'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -83,13 +94,16 @@ const copyText = (string) => {
 
 export default {
   name: 'AId',
+  components: {
+    AnswerBox,
+    FacebookLoader
+  },
   data() {
     return {
       answer: {},
-      question: {},
       aId: '',
       showThankyouBox: false,
-      shareUrl: ''
+      isLoading: true
     }
   },
   validate({ params }) {
@@ -99,18 +113,34 @@ export default {
     return true
   },
   async created() {
-    this.aId = this.$route.params.id
-    const answerData = await firestore
-      .collection('answers')
-      .doc(this.aId)
-      .get()
-    this.answer = answerData.data()
-    const questionData = await firestore
-      .collection('questions')
-      .doc(this.answer.questionId)
-      .get()
-    this.question = questionData.data()
-    this.shareUrl = `https://askmakers.co/s/${this.question.id}`
+    try {
+      this.aId = this.$route.params.id
+      const answerData = await firestore
+        .collection('answers')
+        .doc(this.aId)
+        .get()
+      const answer = answerData.data()
+      const [questionData, userData] = await Promise.all([
+        firestore
+          .collection('questions')
+          .doc(answer.questionId)
+          .get(),
+        firestore
+          .collection('publicUsers')
+          .doc(answer.answerUserId)
+          .get()
+      ])
+
+      this.answer = {
+        answer,
+        question: questionData.data(),
+        user: userData.data()
+      }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      this.isLoading = false
+    }
   },
   mounted() {
     const answeredParam = this.getParam('answered')
@@ -146,5 +176,12 @@ export default {
 
 #share-wrappper {
   margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  #answer-container {
+    padding: 0 !important;
+  }
 }
 </style>

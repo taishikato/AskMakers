@@ -1,60 +1,80 @@
 <template>
   <div class="answer-box bg-white">
-    <div class="flex-container flex-center">
-      <p>✍️ by</p>
-      <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
-        <img
-          :src="answer.user.picture"
-          :alt="answer.user.customName"
-          class="is-rounded"
-          width="35"
-        />
-      </n-link>
+    <p v-if="showQuestion" class="content is-size-4 question-title">
       <n-link
-        :to="`/u/${answer.user.username}`"
-        class="profile-name-link has-text-grey-darker has-text-weight-semibold"
+        :to="`/q/${answer.question.id}`"
+        class="question-text-link has-text-black-bis"
       >
-        {{ answer.user.customName }}
+        {{ answer.question.text }}
       </n-link>
-    </div>
-    <div class="content">
-      <p
-        id="answer-text"
-        class="is-size-5"
-        v-html="sanitizeHtml(answer.answer.content).replace(/\n/g, '<br/>')"
-      ></p>
-    </div>
-    <!-- Begin footer content -->
-    <div class="footer-container flex-container">
-      <a
-        :href="
-          `
-https://twitter.com/share?url=https://askmakers.co/s/${questionId}&text=Answer by @${answer.user.username} ${answer.answer.content}
-`
-        "
-        class="twitter-share"
-        target="_blank"
-      >
-        <span class="icon is-medium">
-          <i class="fab fa-twitter fa-lg"></i>
-        </span>
-      </a>
-      <a class="has-text-black-ter" @click.prevent="copy">
-        <span class="icon is-medium">
-          <i class="far fa-copy fa-lg"></i>
-        </span>
-      </a>
-      <div>
-        <a v-if="answerIsBookmarked === true" @click.prevent="unbookmark()">
+    </p>
+    <div class="answer-content" :class="{ paddingTop: showQuestion === false }">
+      <div class="flex-container flex-center author-section">
+        <p>✍️ by</p>
+        <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
+          <img
+            :src="answer.user.picture"
+            :alt="answer.user.customName"
+            class="is-rounded"
+            width="35"
+          />
+        </n-link>
+        <n-link
+          :to="`/u/${answer.user.username}`"
+          class="profile-name-link has-text-grey-darker has-text-weight-semibold"
+        >
+          {{ answer.user.customName }}
+        </n-link>
+      </div>
+      <div class="content">
+        <p id="answer-text" class="is-size-5">
+          {{
+            answer.answer.content.length > 140
+              ? `${answer.answer.content.substr(0, 140)}…`
+              : answer.answer.content
+          }}
+        </p>
+        <n-link :to="`/a/${answer.answer.id}`">
+          <time
+            class="is-size-7 has-text-grey"
+            :datetime="$moment.unix(answer.answer.created).format('YYYY-MM-DD')"
+          >
+            {{ $moment.unix(answer.answer.created).format('YYYY/MM/DD H:mm') }}
+          </time>
+        </n-link>
+      </div>
+      <!-- Begin footer content -->
+      <div class="footer-container flex-container">
+        <a
+          :href="
+            `
+  https://twitter.com/share?url=https://askmakers.co/sa/${answerId}&text=Answer by @${answer.user.username} ${answer.answer.content}
+  `
+          "
+          class="twitter-share"
+          target="_blank"
+        >
           <span class="icon is-medium">
-            <i class="fas fa-bookmark fa-lg"></i>
+            <i class="fab fa-twitter fa-lg"></i>
           </span>
         </a>
-        <a v-else @click.prevent="bookmark(question.question.id)">
+        <a class="has-text-black-ter" @click.prevent="copy">
           <span class="icon is-medium">
-            <i class="far fa-bookmark fa-lg"></i>
+            <i class="far fa-copy fa-lg"></i>
           </span>
         </a>
+        <div>
+          <a v-if="isBookmarked === true" @click.prevent="unbookmark()">
+            <span class="icon is-medium">
+              <i class="fas fa-bookmark fa-lg"></i>
+            </span>
+          </a>
+          <a v-else @click.prevent="bookmark(answer.question.id)">
+            <span class="icon is-medium">
+              <i class="far fa-bookmark fa-lg"></i>
+            </span>
+          </a>
+        </div>
       </div>
     </div>
     <!-- End footer content -->
@@ -89,14 +109,33 @@ export default {
       type: Object,
       required: true
     },
-    questionId: {
+    answerId: {
       type: String,
       required: true
+    },
+    showQuestion: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      isBookmarked: false
+    }
+  },
+  async beforeCreate() {
+    const bookmarkData = await firestore
+      .collection('bookmarks')
+      .where('answerId', '==', this.$route.params.id)
+      .where('userId', '==', this.$store.getters.getUserInfo.uid)
+      .get()
+    if (bookmarkData.empty === false) {
+      this.isBookmarked = true
     }
   },
   methods: {
     copy() {
-      copyText(`https://askmakers.co/s/${this.questionId}`)
+      copyText(`https://askmakers.co/sa/${this.answerId}`)
       this.$toast.open({
         duration: 3000,
         message: 'Copied!',
@@ -121,11 +160,11 @@ export default {
           .set({
             id: bookmarkId,
             questionId,
-            answerId: this.question.answer.id,
+            answerId: this.answer.answer.id,
             userId: this.$store.getters.getUserInfo.uid,
-            answerUserId: this.question.user.uid
+            answerUserId: this.answer.user.uid
           })
-        this.answerIsBookmarked = true
+        this.isBookmarked = true
       } catch (err) {
         console.log(err)
       }
@@ -134,14 +173,14 @@ export default {
       try {
         const bookmarkData = await firestore
           .collection('bookmarks')
-          .where('answerId', '==', this.question.answer.id)
+          .where('answerId', '==', this.answer.answer.id)
           .where('userId', '==', this.$store.getters.getUserInfo.uid)
           .get()
         await firestore
           .collection('bookmarks')
           .doc(bookmarkData.docs[0].id)
           .delete()
-        this.answerIsBookmarked = false
+        this.isBookmarked = false
       } catch (err) {
         console.log(err)
       }
@@ -153,7 +192,21 @@ export default {
 <style lang="scss" scoped>
 .answer-box {
   border-radius: 3px;
-  padding: 15px;
+  .paddingTop {
+    padding: 15px !important;
+  }
+  .author-section {
+    margin-bottom: 1rem;
+  }
+  .question-title {
+    background-color: hsl(0, 0%, 98%);
+    padding: 15px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  .answer-content {
+    padding: 0 15px 15px;
+  }
   .profile-pic-link {
     margin-left: 10px;
   }
