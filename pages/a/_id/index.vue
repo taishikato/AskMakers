@@ -25,6 +25,7 @@
           :answer="answer"
           :answer-id="aId"
           :show-question="true"
+          :simple-mode="false"
         />
         <!-- <div id="question-img" class="bg-white radius-box">
           <p id="answer-text">{{ answer.content }}</p>

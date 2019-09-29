@@ -72,7 +72,12 @@
             :key="answer.answer.id"
             class="answer-content"
           >
-            <answer-box :answer="answer" :answerId="answer.answer.id" />
+            <answer-box
+              :answer="answer"
+              :answerId="answer.answer.id"
+              :simple-mode="true"
+              :questionId="qId"
+            />
           </section>
         </article>
       </section>

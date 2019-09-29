@@ -27,13 +27,19 @@
         </n-link>
       </div>
       <div class="content">
-        <p id="answer-text" class="is-size-5">
+        <p v-if="simpleMode" id="answer-text" class="is-size-5">
           {{
             answer.answer.content.length > 140
               ? `${answer.answer.content.substr(0, 140)}…`
               : answer.answer.content
           }}
         </p>
+        <p
+          v-else
+          id="answer-text"
+          class="is-size-5"
+          v-html="sanitizeHtml(answer.answer.content).replace(/\n/g, '<br/>')"
+        ></p>
         <n-link :to="`/a/${answer.answer.id}`">
           <time
             class="is-size-7 has-text-grey"
@@ -69,7 +75,7 @@
               <i class="fas fa-bookmark fa-lg"></i>
             </span>
           </a>
-          <a v-else @click.prevent="bookmark(answer.question.id)">
+          <a v-else @click.prevent="bookmark(questionId)">
             <span class="icon is-medium">
               <i class="far fa-bookmark fa-lg"></i>
             </span>
@@ -113,8 +119,17 @@ export default {
       type: String,
       required: true
     },
+    questionId: {
+      type: String,
+      required: false
+    },
     showQuestion: {
       type: Boolean,
+      default: false
+    },
+    simpleMode: {
+      type: Boolean,
+      required: true,
       default: false
     }
   },
