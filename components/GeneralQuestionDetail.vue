@@ -17,7 +17,6 @@
           :question="question"
           :simple-mode="false"
           :has-bookmark-feature="true"
-          :is-bookmarked="isBookmarked"
         />
         <div id="answer-wrapper" class="field">
           <div class="control has-text-centered">
@@ -67,6 +66,15 @@
           </p>
         </div>
         <!-- Begin Other Answers Section -->
+        <article v-else>
+          <section
+            v-for="answer in answers"
+            :key="answer.id"
+            class="answer-content"
+          >
+            <answer-box :answer="answer" :questionId="qId" />
+          </section>
+        </article>
       </section>
     </div>
   </div>
@@ -76,6 +84,7 @@
 import uuid from 'uuid/v4'
 import { FacebookLoader } from 'vue-content-loader'
 import sanitizeHTML from 'sanitize-html'
+import AnswerBox from '~/components/AnswerBox'
 import QuestionBox from '~/components/QuestionBox'
 import getUnixTime from '~/plugins/getUnixTime'
 import firebase from '~/plugins/firebase'
@@ -88,6 +97,7 @@ export default {
   name: 'QuestionDetail',
   components: {
     QuestionBox,
+    AnswerBox,
     FacebookLoader
   },
   data() {
@@ -95,15 +105,9 @@ export default {
       question: {},
       qId: '',
       answer: '',
-      isBookmarked: false,
+      answers: [],
       isSubmitting: false,
-      existingAnswer: {},
-      hasexistingAnswer: false,
-      existingAnswerUser: {},
-      isLoading: true,
-      shareText: '',
-      hasOtherAnswers: false,
-      answers: []
+      isLoading: true
     }
   },
   computed: {
@@ -124,14 +128,30 @@ export default {
       .collection('questions')
       .doc(this.qId)
       .get()
-    // 質問が存在しない場合は404
-    if (questionData.exists !== true) {
-      return this.$nuxt.error({
-        statusCode: 404,
-        message: 'This page could not be found'
-      })
-    }
     this.question.question = questionData.data()
+
+    // 回答データ取得
+    const answerData = await firestore
+      .collection('answers')
+      .where('questionId', '==', this.qId)
+      .orderBy('created', 'desc')
+      .get()
+    this.answers = await Promise.all(
+      answerData.docs.map(async (doc) => {
+        const answer = doc.data()
+        // 回答ごとのユーザーデータ取得
+        const userData = await firestore
+          .collection('publicUsers')
+          .where('uid', '==', answer.answerUserId)
+          .get()
+        return {
+          answer,
+          user: userData.docs[0].data()
+        }
+      })
+    )
+
+    console.log(this.answers)
 
     this.isLoading = false
   },
