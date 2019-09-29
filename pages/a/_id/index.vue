@@ -1,7 +1,7 @@
 <template>
   <div id="users-id" class="section column is-10 container">
     <div class="columns">
-      <div id="answer-container" class="column is-8 container">
+      <div id="answer-container" class="column is-10 container">
         <div
           v-show="
             showThankyouBox &&
@@ -26,6 +26,7 @@
           :answer-id="aId"
           :show-question="true"
           :simple-mode="false"
+          :question-id="answer.question.id"
         />
         <!-- <div id="question-img" class="bg-white radius-box">
           <p id="answer-text">{{ answer.content }}</p>
