@@ -5,7 +5,6 @@ const app = new Koa()
 const Router = require('koa-router')
 const router = new Router()
 const admin = require('firebase-admin')
-const twitterText = require('twitter-text')
 const axios = require('axios')
 
 // Mailgun
@@ -16,6 +15,7 @@ const mg = mailgun({ apiKey: mailgunApiKey, domain: mailgunDomain })
 
 const Twitter = require('twitter')
 const sendAnswerNotification = require('./src/sendAnswerNotification')
+const addGeneralQuestion = require('./src/addGeneralQuestion')
 
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -320,6 +320,7 @@ exports.onQuestionCreated = functions.firestore
 
     if (questions.isGeneral === true) {
       console.log('This is a general question')
+      await addGeneralQuestion(db, mg, snap)
       return
     }
 
