@@ -240,6 +240,10 @@ export default {
   }
 }
 
+.answer-content {
+  margin-bottom: 30px;
+}
+
 #question-for-you {
   margin-bottom: 0.5rem;
 }
