@@ -232,7 +232,7 @@
           v-show="$store.getters.getLoginStatus === false"
           class="login-message"
         >
-          <login-modal-no-button />
+          <login-modal-no-button text="to ask a question." />
         </p>
         <div id="answered-question-list">
           <h3 class="title is-5 weight-800">Answered Questions</h3>

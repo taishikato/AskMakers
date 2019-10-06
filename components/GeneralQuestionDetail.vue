@@ -18,7 +18,11 @@
           :simple-mode="false"
           :has-bookmark-feature="true"
         />
-        <div id="answer-wrapper" class="field">
+        <div
+          v-if="$store.getters.getLoginStatus"
+          id="answer-wrapper"
+          class="field"
+        >
           <div class="control has-text-centered">
             <textarea v-model="answer" class="textarea"></textarea>
             <label class="checkbox">
@@ -34,7 +38,7 @@
             </label>
           </div>
         </div>
-        <div id="answer-btn" class="field">
+        <div v-if="$store.getters.getLoginStatus" id="answer-btn" class="field">
           <div class="control has-text-centered">
             <button
               v-if="isSubmitting"
@@ -52,6 +56,9 @@
               Answer
             </button>
           </div>
+        </div>
+        <div v-else class="login-message">
+          <login-modal-no-button text="to answer the question" />
         </div>
       </article>
       <section>
@@ -89,6 +96,7 @@
 import uuid from 'uuid/v4'
 import { FacebookLoader } from 'vue-content-loader'
 import sanitizeHTML from 'sanitize-html'
+import LoginModalNoButton from '~/components/LoginModalNoButton'
 import AnswerBox from '~/components/AnswerBox'
 import QuestionBox from '~/components/QuestionBox'
 import getUnixTime from '~/plugins/getUnixTime'
@@ -103,7 +111,8 @@ export default {
   components: {
     QuestionBox,
     AnswerBox,
-    FacebookLoader
+    FacebookLoader,
+    LoginModalNoButton
   },
   data() {
     return {
@@ -238,6 +247,10 @@ export default {
       margin-left: 10px;
     }
   }
+}
+
+.login-message {
+  margin-top: 1.5rem;
 }
 
 .answer-content {
