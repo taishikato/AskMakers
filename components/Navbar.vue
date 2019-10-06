@@ -1,5 +1,17 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <b-modal :active.sync="isModalActive" :width="modalWidth">
+      <div id="login-modal" class="has-text-centered">
+        <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
+        <button
+          class="button twitter color-white weight-900 sp-font"
+          @click.prevent="twitterSignin"
+        >
+          Twitter
+        </button>
+        We'll never post to your Twitter account without your permission.
+      </div>
+    </b-modal>
     <div class="container">
       <div class="navbar-brand">
         <n-link class="navbar-item sp-font weight-700 has-text-success" to="/">
@@ -25,11 +37,19 @@
       </div>
       <div id="nabvar-top" class="navbar-menu">
         <div class="navbar-end">
-          <div class="navbar-item">
-            <n-link to="/post-question" class="button is-success is-rounded">
+          <!-- <div class="navbar-item"> -->
+          <a
+            class="weight-800 navbar-item"
+            @click.prevent="goToPostQuestionPage"
+          >
+            <span class="icon">
+              <i class="fas fa-pen"></i>
+            </span>
+            <span>
               Post a question
-            </n-link>
-          </div>
+            </span>
+          </a>
+          <!-- </div> -->
           <div
             v-if="$store.getters.getLoginStatus === true"
             class="navbar-item has-dropdown is-hoverable"
@@ -105,9 +125,10 @@
 </template>
 
 <script>
-import firebase from '~/plugins/firebase'
 import LoginModal from '~/components/LoginModal'
 import getParam from '~/plugins/getParam'
+import firebase from '~/plugins/firebase'
+const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export default {
   name: 'Navbar',
@@ -116,7 +137,9 @@ export default {
   },
   data() {
     return {
-      isCommingSoon: false
+      isCommingSoon: false,
+      isModalActive: false,
+      modalWidth: '500px'
     }
   },
   mounted() {
@@ -126,6 +149,16 @@ export default {
     }
   },
   methods: {
+    goToPostQuestionPage() {
+      if (this.$store.getters.getLoginStatus === false) {
+        this.isModalActive = true
+        return
+      }
+      this.$router.push('/post-question')
+    },
+    twitterSignin() {
+      firebase.auth().signInWithRedirect(twitterProvider)
+    },
     async signOut() {
       await firebase.auth().signOut()
       // Firestoreとアンバインド
@@ -149,4 +182,16 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#login-modal {
+  color: #ffffff;
+  .title {
+    color: #ffffff;
+  }
+  .button {
+    width: 200px;
+    display: block;
+    margin: 10px auto;
+  }
+}
+</style>
