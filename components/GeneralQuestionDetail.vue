@@ -165,8 +165,6 @@ export default {
       })
     )
 
-    console.log(this.answers)
-
     this.isLoading = false
   },
   methods: {

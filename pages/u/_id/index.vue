@@ -423,7 +423,8 @@ export default {
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
               toUserId: this.user.uid,
-              created: getUnixTime()
+              created: getUnixTime(),
+              isGeneral: false
             })
           this.$toast.open({
             message: 'Successfuly submitted',
