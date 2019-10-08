@@ -1,7 +1,7 @@
 <template>
   <section id="post-question" class="section column is-9 container">
     <div id="post-question-wrapper" class="bg-white">
-      <h2 class="title">Post a question for everyone</h2>
+      <h2 class="title">Post a question</h2>
       <div
         v-show="newQuestion.length > 0"
         id="question-svg"
@@ -103,6 +103,7 @@
           <textarea v-model="newQuestion" class="textarea"></textarea>
         </div>
       </div>
+      <label class="label">Topic</label>
       <b-field>
         <b-checkbox-button v-model="topicGroup" native-value="idea">
           <span>💡 Idea</span>
@@ -133,29 +134,22 @@
         </b-checkbox-button>
       </b-field>
       <div class="field">
-        <label class="label">Mode</label>
-        <div class="control">
-          <div class="select">
-            <select v-model="mode">
-              <option value="public">
-                Public
-              </option>
-              <option value="anonymous">
-                Anonymous
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <div class="control">
+        <div v-if="isSaving === false" class="control">
           <button
-            class="button is-rounded is-medium"
+            class="button is-rounded is-medium is-success weight-700"
             :disabled="
               countNewQuestion === 0 ||
                 countNewQuestion > 280 ||
                 tooMuchLine === true
             "
+            @click.prevent="askAQustion"
+          >
+            Post
+          </button>
+        </div>
+        <div v-else class="control">
+          <button
+            class="button is-rounded is-medium is-success weight-700 is-loading"
             @click.prevent="askAQustion"
           >
             Post
@@ -186,7 +180,7 @@ export default {
       newQuestion: '',
       tooMuchLine: false,
       topicGroup: [],
-      mode: 'public'
+      isSaving: false
     }
   },
   computed: {
@@ -264,7 +258,6 @@ export default {
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
               created: getUnixTime(),
-              mode: this.mode,
               topics: this.topicGroup,
               isGeneral: true
             })
