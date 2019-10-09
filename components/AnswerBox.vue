@@ -1,5 +1,19 @@
 <template>
   <div class="answer-box bg-white">
+    <!-- Login Modal -->
+    <b-modal :active.sync="isModalActive" :width="modalWidth">
+      <div id="login-modal" class="has-text-centered">
+        <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
+        <button
+          class="button twitter color-white weight-900 sp-font"
+          @click.prevent="twitterSignin"
+        >
+          Twitter
+        </button>
+        We'll never post to your Twitter account without your permission.
+      </div>
+    </b-modal>
+    <!-- Login Modal End -->
     <p v-if="showQuestion" class="content is-size-4 question-title">
       <n-link
         :to="`/q/${answer.question.id}`"
@@ -94,6 +108,7 @@ import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
 const firestore = firebase.firestore()
+const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 const copyText = (string) => {
   const temp = document.createElement('div')
@@ -135,10 +150,15 @@ export default {
   },
   data() {
     return {
+      isModalActive: false,
+      modalWidth: '500px',
       isBookmarked: false
     }
   },
   async beforeCreate() {
+    if (this.$store.getters.getLoginStatus !== true) {
+      return
+    }
     const bookmarkData = await firestore
       .collection('bookmarks')
       .where('answerId', '==', this.$route.params.id)
@@ -159,6 +179,9 @@ export default {
     },
     sanitizeHtml(text) {
       return sanitizeHTML(text)
+    },
+    twitterSignin() {
+      firebase.auth().signInWithRedirect(twitterProvider)
     },
     async bookmark(questionId) {
       if (this.$store.getters.getLoginStatus !== true) {
@@ -230,6 +253,18 @@ export default {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+#login-modal {
+  color: #ffffff;
+  .title {
+    color: #ffffff;
+  }
+  .button {
+    width: 200px;
+    display: block;
+    margin: 10px auto;
   }
 }
 </style>

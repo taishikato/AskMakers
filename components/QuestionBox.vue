@@ -10,6 +10,7 @@
         >
           Twitter
         </button>
+        We'll never post to your Twitter account without your permission.
       </div>
     </b-modal>
     <!-- Login Modal End -->
