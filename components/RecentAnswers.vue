@@ -59,7 +59,6 @@ export default {
   async created() {
     const answersData = await firestore
       .collection('answers')
-      .where('created', '<', 1569717736)
       .orderBy('created', 'desc')
       .limit(5)
       .get()
