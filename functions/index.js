@@ -16,6 +16,7 @@ const mg = mailgun({ apiKey: mailgunApiKey, domain: mailgunDomain })
 const Twitter = require('twitter')
 const sendAnswerNotification = require('./src/sendAnswerNotification')
 const addGeneralQuestion = require('./src/addGeneralQuestion')
+const shareAnswerRouter = require('./src/shareAnswerRouter')
 
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -154,34 +155,6 @@ const getSampleProfileHtml = (data) => {
   return html
 }
 
-// const generateCanvas = (data) => {
-//   const canvas = new Canvas(2400, 1260)
-//   const ctx = canvas.getContext('2d')
-//   ctx.scale(2, 2)
-//   const bgImage = new Image()
-//   bgImage.src =
-//     'https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/ogp-background.png?alt=media&token=83dae083-fb8a-457a-a04b-156023130469'
-//   bgImage.onload = function() {
-//     ctx.drawImage(bgImage, 0, 0)
-//     const profileImage = new Image()
-//     profileImage.src = data.picture
-//     profileImage.onload = function() {
-//       ctx.save()
-//       ctx.beginPath()
-//       ctx.arc(405, 315, 150, 0, Math.PI * 2, true)
-//       ctx.closePath()
-//       ctx.clip()
-//       ctx.drawImage(profileImage, 230, 140, 350, 350)
-//       ctx.beginPath()
-//       ctx.arc(230, 140, 150, 0, Math.PI * 2, true)
-//       ctx.clip()
-//       ctx.closePath()
-//       ctx.restore()
-//       return canvas
-//     }
-//   }
-// }
-
 router.get('/sp/:id', async (ctx) => {
   // ユーザーデータ取得
   try {
@@ -207,6 +180,14 @@ router.get('/s/:id', async (ctx) => {
     .get()
   const question = questionData.data()
   const html = genHtml(question)
+  ctx.res.set('cache-control', 'public, max-age=3600')
+  ctx.response.status = 200
+  ctx.body = html
+})
+
+// Share an answer
+router.get('/sa/:id', async (ctx) => {
+  const html = await shareAnswerRouter(db, ctx.params.id)
   ctx.res.set('cache-control', 'public, max-age=3600')
   ctx.response.status = 200
   ctx.body = html
