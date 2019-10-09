@@ -82,7 +82,7 @@
             <answer-box
               :answer="answer"
               :answerId="answer.answer.id"
-              :simple-mode="false"
+              :simple-mode="true"
               :questionId="qId"
             />
           </section>

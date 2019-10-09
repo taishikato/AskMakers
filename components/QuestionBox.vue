@@ -41,11 +41,13 @@
       </div>
       <div class="content">
         <p v-if="simpleMode === true" id="answer-text" class="is-size-5">
-          {{
-            question.answer.content.length > 140
-              ? `${question.answer.content.substr(0, 140)}…`
-              : question.answer.content
-          }}
+          <n-link :to="`/a/${question.answer.id}`" class="has-text-grey-darker">
+            {{
+              question.answer.content.length > 140
+                ? `${question.answer.content.substr(0, 140)}…`
+                : question.answer.content
+            }}
+          </n-link>
         </p>
         <div v-else>
           <p
@@ -260,5 +262,13 @@ export default {
 
 .twitter-share {
   color: #00aced;
+}
+
+#answer-text {
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 </style>
