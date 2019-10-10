@@ -1,5 +1,9 @@
 <template>
-  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <nav
+    class="navbar is-fixed-top"
+    role="navigation"
+    aria-label="main navigation"
+  >
     <b-modal :active.sync="isModalActive" :width="modalWidth">
       <div id="login-modal" class="has-text-centered">
         <h3 class="title weight-900 sp-font">Log In / Sign Up</h3>
