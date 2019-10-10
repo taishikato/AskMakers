@@ -21,10 +21,7 @@
         <n-link class="navbar-item sp-font weight-700 has-text-success" to="/">
           AskMakers
         </n-link>
-        <n-link
-          to="/about"
-          class="navbar-item sp-font has-text-weight-semibold"
-        >
+        <n-link to="/about" class="navbar-item has-text-weight-semibold">
           About
         </n-link>
         <a
@@ -113,14 +110,17 @@
             </div>
           </div>
           <div v-else class="navbar-item">
-            <span
-              v-if="isCommingSoon"
-              id="csMessage"
-              class="weight-800 has-text-warning sp-font"
+            <a
+              class="button is-warning is-rounded weight-800"
+              @click.prevent="showModal"
             >
-              Coming Soon!
-            </span>
-            <login-modal v-else />
+              <span class="icon">
+                <i class="fas fa-sign-in-alt"></i>
+              </span>
+              <span>
+                Log In / Sign Up
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -129,19 +129,14 @@
 </template>
 
 <script>
-import LoginModal from '~/components/LoginModal'
 import getParam from '~/plugins/getParam'
 import firebase from '~/plugins/firebase'
 const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export default {
   name: 'Navbar',
-  components: {
-    LoginModal
-  },
   data() {
     return {
-      isCommingSoon: false,
       isModalActive: false,
       modalWidth: '500px'
     }
@@ -153,6 +148,9 @@ export default {
     }
   },
   methods: {
+    showModal() {
+      this.isModalActive = true
+    },
     goToPostQuestionPage() {
       if (this.$store.getters.getLoginStatus === false) {
         this.isModalActive = true
