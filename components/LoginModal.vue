@@ -1,10 +1,15 @@
 <template>
   <div>
     <a
-      class="button is-success is-rounded weight-800"
+      class="button is-warning is-rounded weight-800"
       @click.prevent="showModal"
     >
-      Log In / Sign Up
+      <span class="icon">
+        <i class="fas fa-sign-in-alt"></i>
+      </span>
+      <span>
+        Log In / Sign Up
+      </span>
     </a>
 
     <b-modal :active.sync="isModalActive" :width="modalWidth">

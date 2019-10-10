@@ -94,7 +94,7 @@ export default {
           const question = questionData.data()
           const userData = await firestore
             .collection('publicUsers')
-            .doc(question.toUserId)
+            .doc(answer.answerUserId)
             .get()
           return {
             answer,

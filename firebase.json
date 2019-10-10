@@ -21,6 +21,10 @@
         "function": "func"
       },
       {
+        "source": "/sa/**",
+        "function": "func"
+      },
+      {
         "source": "/tweet/**",
         "function": "func"
       },

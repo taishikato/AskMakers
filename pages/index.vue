@@ -137,6 +137,7 @@
       <div class="columns">
         <div class="column is-9">
           <questions-for-me-card />
+          <recent-questions />
           <p class="title weight-800 is-4">Featured Makers</p>
           <div class="columns is-multiline">
             <div class="column is-6">
@@ -194,6 +195,15 @@
               />
             </a>
           </div>
+          <div id="wip">
+            <a
+              class="button is-rounded is-warning weight-700"
+              href="https://wip.chat/products/2770"
+              target="_blank"
+            >
+              AskMakers on WIP
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -218,6 +228,7 @@ import Users from '~/components/Users'
 import Card from '~/components/Card'
 import QuestionsForMeCard from '~/components/QuestionsForMeCard'
 import RecentAnswers from '~/components/RecentAnswers'
+import RecentQuestions from '~/components/RecentQuestions'
 import getParam from '~/plugins/getParam'
 
 export default {
@@ -226,7 +237,8 @@ export default {
     Users,
     Card,
     QuestionsForMeCard,
-    RecentAnswers
+    RecentAnswers,
+    RecentQuestions
   },
   data() {
     return {
@@ -253,5 +265,13 @@ footer {
 
 #ph-widget {
   margin-top: 20px;
+}
+
+#wip {
+  a {
+    background-color: #f9db01;
+    margin: 0 auto;
+    display: block;
+  }
 }
 </style>

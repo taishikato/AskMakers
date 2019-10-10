@@ -4,7 +4,7 @@
     <a class="weight-800" @click.prevent="showModal">
       Log In / Sign Up
     </a>
-    to ask a question.
+    {{ text }}
 
     <b-modal :active.sync="isModalActive" :width="modalWidth">
       <div id="login-modal" class="has-text-centered">
@@ -27,6 +27,12 @@ const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export default {
   name: 'LoginModalNoButton',
+  props: {
+    text: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       isModalActive: false,

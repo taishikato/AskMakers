@@ -21,8 +21,7 @@
     "koa-firebase-functions": "^1.0.1",
     "koa-router": "^7.4.0",
     "mailgun-js": "^0.22.0",
-    "twitter": "^1.7.1",
-    "twitter-text": "^3.0.0"
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "eslint": "^5.12.0",

@@ -232,7 +232,7 @@
           v-show="$store.getters.getLoginStatus === false"
           class="login-message"
         >
-          <login-modal-no-button />
+          <login-modal-no-button text="to ask a question." />
         </p>
         <div id="answered-question-list">
           <h3 class="title is-5 weight-800">Answered Questions</h3>
@@ -265,9 +265,6 @@
           </ul>
         </div>
       </div>
-      <!-- <div id="sidebar" class="column pd-15rem bg-white radius-box">
-        <p class="title is-5 sp-font">Product</p>
-      </div> -->
     </div>
   </div>
 </template>
@@ -426,7 +423,8 @@ export default {
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
               toUserId: this.user.uid,
-              created: getUnixTime()
+              created: getUnixTime(),
+              isGeneral: false
             })
           this.$toast.open({
             message: 'Successfuly submitted',
