@@ -1,6 +1,9 @@
 <template>
   <div id="index">
-    <section class="hero is-success has-text-centered">
+    <section
+      v-show="$store.getters.getLoginStatus !== true"
+      class="hero is-success has-text-centered"
+    >
       <div class="hero-body">
         <div class="container">
           <h1 class="title weight-800">
