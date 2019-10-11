@@ -72,7 +72,6 @@ export default {
   },
   methods: {
     async pass() {
-      console.log(`question Id: ${this.question.id}`)
       try {
         // passフラグをtrueに
         await firestore
@@ -87,7 +86,6 @@ export default {
       }
     },
     async undoPass() {
-      console.log(`question Id: ${this.question.id}`)
       try {
         // passフラグをtrueに
         await firestore
