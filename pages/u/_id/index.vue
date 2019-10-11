@@ -60,13 +60,24 @@
                 <i class="fab fa-patreon fa-lg"></i>
               </a>
             </div>
+            <a
+              class="button is-light is-rounded marginTop weight-700"
+              @click.prevent="copy"
+            >
+              <span class="icon is-medium">
+                <i class="far fa-copy fa-lg"></i>
+              </span>
+              <span>
+                Copy the sharing URL
+              </span>
+            </a>
             <div
               v-if="user.website !== undefined && user.website !== ''"
-              id="website-btn"
+              class="marginTop"
             >
               <a
                 :href="user.website"
-                class="button is-rounded is-success weight-800"
+                class="button is-rounded is-success weight-700"
                 target="_blank"
               >
                 <span class="icon">
@@ -284,6 +295,20 @@ const inproveText = (text) => {
   return textList
 }
 
+const copyText = (string) => {
+  const temp = document.createElement('div')
+  temp.appendChild(document.createElement('pre')).textContent = string
+  const s = temp.style
+  s.position = 'fixed'
+  s.left = '-100%'
+  document.body.appendChild(temp)
+  document.getSelection().selectAllChildren(temp)
+  const result = document.execCommand('copy')
+  document.body.removeChild(temp)
+  // true なら実行できている falseなら失敗か対応していないか
+  return result
+}
+
 export default {
   name: 'UserId',
   components: {
@@ -400,6 +425,14 @@ export default {
     this.isLoading = false
   },
   methods: {
+    copy() {
+      copyText(`https://askmakers.co/sp/${this.userId}`)
+      this.$toast.open({
+        duration: 3000,
+        message: 'Copied!',
+        type: 'is-success'
+      })
+    },
     askAQustion() {
       this.isSaving = true
       // SVGの大きさをOGPに最適なサイズにしておく
@@ -499,7 +532,7 @@ export default {
   }
 }
 
-#website-btn {
+.marginTop {
   margin-top: 1.5rem;
 }
 
