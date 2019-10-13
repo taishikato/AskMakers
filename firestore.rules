@@ -30,5 +30,9 @@ service cloud.firestore {
       allow read: if isLogin();
       allow write: if isLogin();
     }
+    match /thanks/{thankId} {
+      allow read: if isLogin();
+      allow write: if isLogin();
+    }
   }
 }

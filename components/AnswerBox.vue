@@ -95,6 +95,23 @@
             </span>
           </a>
         </div>
+        <b-dropdown aria-role="list">
+          <a class="button is-white is-rounded" slot="trigger">
+            <span class="icon">
+              <i class="fas fa-ellipsis-h"></i>
+            </span>
+          </a>
+          <div class="dropdown-item">
+            <a @click.prevent="sendThank">
+              <span class="icon">
+                <i class="far fa-kiss-beam"></i>
+              </span>
+              <span>
+                Thank
+              </span>
+            </a>
+          </div>
+        </b-dropdown>
       </div>
     </div>
     <!-- End footer content -->
@@ -104,6 +121,7 @@
 <script>
 import uuid from 'uuid/v4'
 import sanitizeHTML from 'sanitize-html'
+import getUnixTime from '~/plugins/getUnixTime'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -169,6 +187,19 @@ export default {
     }
   },
   methods: {
+    async sendThank() {
+      await firestore.collection('thanks').add({
+        answerUserId: this.answer.answer.answerUserId,
+        senderId: this.$store.getters.getUserInfo.uid,
+        created: getUnixTime()
+      })
+      this.$snackbar.open({
+        message: 'Thank sent',
+        type: 'is-success',
+        position: 'is-top',
+        duration: 5000
+      })
+    },
     copy() {
       copyText(`https://askmakers.co/sa/${this.answerId}`)
       this.$toast.open({
@@ -265,6 +296,12 @@ export default {
     width: 200px;
     display: block;
     margin: 10px auto;
+  }
+}
+
+.dropdown-item {
+  a {
+    display: block;
   }
 }
 </style>

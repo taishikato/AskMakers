@@ -49,5 +49,6 @@ export default {
 #users-wrapper {
   background-color: white;
   border-radius: 4px;
+  border: 1px solid hsl(141, 71%, 48%);
 }
 </style>
