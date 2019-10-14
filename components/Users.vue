@@ -1,6 +1,6 @@
 <template>
   <div id="users">
-    <p class="title weight-800 is-4">Joined Recently</p>
+    <p class="title is-5">Joined Recently</p>
     <contentLoader v-show="isLoadng" />
     <div id="users-wrapper" class="columns is-multiline is-mobile">
       <div v-for="user in users" :key="user.uid" class="column is-3">

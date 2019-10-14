@@ -14,7 +14,7 @@
         <div class="ask-btn has-text-centered">
           <n-link
             :to="`/u/${username}`"
-            class="button is-success is-rounded has-text-weight-bold"
+            class="button is-light is-rounded has-text-weight-bold"
           >
             Ask A Question
           </n-link>
@@ -51,7 +51,6 @@ export default {
 .card-component {
   background-color: white;
   border-radius: 3px;
-  padding: 1.5rem;
   img {
     width: 100%;
     max-width: 200px;

@@ -15,133 +15,12 @@
         </div>
       </div>
     </section>
-    <section
-      v-if="isCommingSoon && $store.getters.getLoginStatus === false"
-      class="hero has-text-centered"
-    >
-      <div class="hero-body">
-        <div class="container">
-          <h2 class="title weight-800 is-2">
-            AskMakers coming soon!
-          </h2>
-          <p class="subtitle weight-700">
-            Please register with the waiting list ✉️
-          </p>
-          <!-- Begin Mailchimp Signup Form -->
-          <link
-            href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css"
-            rel="stylesheet"
-            type="text/css"
-          />
-          <style type="text/css">
-            #mc_embed_signup {
-              clear: left;
-              width: 100%;
-              max-width: 500px;
-              text-align: center;
-              font: 14px Helvetica, Arial, sans-serif;
-              margin: 0 auto;
-            }
-            /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-              We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-          </style>
-          <div id="mc_embed_signup">
-            <form
-              id="mc-embedded-subscribe-form"
-              action="https://gmail.us3.list-manage.com/subscribe/post?u=2b130e92de55bfb420515aa1c&amp;id=d0c60cb2e5"
-              method="post"
-              name="mc-embedded-subscribe-form"
-              class="validate"
-              target="_blank"
-              novalidate
-            >
-              <div id="mc_embed_signup_scroll">
-                <h2>Subscribe</h2>
-                <div class="indicates-required">
-                  <span class="asterisk">*</span>
-                  indicates required
-                </div>
-                <div class="mc-field-group">
-                  <label for="mce-EMAIL">
-                    Email Address <span class="asterisk">*</span>
-                  </label>
-                  <input
-                    id="mce-EMAIL"
-                    type="email"
-                    value=""
-                    name="EMAIL"
-                    class="required email"
-                  />
-                </div>
-                <div id="mce-responses" class="clear">
-                  <div
-                    id="mce-error-response"
-                    class="response"
-                    style="display:none"
-                  ></div>
-                  <div
-                    id="mce-success-response"
-                    class="response"
-                    style="display:none"
-                  ></div>
-                </div>
-                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                <div
-                  style="position: absolute; left: -5000px;"
-                  aria-hidden="true"
-                >
-                  <input
-                    type="text"
-                    name="b_2b130e92de55bfb420515aa1c_d0c60cb2e5"
-                    tabindex="-1"
-                    value=""
-                  />
-                </div>
-                <div class="clear">
-                  <input
-                    id="mc-embedded-subscribe"
-                    type="submit"
-                    value="Subscribe"
-                    name="subscribe"
-                    class="button"
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-          <script
-            type="text/javascript"
-            src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"
-          ></script>
-          <script type="text/javascript">
-            ;(function($) {
-              window.fnames = new Array()
-              window.ftypes = new Array()
-              fnames[0] = 'EMAIL'
-              ftypes[0] = 'email'
-              fnames[1] = 'FNAME'
-              ftypes[1] = 'text'
-              fnames[2] = 'LNAME'
-              ftypes[2] = 'text'
-              fnames[3] = 'ADDRESS'
-              ftypes[3] = 'address'
-              fnames[4] = 'PHONE'
-              ftypes[4] = 'phone'
-              fnames[5] = 'BIRTHDAY'
-              ftypes[5] = 'birthday'
-            })(jQuery)
-            var $mcj = jQuery.noConflict(true)
-          </script>
-          <!--End mc_embed_signup-->
-        </div>
-      </div>
-    </section>
     <section class="section">
       <div class="columns">
-        <div class="column is-9">
+        <div class="column is-8">
           <questions-for-me-card />
           <recent-questions />
-          <p class="title weight-800 is-4">Featured Makers</p>
+          <!-- <p class="title weight-800 is-4">Featured Makers</p>
           <div class="columns is-multiline">
             <div class="column is-6">
               <card
@@ -179,10 +58,49 @@
               >
               </card>
             </div>
-          </div>
+          </div> -->
           <recent-answers />
         </div>
         <div class="column">
+          <p class="title is-5">Featured Makers</p>
+          <div class="columns is-multiline">
+            <div class="column is-12 featured-maker-box">
+              <card
+                name="Amie Chen"
+                username="hyper_yolo"
+                content="The maker of Spider Pro"
+                image="/img/amie.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-12 featured-maker-box">
+              <card
+                name="Hari Krishna Dulipudi"
+                username="1HaKr"
+                content="The maker of VisaList and many products"
+                image="/img/hari.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-12 featured-maker-box">
+              <card
+                name="Justin Jackson"
+                username="mijustin"
+                content="The maker of Transistor.fm and Megamaker"
+                image="/img/justin.jpg"
+              >
+              </card>
+            </div>
+            <div class="column is-12 featured-maker-box">
+              <card
+                name="Jonathan Bull"
+                username="jonathanbull"
+                content="The maker of EmailOctopus"
+                image="/img/jonathan.jpg"
+              >
+              </card>
+            </div>
+          </div>
           <users />
           <div id="ph-widget" class="column has-text-centered">
             <a
@@ -264,6 +182,13 @@ export default {
 
 footer {
   margin-bottom: 20px;
+}
+
+.featured-maker-box {
+  background-color: white;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  border: 1px solid #23d160;
 }
 
 #ph-widget {
