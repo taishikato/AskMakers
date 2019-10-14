@@ -95,8 +95,8 @@
             </span>
           </a>
         </div>
-        <b-dropdown aria-role="list">
-          <a class="button is-white is-rounded" slot="trigger">
+        <b-dropdown v-if="$store.getters.getLoginStatus" aria-role="list">
+          <a slot="trigger" class="button is-white is-rounded">
             <span class="icon">
               <i class="fas fa-ellipsis-h"></i>
             </span>
