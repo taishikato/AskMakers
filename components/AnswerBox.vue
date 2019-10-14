@@ -102,7 +102,10 @@
             </span>
           </a>
           <div class="dropdown-item">
-            <a @click.prevent="sendThank">
+            <span v-if="isThaked">
+              Thanked
+            </span>
+            <a v-else @click.prevent="sendThank">
               <span class="icon">
                 <i class="far fa-kiss-beam"></i>
               </span>
@@ -170,13 +173,16 @@ export default {
     return {
       isModalActive: false,
       modalWidth: '500px',
-      isBookmarked: false
+      isBookmarked: false,
+      isThaked: false
     }
   },
   async beforeCreate() {
     if (this.$store.getters.getLoginStatus !== true) {
       return
     }
+
+    // ブックマークデータ
     const bookmarkData = await firestore
       .collection('bookmarks')
       .where('answerId', '==', this.$route.params.id)
@@ -185,10 +191,21 @@ export default {
     if (bookmarkData.empty === false) {
       this.isBookmarked = true
     }
+
+    // Thankデータ
+    const thankData = await firestore
+      .collection('thanks')
+      .where('answerId', '==', this.answer.answer.id)
+      .where('senderId', '==', this.$store.getters.getUserInfo.uid)
+      .get()
+    if (thankData.empty === false) {
+      this.isThaked = true
+    }
   },
   methods: {
     async sendThank() {
       await firestore.collection('thanks').add({
+        answerId: this.answer.answer.id,
         answerUserId: this.answer.answer.answerUserId,
         senderId: this.$store.getters.getUserInfo.uid,
         created: getUnixTime()
@@ -199,6 +216,7 @@ export default {
         position: 'is-top',
         duration: 5000
       })
+      this.isThaked = true
     },
     copy() {
       copyText(`https://askmakers.co/sa/${this.answerId}`)

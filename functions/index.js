@@ -17,6 +17,7 @@ const Twitter = require('twitter')
 const sendAnswerNotification = require('./src/sendAnswerNotification')
 const addGeneralQuestion = require('./src/addGeneralQuestion')
 const shareAnswerRouter = require('./src/shareAnswerRouter')
+const sendThankNotification = require('./src/sendThankNotification')
 
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -352,5 +353,20 @@ exports.onAnswerCreated = functions.firestore
       await sendAnswerNotification(db, mg, snap)
     } catch (err) {
       console.log(err)
+    }
+  })
+
+/**
+ * Thank新規追加
+ * Thankをもらったユーザーにメールを送信
+ */
+exports.onThankCreated = functions.firestore
+  .document('thanks/{thankId}')
+  .onCreate(async (snap, context) => {
+    console.info('Start onThankCreated function')
+    try {
+      await sendThankNotification(db, mg, snap)
+    } catch (err) {
+      console.error(err)
     }
   })
