@@ -20,85 +20,49 @@
         <div class="column is-8">
           <questions-for-me-card />
           <recent-questions />
-          <!-- <p class="title weight-800 is-4">Featured Makers</p>
-          <div class="columns is-multiline">
-            <div class="column is-6">
-              <card
-                name="Amie Chen"
-                username="hyper_yolo"
-                content="The maker of Spider Pro"
-                image="/img/amie.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-6">
-              <card
-                name="Hari Krishna Dulipudi"
-                username="1HaKr"
-                content="The maker of VisaList and many products"
-                image="/img/hari.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-6">
-              <card
-                name="Justin Jackson"
-                username="mijustin"
-                content="The maker of Transistor.fm and Megamaker"
-                image="/img/justin.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-6">
-              <card
-                name="Jonathan Bull"
-                username="jonathanbull"
-                content="The maker of EmailOctopus"
-                image="/img/jonathan.jpg"
-              >
-              </card>
-            </div>
-          </div> -->
-          <recent-answers />
+          <!-- <recent-answers /> -->
         </div>
         <div class="column">
-          <p class="title is-5">Featured Makers</p>
-          <div class="columns is-multiline">
-            <div class="column is-12 featured-maker-box">
-              <card
-                name="Amie Chen"
-                username="hyper_yolo"
-                content="The maker of Spider Pro"
-                image="/img/amie.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-12 featured-maker-box">
-              <card
-                name="Hari Krishna Dulipudi"
-                username="1HaKr"
-                content="The maker of VisaList and many products"
-                image="/img/hari.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-12 featured-maker-box">
-              <card
-                name="Justin Jackson"
-                username="mijustin"
-                content="The maker of Transistor.fm and Megamaker"
-                image="/img/justin.jpg"
-              >
-              </card>
-            </div>
-            <div class="column is-12 featured-maker-box">
-              <card
-                name="Jonathan Bull"
-                username="jonathanbull"
-                content="The maker of EmailOctopus"
-                image="/img/jonathan.jpg"
-              >
-              </card>
+          <recent-answers />
+          <div class="featured-makers">
+            <p class="title is-5">Featured Makers</p>
+            <div class="columns is-multiline">
+              <div class="column is-12 featured-maker-box">
+                <card
+                  name="Amie Chen"
+                  username="hyper_yolo"
+                  content="The maker of Spider Pro"
+                  image="/img/amie.jpg"
+                >
+                </card>
+              </div>
+              <div class="column is-12 featured-maker-box">
+                <card
+                  name="Hari Krishna Dulipudi"
+                  username="1HaKr"
+                  content="The maker of VisaList and many products"
+                  image="/img/hari.jpg"
+                >
+                </card>
+              </div>
+              <div class="column is-12 featured-maker-box">
+                <card
+                  name="Justin Jackson"
+                  username="mijustin"
+                  content="The maker of Transistor.fm and Megamaker"
+                  image="/img/justin.jpg"
+                >
+                </card>
+              </div>
+              <div class="column is-12 featured-maker-box">
+                <card
+                  name="Jonathan Bull"
+                  username="jonathanbull"
+                  content="The maker of EmailOctopus"
+                  image="/img/jonathan.jpg"
+                >
+                </card>
+              </div>
             </div>
           </div>
           <users />
@@ -184,11 +148,15 @@ footer {
   margin-bottom: 20px;
 }
 
+.featured-makers {
+  margin-bottom: 10px;
+}
+
 .featured-maker-box {
   background-color: white;
   border-radius: 3px;
   margin-bottom: 10px;
-  border: 1px solid #23d160;
+  border-bottom: 2px solid #23d160;
 }
 
 #ph-widget {

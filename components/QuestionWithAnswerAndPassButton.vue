@@ -1,6 +1,6 @@
 <template>
   <div class="question-box">
-    <p class="content is-size-5 question-title has-text-weight-medium">
+    <p class="is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.id}`"
         class="question-text-link has-text-black-bis"
@@ -16,6 +16,18 @@
           </span>
           <span>
             Answer
+          </span>
+        </n-link>
+        <n-link
+          v-if="answerCount > 0"
+          :to="`/q/${question.id}`"
+          class="button is-white is-rounded"
+        >
+          <span class="icon">
+            <i class="fas fa-lightbulb"></i>
+          </span>
+          <span>
+            {{ answerCount }}
           </span>
         </n-link>
         <a
@@ -72,8 +84,16 @@ export default {
   },
   data() {
     return {
-      isPassed: false
+      isPassed: false,
+      answerCount: 0
     }
+  },
+  async created() {
+    const answersData = await firestore
+      .collection('answers')
+      .where('questionId', '==', this.question.id)
+      .get()
+    this.answerCount = answersData.size
   },
   methods: {
     async pass() {
@@ -119,7 +139,8 @@ export default {
     }
   }
   .question-title {
-    padding: 15px;
+    margin-bottom: 1rem;
+    padding: 15px 15px 0;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
   }

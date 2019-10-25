@@ -14,7 +14,7 @@
       </div>
     </b-modal>
     <!-- Login Modal End -->
-    <p class="content is-size-5 question-title has-text-weight-medium">
+    <p class="is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.question.id}`"
         class="question-text-link has-text-black-bis"
@@ -24,7 +24,7 @@
     </p>
     <div v-if="question.answer !== undefined" class="answer-content">
       <div class="flex-container flex-center">
-        <p>✍️ The answer by</p>
+        <p>✍️ Answered by</p>
         <n-link :to="`/u/${question.user.username}`" class="profile-pic-link">
           <img
             :src="question.user.picture"
@@ -227,7 +227,8 @@ export default {
   border-radius: 3px;
   border-bottom: 2px solid #e8d5d5;
   .question-title {
-    padding: 15px;
+    padding: 15px 15px 0;
+    margin-bottom: 1rem;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     .question-text-link {
