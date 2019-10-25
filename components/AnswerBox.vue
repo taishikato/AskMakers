@@ -14,7 +14,10 @@
       </div>
     </b-modal>
     <!-- Login Modal End -->
-    <p v-if="showQuestion" class="content is-size-4 question-title">
+    <p
+      v-if="showQuestion"
+      class="content is-size-5 has-text-weight-medium question-title"
+    >
       <n-link
         :to="`/q/${answer.question.id}`"
         class="question-text-link has-text-black-bis"
@@ -153,11 +156,13 @@ export default {
     },
     answerId: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     questionId: {
       type: String,
-      required: false
+      required: false,
+      default: ''
     },
     showQuestion: {
       type: Boolean,
@@ -279,6 +284,7 @@ export default {
 <style lang="scss" scoped>
 .answer-box {
   border-radius: 3px;
+  border-bottom: 2px solid #e8d5d5;
   .paddingTop {
     padding: 15px !important;
   }
@@ -286,7 +292,6 @@ export default {
     margin-bottom: 1rem;
   }
   .question-title {
-    background-color: hsl(0, 0%, 98%);
     padding: 15px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
