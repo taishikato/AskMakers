@@ -164,10 +164,11 @@ export default {
   methods: {
     copy() {
       copyText(`https://askmakers.co/s/${this.question.question.id}`)
-      this.$toast.open({
+      this.$snackbar.open({
         duration: 3000,
-        message: 'Copied!',
-        type: 'is-success'
+        message: 'Copied successfully',
+        type: 'is-success',
+        position: 'is-top'
       })
     },
     sanitizeHtml(text) {
@@ -224,8 +225,8 @@ export default {
 .question-box {
   background-color: white;
   border-radius: 3px;
+  border-bottom: 2px solid #e8d5d5;
   .question-title {
-    background-color: hsl(0, 0%, 98%);
     padding: 15px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;

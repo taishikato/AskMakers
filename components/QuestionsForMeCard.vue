@@ -10,7 +10,10 @@
         :key="question.id"
         class="column is-12"
       >
-        <question-with-answer-and-pass-button :question="question" />
+        <question-with-answer-and-pass-button
+          :question="question"
+          :has-pass-btn="true"
+        />
       </div>
     </div>
     <div v-show="isLoading === true" class="columns">

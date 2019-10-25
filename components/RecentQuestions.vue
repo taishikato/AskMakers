@@ -11,29 +11,10 @@
         :key="question.id"
         class="column is-12"
       >
-        <div class="question-box">
-          <p class="content is-size-5 question-title has-text-weight-medium">
-            <n-link
-              :to="`/q/${question.id}`"
-              class="question-text-link has-text-black-bis"
-            >
-              {{ question.text }}
-            </n-link>
-          </p>
-          <div class="footer-content">
-            <n-link
-              :to="`/q/${question.id}`"
-              class="button is-white is-rounded"
-            >
-              <span class="icon">
-                <i class="fas fa-pen"></i>
-              </span>
-              <span>
-                Answer
-              </span>
-            </n-link>
-          </div>
-        </div>
+        <question-with-answer-and-pass-button
+          :question="question"
+          :has-pass-btn="false"
+        />
       </div>
     </div>
     <div v-show="isLoading === true" class="columns">
@@ -49,7 +30,7 @@
 <script>
 import sanitizeHTML from 'sanitize-html'
 import { FacebookLoader } from 'vue-content-loader'
-// import QuestionBox from '~/components/QuestionBox'
+import QuestionWithAnswerAndPassButton from '~/components/QuestionWithAnswerAndPassButton'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -58,8 +39,8 @@ const firestore = firebase.firestore()
 export default {
   name: 'RecentAnswers',
   components: {
-    FacebookLoader
-    // QuestionBox
+    FacebookLoader,
+    QuestionWithAnswerAndPassButton
   },
   data() {
     return {

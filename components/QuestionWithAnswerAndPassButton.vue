@@ -19,6 +19,7 @@
           </span>
         </n-link>
         <a
+          v-if="hasPassBtn"
           class="button is-white is-rounded has-text-grey-light"
           @click.prevent="pass"
         >
@@ -63,6 +64,10 @@ export default {
     question: {
       type: Object,
       required: true
+    },
+    hasPassBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -107,13 +112,13 @@ export default {
 .question-box {
   background-color: white;
   border-radius: 3px;
+  border-bottom: 2px solid #e8d5d5;
   .question-text-link {
     &:hover {
       text-decoration: underline;
     }
   }
   .question-title {
-    background-color: #fafafa;
     padding: 15px;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
