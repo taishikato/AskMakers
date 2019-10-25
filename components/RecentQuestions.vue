@@ -1,7 +1,7 @@
 <template>
   <div id="recent-answers">
     <p id="title-p">
-      <span class="title weight-800 is-4">
+      <span class="title is-5">
         Recent Questions
       </span>
     </p>
@@ -12,7 +12,7 @@
         class="column is-12"
       >
         <div class="question-box">
-          <p class="content is-size-4 question-title">
+          <p class="content is-size-5 question-title has-text-weight-medium">
             <n-link
               :to="`/q/${question.id}`"
               class="question-text-link has-text-black-bis"

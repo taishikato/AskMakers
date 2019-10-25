@@ -3,7 +3,7 @@
     v-if="questions.length > 0 && $store.getters.getLoginStatus"
     id="questions-for-me-card"
   >
-    <p class="title weight-800 is-4">The questions for you</p>
+    <p class="title is-5">The questions for you</p>
     <div v-show="isLoading === false" class="columns is-multiline">
       <div
         v-for="question in questions"

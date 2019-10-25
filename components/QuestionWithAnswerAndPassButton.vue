@@ -1,6 +1,6 @@
 <template>
   <div class="question-box">
-    <p class="content is-size-4 question-title">
+    <p class="content is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.id}`"
         class="question-text-link has-text-black-bis"

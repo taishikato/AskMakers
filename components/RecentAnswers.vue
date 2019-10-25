@@ -1,7 +1,7 @@
 <template>
   <div id="recent-answers">
     <p id="title-p">
-      <span class="title weight-800 is-4">
+      <span class="title is-5">
         Recent Answers
       </span>
     </p>

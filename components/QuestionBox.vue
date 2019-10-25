@@ -14,7 +14,7 @@
       </div>
     </b-modal>
     <!-- Login Modal End -->
-    <p class="content is-size-4 question-title">
+    <p class="content is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.question.id}`"
         class="question-text-link has-text-black-bis"
@@ -41,7 +41,7 @@
         </n-link>
       </div>
       <div class="content">
-        <p v-if="simpleMode === true" id="answer-text" class="is-size-5">
+        <p v-if="simpleMode === true" id="answer-text" class="is-size-6">
           <n-link :to="`/a/${question.answer.id}`" class="has-text-grey-darker">
             {{
               question.answer.content.length > 140
@@ -53,7 +53,7 @@
         <div v-else>
           <p
             id="answer-text"
-            class="is-size-5"
+            class="is-size-6"
             v-html="
               sanitizeHtml(question.answer.content).replace(/\n/g, '<br/>')
             "
