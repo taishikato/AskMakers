@@ -227,7 +227,7 @@ export default {
       firestore
         .collection('upvotes')
         .where('answerId', '==', this.answerId)
-        .where('userId', '==', this.$store.getters.getUserInfo.uid)
+        .where('senderId', '==', this.$store.getters.getUserInfo.uid)
         .get(),
       // Upvoteしているか
       firestore
