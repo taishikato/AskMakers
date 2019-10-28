@@ -81,7 +81,34 @@
             <i class="fab fa-twitter fa-lg"></i>
           </span>
         </a>
-        <a class="has-text-black-ter" @click.prevent="copy">
+        <div>
+          <a
+            v-if="isUpvoted === true"
+            @click.prevent="unupvote"
+            class="button is-white is-rounded has-text-link"
+          >
+            <span class="icon is-medium">
+              <i class="fas fa-arrow-alt-circle-up fa-lg"></i>
+            </span>
+            <span>
+              {{ upvoteCount }}
+            </span>
+          </a>
+          <a
+            v-else
+            @click.prevent="upvote"
+            class="has-text-grey button is-white is-rounded"
+            title="Upvote"
+          >
+            <span class="icon is-medium">
+              <i class="far fa-arrow-alt-circle-up fa-lg"></i>
+            </span>
+            <span>
+              {{ upvoteCount }}
+            </span>
+          </a>
+        </div>
+        <a class="has-text-grey" @click.prevent="copy">
           <span class="icon is-medium">
             <i class="far fa-copy fa-lg"></i>
           </span>
@@ -92,14 +119,14 @@
               <i class="fas fa-bookmark fa-lg"></i>
             </span>
           </a>
-          <a v-else @click.prevent="bookmark(questionId)">
+          <a v-else @click.prevent="bookmark(questionId)" class="has-text-grey">
             <span class="icon is-medium">
               <i class="far fa-bookmark fa-lg"></i>
             </span>
           </a>
         </div>
         <b-dropdown v-if="$store.getters.getLoginStatus" aria-role="list">
-          <a slot="trigger" class="button is-white is-rounded">
+          <a slot="trigger" class="button is-white is-rounded has-text-grey">
             <span class="icon">
               <i class="fas fa-ellipsis-h"></i>
             </span>
@@ -176,9 +203,12 @@ export default {
   },
   data() {
     return {
-      isModalActive: false,
       modalWidth: '500px',
+      upvoteCount: 0,
+      userUpvoteData: null,
+      isModalActive: false,
       isBookmarked: false,
+      isUpvoted: false,
       isThaked: false
     }
   },
@@ -187,27 +217,80 @@ export default {
       return
     }
 
-    // ブックマークデータ
-    const bookmarkData = await firestore
-      .collection('bookmarks')
-      .where('answerId', '==', this.answerId)
-      .where('userId', '==', this.$store.getters.getUserInfo.uid)
-      .get()
+    const [
+      upvoteData,
+      upvoteThisAnswerData,
+      bookmarkData,
+      thankData
+    ] = await Promise.all([
+      // Upvoteしているか
+      firestore
+        .collection('upvotes')
+        .where('answerId', '==', this.answerId)
+        .where('userId', '==', this.$store.getters.getUserInfo.uid)
+        .get(),
+      // Upvoteしているか
+      firestore
+        .collection('upvotes')
+        .where('answerId', '==', this.answerId)
+        .get(),
+      // ブックマークデータ
+      firestore
+        .collection('bookmarks')
+        .where('answerId', '==', this.answerId)
+        .where('userId', '==', this.$store.getters.getUserInfo.uid)
+        .get(),
+      // Thankデータ
+      firestore
+        .collection('thanks')
+        .where('answerId', '==', this.answer.answer.id)
+        .where('senderId', '==', this.$store.getters.getUserInfo.uid)
+        .get()
+    ])
+
+    if (upvoteData.empty === false) {
+      this.isUpvoted = true
+      this.userUpvoteData = upvoteData.docs[0].data()
+    }
+
+    this.upvoteCount = upvoteThisAnswerData.size
+
     if (bookmarkData.empty === false) {
       this.isBookmarked = true
     }
-
-    // Thankデータ
-    const thankData = await firestore
-      .collection('thanks')
-      .where('answerId', '==', this.answer.answer.id)
-      .where('senderId', '==', this.$store.getters.getUserInfo.uid)
-      .get()
     if (thankData.empty === false) {
       this.isThaked = true
     }
   },
   methods: {
+    async upvote() {
+      if (this.$store.getters.getLoginStatus !== true) {
+        this.isModalActive = true
+        return
+      }
+      const upvoteId = uuid()
+        .split('-')
+        .join('')
+      await firestore
+        .collection('upvotes')
+        .doc(upvoteId)
+        .set({
+          id: upvoteId,
+          answerId: this.answer.answer.id,
+          userId: this.$store.getters.getUserInfo.uid,
+          created: getUnixTime()
+        })
+      this.isUpvoted = true
+      this.upvoteCount += 1
+    },
+    async unupvote() {
+      await firestore
+        .collection('upvotes')
+        .doc(this.userUpvoteData.id)
+        .delete()
+      this.isUpvoted = false
+      this.upvoteCount -= 1
+    },
     async sendThank() {
       await firestore.collection('thanks').add({
         answerId: this.answer.answer.id,
