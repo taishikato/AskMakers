@@ -5,7 +5,10 @@ const addGeneralQuestion = async (db, mg, snap) => {
   const mailAdressArray = []
   userData.docs.forEach((doc) => {
     const user = doc.data()
-    if (user.email !== undefined) {
+    if (
+      user.email !== undefined &&
+      user.isEmailNewGeneralQuestionNotification !== false
+    ) {
       mailAdressArray.push(user.email)
     }
   })

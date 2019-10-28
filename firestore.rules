@@ -11,7 +11,7 @@ function onlyIdentityUser(userId) {
 service cloud.firestore {
   match /databases/{database}/documents {
     match /secretUsers/{userId} {
-      allow read: if false;
+      allow read: if onlyIdentityUser(userId);
       allow write: if onlyIdentityUser(userId);
     }
     match /publicUsers/{userId} {

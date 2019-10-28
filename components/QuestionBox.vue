@@ -14,7 +14,7 @@
       </div>
     </b-modal>
     <!-- Login Modal End -->
-    <p class="content is-size-4 question-title">
+    <p class="is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.question.id}`"
         class="question-text-link has-text-black-bis"
@@ -24,7 +24,7 @@
     </p>
     <div v-if="question.answer !== undefined" class="answer-content">
       <div class="flex-container flex-center">
-        <p>✍️ The answer by</p>
+        <p>✍️ Answered by</p>
         <n-link :to="`/u/${question.user.username}`" class="profile-pic-link">
           <img
             :src="question.user.picture"
@@ -41,7 +41,7 @@
         </n-link>
       </div>
       <div class="content">
-        <p v-if="simpleMode === true" id="answer-text" class="is-size-5">
+        <p v-if="simpleMode === true" id="answer-text" class="is-size-6">
           <n-link :to="`/a/${question.answer.id}`" class="has-text-grey-darker">
             {{
               question.answer.content.length > 140
@@ -53,7 +53,7 @@
         <div v-else>
           <p
             id="answer-text"
-            class="is-size-5"
+            class="is-size-6"
             v-html="
               sanitizeHtml(question.answer.content).replace(/\n/g, '<br/>')
             "
@@ -164,10 +164,11 @@ export default {
   methods: {
     copy() {
       copyText(`https://askmakers.co/s/${this.question.question.id}`)
-      this.$toast.open({
+      this.$snackbar.open({
         duration: 3000,
-        message: 'Copied!',
-        type: 'is-success'
+        message: 'Copied successfully',
+        type: 'is-success',
+        position: 'is-top'
       })
     },
     sanitizeHtml(text) {
@@ -224,9 +225,10 @@ export default {
 .question-box {
   background-color: white;
   border-radius: 3px;
+  border-bottom: 2px solid #eaeaea;
   .question-title {
-    background-color: hsl(0, 0%, 98%);
-    padding: 15px;
+    padding: 15px 15px 0;
+    margin-bottom: 1rem;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     .question-text-link {

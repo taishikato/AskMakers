@@ -16,7 +16,7 @@
             :to="`/u/${username}`"
             class="button is-light is-rounded has-text-weight-bold"
           >
-            Ask A Question
+            Ask 1 on 1 Question
           </n-link>
         </div>
       </div>

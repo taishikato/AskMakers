@@ -75,8 +75,19 @@
                 <label class="label sp-font">Emeil Notification</label>
                 <label class="checkbox">
                   <input
-                    type="checkbox"
                     v-model="userSettings.isEmailNewQuestionNotification"
+                    type="checkbox"
+                  />
+                  Send email when you get a new 1on1 question
+                </label>
+              </div>
+              <div class="field">
+                <label class="checkbox">
+                  <input
+                    v-model="
+                      userSecretSettings.isEmailNewGeneralQuestionNotification
+                    "
+                    type="checkbox"
                   />
                   Send email when you get a new question
                 </label>
@@ -235,6 +246,9 @@ export default {
           gitHub: '',
           patreon: ''
         }
+      },
+      userSecretSettings: {
+        isEmailNewGeneralQuestionNotification: true
       }
     }
   },
@@ -244,8 +258,18 @@ export default {
     }
     return false
   },
-  created() {
+  async created() {
     this.userSettings = this.$store.getters.getUserInfo
+    const secretUserData = await firestore
+      .collection('secretUsers')
+      .doc(this.$store.getters.getUserInfo.uid)
+      .get()
+    /**
+     * メール受け取り設定(isEmailNewGeneralQuestionNotification)はsecretUserコレクションに格納されているのでここで取得
+     **/
+    const secretUser = secretUserData.data()
+    this.userSecretSettings.isEmailNewGeneralQuestionNotification =
+      secretUser.isEmailNewGeneralQuestionNotification
   },
   methods: {
     async update() {
@@ -259,16 +283,24 @@ export default {
         const userRef = firestore
           .collection('publicUsers')
           .doc(this.$store.getters.getUserInfo.uid)
-        await updateDoc(userRef, this.userSettings)
-        this.$toast.open({
+        const userSecretRef = firestore
+          .collection('secretUsers')
+          .doc(this.$store.getters.getUserInfo.uid)
+        await Promise.all([
+          updateDoc(userRef, this.userSettings),
+          updateDoc(userSecretRef, this.userSecretSettings)
+        ])
+        this.$snackbar.open({
           message: 'Successfuly saved',
           type: 'is-success',
-          duration: 4000
+          position: 'is-top',
+          duration: 3000
         })
       } catch (err) {
-        this.$toast.open({
+        this.$snackbar.open({
           message: 'Something went wrong...Please try again',
           type: 'is-danger',
+          position: 'is-top',
           duration: 4000
         })
       } finally {

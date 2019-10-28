@@ -51,6 +51,7 @@ export default async ({ store, redirect }) => {
         email: userData.email,
         created,
         provider: [result.additionalUserInfo.providerId],
+        isEmailNewGeneralQuestionNotification: true,
         twitter: {
           accessToken: result.credential.accessToken,
           secret: result.credential.secret
