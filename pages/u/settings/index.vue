@@ -252,6 +252,11 @@ export default {
       }
     }
   },
+  head() {
+    return {
+      meta: [{ hid: 'robots', name: 'robots', content: 'noindex' }]
+    }
+  },
   validate({ store }) {
     if (store.getters.getLoginStatus === true) {
       return true
