@@ -11,10 +11,10 @@
         :key="answer.answer.id"
         class="column is-12"
       >
-        <question-box
-          :question="answer"
-          :simpleMode="true"
-          :hasBookmarkFeature="false"
+        <answer-box
+          :answer="answer"
+          :answer-id="answer.answer.id"
+          :simple-mode="true"
         />
       </div>
     </div>
@@ -38,7 +38,7 @@
 <script>
 import sanitizeHTML from 'sanitize-html'
 import { FacebookLoader } from 'vue-content-loader'
-import QuestionBox from '~/components/QuestionBox'
+import AnswerBox from '~/components/AnswerBox'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -48,7 +48,7 @@ export default {
   name: 'RecentAnswers',
   components: {
     FacebookLoader,
-    QuestionBox
+    AnswerBox
   },
   data() {
     return {

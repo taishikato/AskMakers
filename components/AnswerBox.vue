@@ -103,7 +103,7 @@
             <span class="icon is-medium">
               <i class="far fa-arrow-alt-circle-up fa-lg"></i>
             </span>
-            <span>
+            <span v-show="upvoteCount > 0">
               {{ upvoteCount }}
             </span>
           </a>
@@ -271,15 +271,18 @@ export default {
       const upvoteId = uuid()
         .split('-')
         .join('')
+      const setData = {
+        id: upvoteId,
+        answerId: this.answer.answer.id,
+        senderId: this.$store.getters.getUserInfo.uid,
+        answerUserId: this.answer.answer.answerUserId,
+        created: getUnixTime()
+      }
       await firestore
         .collection('upvotes')
         .doc(upvoteId)
-        .set({
-          id: upvoteId,
-          answerId: this.answer.answer.id,
-          userId: this.$store.getters.getUserInfo.uid,
-          created: getUnixTime()
-        })
+        .set(setData)
+      this.userUpvoteData = setData
       this.isUpvoted = true
       this.upvoteCount += 1
     },

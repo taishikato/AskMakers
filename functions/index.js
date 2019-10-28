@@ -18,6 +18,7 @@ const sendAnswerNotification = require('./src/sendAnswerNotification')
 const addGeneralQuestion = require('./src/addGeneralQuestion')
 const shareAnswerRouter = require('./src/shareAnswerRouter')
 const sendThankNotification = require('./src/sendThankNotification')
+const sendUpvoteNotification = require('./src/sendUpvoteNotification')
 
 app.use(router.routes())
 app.use(router.allowedMethods())
@@ -366,6 +367,21 @@ exports.onThankCreated = functions.firestore
     console.info('Start onThankCreated function')
     try {
       await sendThankNotification(db, mg, snap)
+    } catch (err) {
+      console.error(err)
+    }
+  })
+
+/**
+ * Upvote新規追加
+ * Upvoteをもらったユーザーにメールを送信
+ */
+exports.onUpvoteCreated = functions.firestore
+  .document('upvotes/{upvoteId}')
+  .onCreate(async (snap, context) => {
+    console.info('Start onUpvoteCreated function')
+    try {
+      await sendUpvoteNotification(db, mg, snap)
     } catch (err) {
       console.error(err)
     }
