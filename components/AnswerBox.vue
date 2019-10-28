@@ -182,7 +182,7 @@ export default {
       isThaked: false
     }
   },
-  async beforeCreate() {
+  async created() {
     if (this.$store.getters.getLoginStatus !== true) {
       return
     }
@@ -190,7 +190,7 @@ export default {
     // ブックマークデータ
     const bookmarkData = await firestore
       .collection('bookmarks')
-      .where('answerId', '==', this.$route.params.id)
+      .where('answerId', '==', this.answerId)
       .where('userId', '==', this.$store.getters.getUserInfo.uid)
       .get()
     if (bookmarkData.empty === false) {
