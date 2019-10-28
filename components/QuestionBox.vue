@@ -225,7 +225,7 @@ export default {
 .question-box {
   background-color: white;
   border-radius: 3px;
-  border-bottom: 2px solid #e8d5d5;
+  border-bottom: 2px solid #eaeaea;
   .question-title {
     padding: 15px 15px 0;
     margin-bottom: 1rem;
