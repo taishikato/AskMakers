@@ -84,8 +84,8 @@
         <div>
           <a
             v-if="isUpvoted === true"
-            @click.prevent="unupvote"
             class="button is-white is-rounded has-text-link"
+            @click.prevent="unupvote"
           >
             <span class="icon is-medium">
               <i class="fas fa-arrow-alt-circle-up fa-lg"></i>
@@ -213,26 +213,23 @@ export default {
     }
   },
   async created() {
+    // Upvote数
+    const upvoteThisAnswerData = await firestore
+      .collection('upvotes')
+      .where('answerId', '==', this.answerId)
+      .get()
+    this.upvoteCount = upvoteThisAnswerData.size
+
     if (this.$store.getters.getLoginStatus !== true) {
       return
     }
 
-    const [
-      upvoteData,
-      upvoteThisAnswerData,
-      bookmarkData,
-      thankData
-    ] = await Promise.all([
+    const [upvoteData, bookmarkData, thankData] = await Promise.all([
       // Upvoteしているか
       firestore
         .collection('upvotes')
         .where('answerId', '==', this.answerId)
         .where('senderId', '==', this.$store.getters.getUserInfo.uid)
-        .get(),
-      // Upvoteしているか
-      firestore
-        .collection('upvotes')
-        .where('answerId', '==', this.answerId)
         .get(),
       // ブックマークデータ
       firestore
@@ -252,8 +249,6 @@ export default {
       this.isUpvoted = true
       this.userUpvoteData = upvoteData.docs[0].data()
     }
-
-    this.upvoteCount = upvoteThisAnswerData.size
 
     if (bookmarkData.empty === false) {
       this.isBookmarked = true
