@@ -306,10 +306,11 @@ export default {
     },
     copy() {
       copyText(`https://askmakers.co/sa/${this.answerId}`)
-      this.$toast.open({
+      this.$snackbar.open({
         duration: 3000,
-        message: 'Copied!',
-        type: 'is-success'
+        message: 'Copied successfully',
+        type: 'is-success',
+        position: 'is-top'
       })
     },
     sanitizeHtml(text) {
