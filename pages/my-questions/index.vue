@@ -26,6 +26,11 @@ const firestore = firebase.firestore()
 
 export default {
   name: 'MyQuestions',
+  head() {
+    return {
+      meta: [{ hid: 'robots', name: 'robots', content: 'noindex' }]
+    }
+  },
   validate({ store }) {
     if (store.getters.getLoginStatus === false) {
       return false

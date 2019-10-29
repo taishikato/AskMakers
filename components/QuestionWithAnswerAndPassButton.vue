@@ -1,5 +1,10 @@
 <template>
   <div class="question-box">
+    <div class="tags">
+      <span v-for="topic in question.topics" :key="topic" class="tag">
+        {{ topic }}
+      </span>
+    </div>
     <p class="is-size-5 question-title has-text-weight-medium">
       <n-link
         :to="`/q/${question.id}`"
@@ -130,9 +135,13 @@ export default {
 
 <style lang="scss" scoped>
 .question-box {
+  padding: 15px;
   background-color: white;
   border-radius: 3px;
   border-bottom: 2px solid #eaeaea;
+  .tags {
+    margin-bottom: 0;
+  }
   .question-text-link {
     &:hover {
       text-decoration: underline;
@@ -140,12 +149,8 @@ export default {
   }
   .question-title {
     margin-bottom: 1rem;
-    padding: 15px 15px 0;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-  }
-  .footer-content {
-    padding: 0 15px 15px;
   }
   #undo {
     &:hover {
