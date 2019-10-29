@@ -5,72 +5,20 @@
       <div
         v-for="answer in answers"
         :key="answer.answer.id"
-        class="column is-4"
+        class="column is-6"
       >
-        <div class="card radius-box">
-          <div class="card-image">
-            <n-link :to="`/q/${answer.question.id}`">
-              <figure class="image">
-                <img :src="answer.question.image" :alt="answer.question.text" />
-              </figure>
-            </n-link>
-          </div>
-          <div class="card-content">
-            <div class="media">
-              <div class="media-left">
-                <figure class="image is-48x48">
-                  <n-link :to="`/u/${answer.user.username}`">
-                    <img
-                      :src="answer.user.picture"
-                      alt="existingAnswerUser.customName"
-                      class="is-rounded"
-                    />
-                  </n-link>
-                </figure>
-              </div>
-              <div class="media-content">
-                <n-link :to="`/u/${answer.user.username}`">
-                  <p class="title is-4">
-                    {{ answer.user.customName }}
-                  </p>
-                </n-link>
-              </div>
-            </div>
-            <div class="content">
-              <p id="answer-text" class="is-size-5">
-                {{
-                  answer.answer.content.length > 140
-                    ? `${answer.answer.content.substr(0, 140)}…`
-                    : answer.answer.content
-                }}
-              </p>
-            </div>
-            <!-- Footer -->
-            <div class="flex-container">
-              <div>
-                <a
-                  :href="
-                    `
-https://twitter.com/share?url=https://askmakers.co/s/${answer.question.id}&text=Answer by @${answer.user.username} ${answer.answer.content}
-`
-                  "
-                  class="twitter-share"
-                  target="_blank"
-                >
-                  <span class="icon is-medium">
-                    <i class="fab fa-twitter fa-lg"></i>
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <answer-box
+          :answer="answer"
+          :answer-id="answer.answer.id"
+          :simple-mode="true"
+        />
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import AnswerBox from '~/components/AnswerBox'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -78,6 +26,9 @@ const firestore = firebase.firestore()
 
 export default {
   name: 'UBookmarksId',
+  components: {
+    AnswerBox
+  },
   async asyncData({ error }) {
     try {
       const answersData = await firestore
