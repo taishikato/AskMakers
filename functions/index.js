@@ -178,9 +178,14 @@ router.get('/s/:id', async (ctx) => {
   // 質問データ取得
   const questionData = await db
     .collection('questions')
-    .doc(ctx.params.id)
+    // .doc(ctx.params.id)
+    .where('slug', '==', ctx.params.id)
     .get()
-  const question = questionData.data()
+  if (questionData.size === 0) {
+    console.log('No such a question')
+    return
+  }
+  const question = questionData.docs[0].data()
   const html = genHtml(question)
   ctx.res.set('cache-control', 'public, max-age=3600')
   ctx.response.status = 200
@@ -271,7 +276,7 @@ router.get('/tweet/:answerId', async (ctx) => {
     access_token_key: user.twitter.accessToken,
     access_token_secret: user.twitter.secret
   })
-  const tweetText = `${answerContent} https://askmakers.co/s/${question.id}${hashTag}`
+  const tweetText = `${answerContent} https://askmakers.co/s/${question.slug}${hashTag}`
   try {
     await client.post('statuses/update', { status: tweetText })
   } catch (err) {
@@ -329,10 +334,10 @@ exports.onQuestionCreated = functions.firestore
       from: 'AskMakers <info@mail.askmakers.co>',
       to: [toSecretUser.email],
       subject: "You've gotten a new question 😺",
-      text: `You've gotten a new question 👍 Please check it out! https://askmakers.co/q/${questions.id}`,
+      text: `You've gotten a new question 👍 Please check it out! https://askmakers.co/q/${questions.slug}`,
       html: `<p><strong>You've gotten a new question 👍</strong></p>
       <p>Please check it out!</p>
-      <a href="https://askmakers.co/q/${questions.id}">https://askmakers.co/q/${questions.id}</a>`
+      <a href="https://askmakers.co/q/${questions.slug}">https://askmakers.co/q/${questions.slug}</a>`
     }
     const res = await mg.messages().send(data, (err, body) => {
       console.log(body)

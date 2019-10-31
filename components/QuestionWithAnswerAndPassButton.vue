@@ -7,7 +7,7 @@
     </div>
     <p class="is-size-5 question-title has-text-weight-medium">
       <n-link
-        :to="`/q/${question.id}`"
+        :to="`/q/${question.slug}`"
         class="question-text-link has-text-black-bis"
       >
         {{ question.text }}
@@ -15,7 +15,7 @@
     </p>
     <div class="footer-content">
       <div v-if="isPassed === false">
-        <n-link :to="`/q/${question.id}`" class="button is-white is-rounded">
+        <n-link :to="`/q/${question.slug}`" class="button is-white is-rounded">
           <span class="icon">
             <i class="fas fa-pen"></i>
           </span>
@@ -25,7 +25,7 @@
         </n-link>
         <n-link
           v-if="answerCount > 0"
-          :to="`/q/${question.id}`"
+          :to="`/q/${question.slug}`"
           class="button is-white is-rounded"
         >
           <span class="icon">

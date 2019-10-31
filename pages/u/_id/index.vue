@@ -284,6 +284,7 @@
 import uuid from 'uuid/v4'
 import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
+import generateSlug from '~/plugins/generateSlug'
 import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
 // Use firestore
@@ -311,6 +312,7 @@ const copyText = (string) => {
 
 export default {
   name: 'UserId',
+  layout: 'white',
   components: {
     AnsweredQuestionCard,
     LoginModalNoButton
@@ -446,6 +448,7 @@ export default {
           // Firebase Cloud Storageにアップロード
           await fileRef.putString(data, 'data_url')
           const url = await fileRef.getDownloadURL()
+          const slug = await generateSlug(this.newQuestion)
           // Firestoreに保存
           await firestore
             .collection('questions')
@@ -455,21 +458,24 @@ export default {
               image: url,
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
+              slug,
               toUserId: this.user.uid,
               created: getUnixTime(),
               isGeneral: false
             })
-          this.$toast.open({
+          this.$snackbar.open({
             message: 'Successfuly submitted',
             type: 'is-success',
-            duration: 4000
+            position: 'is-top',
+            duration: 3000
           })
           this.newQuestion = ''
-          this.$router.push(`/q/${id}`)
+          this.$router.push(`/q/${slug}`)
         } catch (err) {
-          this.$toast.open({
+          this.$snackbar.open({
             message: 'Something went wrong...Please try again',
             type: 'is-danger',
+            position: 'is-top',
             duration: 4000
           })
         } finally {

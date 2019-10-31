@@ -2,11 +2,7 @@
   <section id="post-question" class="section column is-9 container">
     <div id="post-question-wrapper" class="bg-white">
       <h2 class="title">Post a question</h2>
-      <div
-        v-show="newQuestion.length > 0"
-        id="question-svg"
-        class="has-text-centered"
-      >
+      <div v-show="!hideSvg" id="question-svg">
         <svg
           id="svg-card"
           ref="svgCard"
@@ -93,6 +89,8 @@
             transform="translate(0.06 -0.001)"
           />
         </svg>
+      </div>
+      <div v-show="newQuestion.length > 0" class="has-text-centered">
         <span class="tag is-warning">
           Max length is 280
         </span>
@@ -161,8 +159,10 @@
 </template>
 
 <script>
+/* eslint-disable unicorn/escape-case,no-useless-escape */
 import uuid from 'uuid/v4'
 import getUnixTime from '~/plugins/getUnixTime'
+import generateSlug from '~/plugins/generateSlug'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -180,7 +180,8 @@ export default {
       newQuestion: '',
       tooMuchLine: false,
       topicGroup: [],
-      isSaving: false
+      isSaving: false,
+      hideSvg: true
     }
   },
   computed: {
@@ -248,6 +249,7 @@ export default {
           // Firebase Cloud Storageにアップロード
           await fileRef.putString(data, 'data_url')
           const url = await fileRef.getDownloadURL()
+          const slug = await generateSlug(this.newQuestion)
           // Firestoreに保存
           await firestore
             .collection('questions')
@@ -257,6 +259,7 @@ export default {
               image: url,
               text: this.newQuestion,
               fromUserId: this.$store.getters.getUserInfo.uid,
+              slug,
               created: getUnixTime(),
               topics: this.topicGroup,
               isGeneral: true
@@ -267,7 +270,7 @@ export default {
             duration: 4000
           })
           this.newQuestion = ''
-          this.$router.push(`/q/${id}`)
+          this.$router.push(`/q/${slug}`)
         } catch (err) {
           this.$toast.open({
             message: 'Something went wrong...Please try again',

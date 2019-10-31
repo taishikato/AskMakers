@@ -27,7 +27,6 @@
     </p>
     <div class="answer-content" :class="{ paddingTop: showQuestion === false }">
       <div class="flex-container flex-center author-section">
-        <p>✍️ by</p>
         <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
           <img
             :src="answer.user.picture"

@@ -80,15 +80,6 @@
               />
             </a>
           </div>
-          <div id="wip">
-            <a
-              class="button is-rounded is-warning weight-700"
-              href="https://wip.chat/products/2770"
-              target="_blank"
-            >
-              AskMakers on WIP
-            </a>
-          </div>
         </div>
       </div>
     </section>
@@ -118,6 +109,7 @@ import getParam from '~/plugins/getParam'
 
 export default {
   name: 'HomePage',
+  layout: 'default',
   components: {
     Users,
     Card,
@@ -161,13 +153,5 @@ footer {
 
 #ph-widget {
   margin-top: 20px;
-}
-
-#wip {
-  a {
-    background-color: #f9db01;
-    margin: 0 auto;
-    display: block;
-  }
 }
 </style>

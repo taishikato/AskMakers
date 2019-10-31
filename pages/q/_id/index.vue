@@ -32,20 +32,28 @@ export default {
     return true
   },
   async created() {
-    this.qId = this.$route.params.id
-    // 質問データ習得
-    const questionData = await firestore
+    const slug = this.$route.params.id
+    this.qId = slug
+    const questionSlugData = await firestore
       .collection('questions')
-      .doc(this.qId)
+      .where('slug', '==', slug)
       .get()
-    // 質問が存在しない場合は404
-    if (questionData.exists !== true) {
+    if (questionSlugData.size > 0) {
+      this.question.question = questionSlugData.docs[0].data()
+    } else {
+      // 質問データ習得
+      const questionData = await firestore
+        .collection('questions')
+        .doc(this.qId)
+        .get()
+      this.question.question = questionData.data()
+    }
+    if (this.question.question === undefined) {
       return this.$nuxt.error({
         statusCode: 404,
         message: 'This page could not be found'
       })
     }
-    this.question.question = questionData.data()
 
     if (this.question.question.isGeneral === true) {
       this.isGeneralQuestion = true

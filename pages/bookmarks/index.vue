@@ -85,6 +85,11 @@ export default {
       hasexistingAnswer: true
     }
   },
+  head() {
+    return {
+      meta: [{ hid: 'robots', name: 'robots', content: 'noindex' }]
+    }
+  },
   async created() {
     const bookmarksData = await firestore
       .collection('bookmarks')

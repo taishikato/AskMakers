@@ -152,20 +152,22 @@ export default {
     return true
   },
   async created() {
-    this.qId = this.$route.params.id
+    const slug = this.$route.params.id
+    this.qId = slug
     // 質問データ習得
     const questionData = await firestore
       .collection('questions')
-      .doc(this.qId)
+      .where('slug', '==', slug)
       .get()
-    // 質問が存在しない場合は404
-    if (questionData.exists !== true) {
-      return this.$nuxt.error({
-        statusCode: 404,
-        message: 'This page could not be found'
-      })
+    if (questionData.size > 0) {
+      this.question.question = questionData.docs[0].data()
+    } else {
+      const questionData = await firestore
+        .collection('questions')
+        .doc(this.qId)
+        .get()
+      this.question.question = questionData.data()
     }
-    this.question.question = questionData.data()
 
     // 質問されたユーザーの情報を取得
     const toUserData = await firestore

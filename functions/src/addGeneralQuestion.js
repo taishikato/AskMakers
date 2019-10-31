@@ -19,11 +19,11 @@ const addGeneralQuestion = async (db, mg, snap) => {
       from: 'AskMakers <info@mail.askmakers.co>',
       to: [email],
       subject: 'New question alert 😺',
-      text: `New question is just posted! Please check it out! https://askmakers.co/q/${question.id}`,
+      text: `New question is just posted! Please check it out! https://askmakers.co/q/${question.slug}`,
       html: `<p>New question is just posted!<br />Please check it out!</p>
       <p>
         ${question.text}<br />
-        <a href="https://askmakers.co/q/${question.id}">https://askmakers.co/q/${question.id}</a>
+        <a href="https://askmakers.co/q/${question.slug}">https://askmakers.co/q/${question.slug}</a>
       </p>`
     }
     const res = await mg.messages().send(data, (err, body) => {

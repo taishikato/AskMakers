@@ -136,18 +136,27 @@ export default {
     return true
   },
   async created() {
-    this.qId = this.$route.params.id
+    const slug = this.$route.params.id
+    this.qId = slug
     // 質問データ習得
     const questionData = await firestore
       .collection('questions')
-      .doc(this.qId)
+      .where('slug', '==', slug)
       .get()
-    this.question.question = questionData.data()
+    if (questionData.size > 0) {
+      this.question.question = questionData.docs[0].data()
+    } else {
+      const questionData = await firestore
+        .collection('questions')
+        .doc(this.qId)
+        .get()
+      this.question.question = questionData.data()
+    }
 
     // 回答データ取得
     const answerData = await firestore
       .collection('answers')
-      .where('questionId', '==', this.qId)
+      .where('questionId', '==', this.question.question.id)
       .orderBy('created', 'desc')
       .get()
     this.answers = await Promise.all(
