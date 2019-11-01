@@ -19,10 +19,24 @@ export default {
     QuestionDetail,
     GeneralQuestionDetail
   },
+  head() {
+    return {
+      title: `${this.question.question.text} - AskMakers`,
+      meta: [
+        {
+          hid: 'og:title',
+          name: 'og:title',
+          content: `${this.question.question.text} - AskMakers`
+        }
+      ]
+    }
+  },
   data() {
     return {
       isGeneralQuestion: null,
-      question: {}
+      question: {
+        question: {}
+      }
     }
   },
   validate({ params }) {
@@ -31,7 +45,7 @@ export default {
     }
     return true
   },
-  async created() {
+  async beforeCreate() {
     const slug = this.$route.params.id
     this.qId = slug
     const questionSlugData = await firestore

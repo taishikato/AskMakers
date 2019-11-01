@@ -15,6 +15,8 @@
           :answer="answer"
           :answer-id="answer.answer.id"
           :simple-mode="true"
+          :show-question="true"
+          :show-answer="false"
         />
       </div>
     </div>

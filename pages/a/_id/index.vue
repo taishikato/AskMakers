@@ -28,45 +28,6 @@
           :simple-mode="false"
           :question-id="answer.question.id"
         />
-        <!-- <div id="question-img" class="bg-white radius-box">
-          <p id="answer-text">{{ answer.content }}</p>
-          <img :src="question.image" />
-          <div class="is-divider"></div>
-          <div id="share-wrappper">
-            <p class="title is-4 weight-800 has-text-centered">
-              Share the answer
-            </p>
-            <ul class="columns">
-              <li class="column has-text-centered">
-                <a
-                  :href="`http://www.facebook.com/share.php?u=${shareUrl}`"
-                  class="button facebook is-rounded weight-700"
-                  target="_blank"
-                >
-                  <span class="icon">
-                    <i class="fab fa-facebook-f"></i>
-                  </span>
-                  <span>
-                    Facebook
-                  </span>
-                </a>
-              </li>
-              <li class="column has-text-centered">
-                <a
-                  class="button is-rounded is-white weight-700"
-                  @click.prevent="copyUrl"
-                >
-                  <span class="icon">
-                    <i class="fas fa-copy"></i>
-                  </span>
-                  <span>
-                    Copy a sharing URL
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -121,6 +82,12 @@ export default {
         .collection('answers')
         .doc(this.aId)
         .get()
+      if (answerData.exists === false) {
+        return this.$nuxt.error({
+          statusCode: 404,
+          message: 'This page could not be found'
+        })
+      }
       const answer = answerData.data()
       const [questionData, userData] = await Promise.all([
         firestore

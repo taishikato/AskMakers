@@ -19,7 +19,7 @@
       class="content is-size-5 has-text-weight-medium question-title"
     >
       <n-link
-        :to="`/q/${answer.question.id}`"
+        :to="`/q/${answer.question.slug}`"
         class="question-text-link has-text-black-bis"
       >
         {{ answer.question.text }}
@@ -27,6 +27,7 @@
     </p>
     <div class="answer-content" :class="{ paddingTop: showQuestion === false }">
       <div class="flex-container flex-center author-section">
+        By
         <n-link :to="`/u/${answer.user.username}`" class="profile-pic-link">
           <img
             :src="answer.user.picture"
@@ -42,7 +43,7 @@
           {{ answer.user.customName }}
         </n-link>
       </div>
-      <div class="content">
+      <div v-show="showAnswer" class="content">
         <p v-if="simpleMode" id="answer-text" class="is-size-5">
           {{
             answer.answer.content.length > 140
@@ -193,6 +194,10 @@ export default {
     showQuestion: {
       type: Boolean,
       default: false
+    },
+    showAnswer: {
+      type: Boolean,
+      default: true
     },
     simpleMode: {
       type: Boolean,
@@ -374,6 +379,7 @@ export default {
   }
   .question-title {
     padding: 15px;
+    margin-bottom: 0;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
   }

@@ -68,7 +68,7 @@ const genHtml = (question) => `
   </head>
   <body>
     <script>
-      location.href = '/q/${question.id}';
+      location.href = '/q/${question.slug}';
     </script>
   </body>
 </html>

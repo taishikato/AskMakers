@@ -204,14 +204,14 @@ export default {
             .doc(id)
             .set({
               id,
-              questionId: this.qId,
+              questionId: this.question.question.id,
               answerUserId: this.$store.getters.getUserInfo.uid,
               created: getUnixTime(),
               content: this.answer
             }),
           firestore
             .collection('questions')
-            .doc(this.qId)
+            .doc(this.question.question.id)
             .update({
               isAnswered: true
             })
