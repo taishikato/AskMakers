@@ -317,6 +317,18 @@ export default {
     AnsweredQuestionCard,
     LoginModalNoButton
   },
+  head() {
+    return {
+      title: `${this.user.customName} - AskMakers`,
+      meta: [
+        {
+          hid: 'og:title',
+          name: 'og:title',
+          content: `${this.user.customName} - AskMakers`
+        }
+      ]
+    }
+  },
   data() {
     return {
       user: {
