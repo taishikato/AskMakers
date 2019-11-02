@@ -8,16 +8,7 @@
               <h3 class="title">
                 About
               </h3>
-              <p>
-                AskMakers is the community of indie makers to ask
-                experienced/successful makers your questions.
-              </p>
-              <p>
-                My dream is to make AskMakers the Quora for makers.
-              </p>
-              <p>
-                I hope that AskMakers becomes your source of knowledge.
-              </p>
+              <p style="word-wrap:break-word;" v-html="description"></p>
             </div>
             <div id="team" class="column">
               <h3 class="title">
@@ -55,7 +46,37 @@
 
 <script>
 export default {
-  name: 'About'
+  name: 'About',
+  head() {
+    return {
+      title: 'About - AskMakers',
+      meta: [
+        {
+          hid: 'og:title',
+          name: 'og:title',
+          content: 'About - AskMakers'
+        },
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.description.replace(/<br \/>/g, '')
+        },
+        {
+          hid: 'og:description',
+          name: 'og:description',
+          content: this.description.replace(/<br \/>/g, '')
+        }
+      ]
+    }
+  },
+  data() {
+    return {
+      description: `AskMakers is the community of indie makers to ask
+experienced/successful makers your questions.<br />
+My dream is to make AskMakers the Quora for makers.<br />
+I hope that AskMakers becomes your source of knowledge.`
+    }
+  }
 }
 </script>
 
