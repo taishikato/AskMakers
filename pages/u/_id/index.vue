@@ -250,48 +250,22 @@
         </p>
         <div class="tabs">
           <ul>
-            <li class="is-active">
+            <li :class="{ 'is-active': isShowQuestions }">
               <a @click.prevent="showQuestions">
                 Questions
               </a>
             </li>
-            <li><a>Answers</a></li>
-            <li><a>Videos</a></li>
-            <li><a>Documents</a></li>
+            <li :class="{ 'is-active': isShowAnswers }">
+              <a @click.prevent="showAnswers">
+                Answers
+              </a>
+            </li>
           </ul>
         </div>
         <div id="contaniner-wrapper">
-          <user-questions v-if="isShowQuestions" />
-        </div>
-        <div id="answered-question-list">
-          <h3 class="title is-5 weight-800">Answered Questions</h3>
-          <div v-show="isLoading" class="has-text-centered">
-            <span class="icon is-large">
-              <i class="fas fa-spinner fa-3x fa-spin"></i>
-            </span>
-          </div>
-          <p
-            v-show="isLoading === false && answeredQuestions.length === 0"
-            class="weight-700"
-          >
-            No answered questions… yet!
-          </p>
-          <ul
-            v-show="isLoading === false && answeredQuestions.length > 0"
-            class="columns is-multiline"
-          >
-            <li
-              v-for="answeredQuestion in answeredQuestions"
-              :key="answeredQuestion.id"
-              class="column is-6"
-            >
-              <answered-question-card
-                :id="answeredQuestion.question.id"
-                :image="answeredQuestion.question.image"
-                :answer="answeredQuestion.answer.content"
-              />
-            </li>
-          </ul>
+          <component :is="component" :user="user" />
+          <!-- <user-questions v-if="isShowQuestions" :user="user" />
+          <user-answers v-if="isShowAnswers" :user="user" /> -->
         </div>
       </div>
     </div>
@@ -301,10 +275,10 @@
 <script>
 import uuid from 'uuid/v4'
 import UserQuestions from '~/components/UserQuestions'
+import UserAnswers from '~/components/UserAnswers'
 import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
 import generateSlug from '~/plugins/generateSlug'
-import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -333,9 +307,9 @@ export default {
   name: 'UserId',
   layout: 'white',
   components: {
-    AnsweredQuestionCard,
     LoginModalNoButton,
-    UserQuestions
+    UserQuestions,
+    UserAnswers
   },
   head() {
     return {
@@ -358,10 +332,11 @@ export default {
       newQuestion: '',
       userId: '',
       isSaving: false,
-      answeredQuestions: [],
       isLoading: true,
       tooMuchLine: false,
-      isShowQuestions: true
+      isShowQuestions: true,
+      isShowAnswers: false,
+      component: ''
     }
   },
   computed: {
@@ -437,31 +412,19 @@ export default {
       })
     }
     this.user = userInfo.docs[0].data()
-
-    // 回答済み回答習得
-    const answerData = await firestore
-      .collection('answers')
-      .where('answerUserId', '==', this.user.uid)
-      .orderBy('created', 'desc')
-      .get()
-    this.answeredQuestions = await Promise.all(
-      answerData.docs.map(async (doc) => {
-        const answer = doc.data()
-        const questionData = await firestore
-          .collection('questions')
-          .doc(answer.questionId)
-          .get()
-        return {
-          answer,
-          question: questionData.data()
-        }
-      })
-    )
+    this.component = UserQuestions
     this.isLoading = false
   },
   methods: {
     showQuestions() {
+      this.component = UserQuestions
       this.isShowQuestions = true
+      this.isShowAnswers = false
+    },
+    showAnswers() {
+      this.component = UserAnswers
+      this.isShowQuestions = false
+      this.isShowAnswers = true
     },
     copy() {
       copyText(`https://askmakers.co/sp/${this.userId}`)

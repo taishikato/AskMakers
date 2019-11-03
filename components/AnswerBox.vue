@@ -96,9 +96,9 @@
           </a>
           <a
             v-else
-            @click.prevent="upvote"
             class="has-text-grey button is-white is-rounded"
             title="Upvote"
+            @click.prevent="upvote"
           >
             <span class="icon is-medium">
               <i class="far fa-arrow-alt-circle-up fa-lg"></i>
