@@ -396,22 +396,25 @@ export default {
     }
     return true
   },
-  async created() {
+  async asyncData({ params, error }) {
     // maybe slug
-    this.userId = this.$route.params.id
+    const slug = params.id
     // Slugとして扱ってDBを走査
     const userInfo = await firestore
       .collection('publicUsers')
-      .where('username', '==', this.userId)
+      .where('username', '==', slug)
       .get()
     // ユーザーが存在しない場合は404
     if (userInfo.empty === true) {
-      return this.$nuxt.error({
+      return error({
         statusCode: 404,
         message: 'This page could not be found'
       })
     }
-    this.user = userInfo.docs[0].data()
+    const user = userInfo.docs[0].data()
+    return { user }
+  },
+  created() {
     this.component = UserQuestions
     this.isLoading = false
   },
