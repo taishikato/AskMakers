@@ -9,8 +9,11 @@
             </figure>
           </div>
           <div class="column">
-            <p class="title is-3 weight-800 sp-font">{{ user.customName }}</p>
-            <p v-show="user.tagline !== undefined && user.tagline !== ''">
+            <p class="title is-3 weight-700 sp-font">{{ user.customName }}</p>
+            <p
+              v-show="user.tagline !== undefined && user.tagline !== ''"
+              id="tagline"
+            >
               {{ user.tagline }}
             </p>
             <div>
@@ -245,6 +248,21 @@
         >
           <login-modal-no-button text="to ask a question." />
         </p>
+        <div class="tabs">
+          <ul>
+            <li class="is-active">
+              <a @click.prevent="showQuestions">
+                Questions
+              </a>
+            </li>
+            <li><a>Answers</a></li>
+            <li><a>Videos</a></li>
+            <li><a>Documents</a></li>
+          </ul>
+        </div>
+        <div id="contaniner-wrapper">
+          <user-questions v-if="isShowQuestions" />
+        </div>
         <div id="answered-question-list">
           <h3 class="title is-5 weight-800">Answered Questions</h3>
           <div v-show="isLoading" class="has-text-centered">
@@ -282,6 +300,7 @@
 
 <script>
 import uuid from 'uuid/v4'
+import UserQuestions from '~/components/UserQuestions'
 import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
 import generateSlug from '~/plugins/generateSlug'
@@ -315,7 +334,8 @@ export default {
   layout: 'white',
   components: {
     AnsweredQuestionCard,
-    LoginModalNoButton
+    LoginModalNoButton,
+    UserQuestions
   },
   head() {
     return {
@@ -340,7 +360,8 @@ export default {
       isSaving: false,
       answeredQuestions: [],
       isLoading: true,
-      tooMuchLine: false
+      tooMuchLine: false,
+      isShowQuestions: true
     }
   },
   computed: {
@@ -439,12 +460,16 @@ export default {
     this.isLoading = false
   },
   methods: {
+    showQuestions() {
+      this.isShowQuestions = true
+    },
     copy() {
       copyText(`https://askmakers.co/sp/${this.userId}`)
-      this.$toast.open({
-        duration: 3000,
-        message: 'Copied!',
-        type: 'is-success'
+      this.$snackbar.open({
+        message: 'Copied successfully',
+        type: 'is-success',
+        position: 'is-top',
+        duration: 3000
       })
     },
     askAQustion() {
@@ -519,6 +544,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title.sp-font,
+#tagline {
+  margin-bottom: 0.5rem;
+}
 .login-message {
   margin-bottom: 1.5rem;
 }
