@@ -9,8 +9,11 @@
             </figure>
           </div>
           <div class="column">
-            <p class="title is-3 weight-800 sp-font">{{ user.customName }}</p>
-            <p v-show="user.tagline !== undefined && user.tagline !== ''">
+            <p class="title is-3 weight-700 sp-font">{{ user.customName }}</p>
+            <p
+              v-show="user.tagline !== undefined && user.tagline !== ''"
+              id="tagline"
+            >
               {{ user.tagline }}
             </p>
             <div>
@@ -245,35 +248,24 @@
         >
           <login-modal-no-button text="to ask a question." />
         </p>
-        <div id="answered-question-list">
-          <h3 class="title is-5 weight-800">Answered Questions</h3>
-          <div v-show="isLoading" class="has-text-centered">
-            <span class="icon is-large">
-              <i class="fas fa-spinner fa-3x fa-spin"></i>
-            </span>
-          </div>
-          <p
-            v-show="isLoading === false && answeredQuestions.length === 0"
-            class="weight-700"
-          >
-            No answered questions… yet!
-          </p>
-          <ul
-            v-show="isLoading === false && answeredQuestions.length > 0"
-            class="columns is-multiline"
-          >
-            <li
-              v-for="answeredQuestion in answeredQuestions"
-              :key="answeredQuestion.id"
-              class="column is-6"
-            >
-              <answered-question-card
-                :id="answeredQuestion.question.id"
-                :image="answeredQuestion.question.image"
-                :answer="answeredQuestion.answer.content"
-              />
+        <div class="tabs">
+          <ul>
+            <li :class="{ 'is-active': isShowQuestions }">
+              <a @click.prevent="showQuestions">
+                Questions
+              </a>
+            </li>
+            <li :class="{ 'is-active': isShowAnswers }">
+              <a @click.prevent="showAnswers">
+                Answers
+              </a>
             </li>
           </ul>
+        </div>
+        <div id="contaniner-wrapper">
+          <component :is="component" :user="user" />
+          <!-- <user-questions v-if="isShowQuestions" :user="user" />
+          <user-answers v-if="isShowAnswers" :user="user" /> -->
         </div>
       </div>
     </div>
@@ -282,10 +274,11 @@
 
 <script>
 import uuid from 'uuid/v4'
+import UserQuestions from '~/components/UserQuestions'
+import UserAnswers from '~/components/UserAnswers'
 import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
 import generateSlug from '~/plugins/generateSlug'
-import AnsweredQuestionCard from '~/components/AnsweredQuestionCard'
 import firebase from '~/plugins/firebase'
 // Use firestore
 import 'firebase/firestore'
@@ -314,8 +307,9 @@ export default {
   name: 'UserId',
   layout: 'white',
   components: {
-    AnsweredQuestionCard,
-    LoginModalNoButton
+    LoginModalNoButton,
+    UserQuestions,
+    UserAnswers
   },
   head() {
     return {
@@ -338,9 +332,11 @@ export default {
       newQuestion: '',
       userId: '',
       isSaving: false,
-      answeredQuestions: [],
       isLoading: true,
-      tooMuchLine: false
+      tooMuchLine: false,
+      isShowQuestions: true,
+      isShowAnswers: false,
+      component: ''
     }
   },
   computed: {
@@ -400,51 +396,46 @@ export default {
     }
     return true
   },
-  async created() {
+  async asyncData({ params, error }) {
     // maybe slug
-    this.userId = this.$route.params.id
+    const slug = params.id
     // Slugとして扱ってDBを走査
     const userInfo = await firestore
       .collection('publicUsers')
-      .where('username', '==', this.userId)
+      .where('username', '==', slug)
       .get()
     // ユーザーが存在しない場合は404
     if (userInfo.empty === true) {
-      return this.$nuxt.error({
+      return error({
         statusCode: 404,
         message: 'This page could not be found'
       })
     }
-    this.user = userInfo.docs[0].data()
-
-    // 回答済み回答習得
-    const answerData = await firestore
-      .collection('answers')
-      .where('answerUserId', '==', this.user.uid)
-      .orderBy('created', 'desc')
-      .get()
-    this.answeredQuestions = await Promise.all(
-      answerData.docs.map(async (doc) => {
-        const answer = doc.data()
-        const questionData = await firestore
-          .collection('questions')
-          .doc(answer.questionId)
-          .get()
-        return {
-          answer,
-          question: questionData.data()
-        }
-      })
-    )
+    const user = userInfo.docs[0].data()
+    return { user }
+  },
+  created() {
+    this.component = UserQuestions
     this.isLoading = false
   },
   methods: {
+    showQuestions() {
+      this.component = UserQuestions
+      this.isShowQuestions = true
+      this.isShowAnswers = false
+    },
+    showAnswers() {
+      this.component = UserAnswers
+      this.isShowQuestions = false
+      this.isShowAnswers = true
+    },
     copy() {
       copyText(`https://askmakers.co/sp/${this.userId}`)
-      this.$toast.open({
-        duration: 3000,
-        message: 'Copied!',
-        type: 'is-success'
+      this.$snackbar.open({
+        message: 'Copied successfully',
+        type: 'is-success',
+        position: 'is-top',
+        duration: 3000
       })
     },
     askAQustion() {
@@ -519,6 +510,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title.sp-font,
+#tagline {
+  margin-bottom: 0.5rem;
+}
 .login-message {
   margin-bottom: 1.5rem;
 }
