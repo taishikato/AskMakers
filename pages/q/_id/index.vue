@@ -39,41 +39,44 @@ export default {
       }
     }
   },
-  validate({ params }) {
-    if (params.id === undefined) {
-      return false
-    }
-    return true
-  },
-  async beforeCreate() {
-    const slug = this.$route.params.id
-    this.qId = slug
+  async asyncData({ params, error }) {
+    const slug = params.id
+    const qId = slug
+    const question = {}
     const questionSlugData = await firestore
       .collection('questions')
       .where('slug', '==', slug)
       .get()
     if (questionSlugData.size > 0) {
-      this.question.question = questionSlugData.docs[0].data()
+      question.question = questionSlugData.docs[0].data()
     } else {
       // 質問データ習得
       const questionData = await firestore
         .collection('questions')
-        .doc(this.qId)
+        .doc(qId)
         .get()
-      this.question.question = questionData.data()
+      question.question = questionData.data()
     }
-    if (this.question.question === undefined) {
-      return this.$nuxt.error({
+    if (question.question === undefined) {
+      return error({
         statusCode: 404,
         message: 'This page could not be found'
       })
     }
-
-    if (this.question.question.isGeneral === true) {
-      this.isGeneralQuestion = true
-    } else {
-      this.isGeneralQuestion = false
+    let isGeneralQuestion = false
+    if (question.question.isGeneral === true) {
+      isGeneralQuestion = true
     }
+    return {
+      question,
+      isGeneralQuestion
+    }
+  },
+  validate({ params }) {
+    if (params.id === undefined) {
+      return false
+    }
+    return true
   }
 }
 </script>
