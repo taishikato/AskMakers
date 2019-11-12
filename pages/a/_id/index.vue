@@ -37,7 +37,7 @@
           Thank you for answering
         </p>
         <p class="subtitle is-6">
-          Please share your answer with everybody on Twitter.
+          Please share your answer with friends on Twitter.
         </p>
         <a
           class="button twitter is-rounded"
