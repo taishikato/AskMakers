@@ -36,17 +36,6 @@
             class="control has-text-centered"
           >
             <textarea v-model="answer" class="textarea"></textarea>
-            <label class="checkbox">
-              <input
-                v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
-                type="checkbox"
-                @change="onCheckBoxChange()"
-              />
-              Share on
-              <span class="icon is-medium">
-                <i class="fab fa-twitter fa-lg"></i>
-              </span>
-            </label>
           </div>
         </div>
         <div
@@ -249,15 +238,6 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
   methods: {
     twitterSignin() {
       firebase.auth().signInWithRedirect(twitterProvider)
-    },
-    async onCheckBoxChange() {
-      await firestore
-        .collection('publicUsers')
-        .doc(this.$store.getters.getUserInfo.uid)
-        .update({
-          isEnabletoShareOnTwitter: this.$store.getters.getUserInfo
-            .isEnabletoShareOnTwitter
-        })
     },
     sanitizeHtml(text) {
       return sanitizeHTML(text)
