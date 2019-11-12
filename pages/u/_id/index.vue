@@ -441,7 +441,7 @@ export default {
       this.isShowBookmarks = true
     },
     copy() {
-      copyText(`https://askmakers.co/sp/${this.userId}`)
+      copyText(`https://askmakers.co/sp/${this.user.username}`)
       this.$snackbar.open({
         message: 'Copied successfully',
         type: 'is-success',
