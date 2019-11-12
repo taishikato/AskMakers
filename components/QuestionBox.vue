@@ -163,7 +163,7 @@ export default {
   },
   methods: {
     copy() {
-      copyText(`https://askmakers.co/s/${this.question.question.id}`)
+      copyText(`https://askmakers.co/s/${this.question.question.slug}`)
       this.$snackbar.open({
         duration: 3000,
         message: 'Copied successfully',

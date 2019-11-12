@@ -10,6 +10,7 @@
         <answer-box
           :answer="answer"
           :answer-id="answer.answer.id"
+          :show-question="true"
           :simple-mode="true"
         />
       </div>

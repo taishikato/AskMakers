@@ -260,12 +260,15 @@
                 Answers
               </a>
             </li>
+            <li :class="{ 'is-active': isShowBookmarks }">
+              <a @click.prevent="showBookmarks">
+                Bookmarks
+              </a>
+            </li>
           </ul>
         </div>
         <div id="contaniner-wrapper">
           <component :is="component" :user="user" />
-          <!-- <user-questions v-if="isShowQuestions" :user="user" />
-          <user-answers v-if="isShowAnswers" :user="user" /> -->
         </div>
       </div>
     </div>
@@ -276,6 +279,7 @@
 import uuid from 'uuid/v4'
 import UserQuestions from '~/components/UserQuestions'
 import UserAnswers from '~/components/UserAnswers'
+import UserBookmarks from '~/components/UserBookmarks'
 import LoginModalNoButton from '~/components/LoginModalNoButton'
 import getUnixTime from '~/plugins/getUnixTime'
 import generateSlug from '~/plugins/generateSlug'
@@ -307,9 +311,7 @@ export default {
   name: 'UserId',
   layout: 'white',
   components: {
-    LoginModalNoButton,
-    UserQuestions,
-    UserAnswers
+    LoginModalNoButton
   },
   head() {
     return {
@@ -336,6 +338,7 @@ export default {
       tooMuchLine: false,
       isShowQuestions: true,
       isShowAnswers: false,
+      isShowBookmarks: false,
       component: ''
     }
   },
@@ -423,14 +426,22 @@ export default {
       this.component = UserQuestions
       this.isShowQuestions = true
       this.isShowAnswers = false
+      this.isShowBookmarks = false
     },
     showAnswers() {
       this.component = UserAnswers
       this.isShowQuestions = false
       this.isShowAnswers = true
+      this.isShowBookmarks = false
+    },
+    showBookmarks() {
+      this.component = UserBookmarks
+      this.isShowQuestions = false
+      this.isShowAnswers = false
+      this.isShowBookmarks = true
     },
     copy() {
-      copyText(`https://askmakers.co/sp/${this.userId}`)
+      copyText(`https://askmakers.co/sp/${this.user.username}`)
       this.$snackbar.open({
         message: 'Copied successfully',
         type: 'is-success',
