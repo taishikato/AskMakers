@@ -183,6 +183,7 @@ router.get('/s/:id', async (ctx) => {
     .get()
   if (questionData.size === 0) {
     console.log('No such a question')
+    ctx.redirect('https://askmakers.co/')
     return
   }
   const question = questionData.docs[0].data()
