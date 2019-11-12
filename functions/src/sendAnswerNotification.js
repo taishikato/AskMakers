@@ -20,6 +20,7 @@ const sendAnswerNotification = async (db, mg, snap) => {
   const data = {
     from: 'AskMakers <info@mail.askmakers.co>',
     to: [user.email],
+    bcc: ['taishi.k0903@gmail.com'],
     subject: 'You got a new answer 😺',
     text: `You got a new answern 👍 Please check it out! https://askmakers.co/q/${question.id}`,
     html: `<p><strong>You got a new answer 👍</strong><br />Please check it out!</p>

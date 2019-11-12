@@ -31,6 +31,7 @@ const sendUpvoteNotification = async (db, mg, snap) => {
   const data = {
     from: 'AskMakers <info@mail.askmakers.co>',
     to: [answerUserSecret.email],
+    bcc: ['taishi.k0903@gmail.com'],
     subject: 'You got a new upvote 🙏',
     text: `You got a new upvote for your answer 🙏`,
     html: `<p>Hi, ${answerUserPublic.customName}!</p>

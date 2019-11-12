@@ -333,6 +333,7 @@ exports.onQuestionCreated = functions.firestore
     const data = {
       from: 'AskMakers <info@mail.askmakers.co>',
       to: [toSecretUser.email],
+      bcc: ['taishi.k0903@gmail.com'],
       subject: "You've gotten a new question 😺",
       text: `You've gotten a new question 👍 Please check it out! https://askmakers.co/q/${questions.slug}`,
       html: `<p><strong>You've gotten a new question 👍</strong></p>
