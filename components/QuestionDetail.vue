@@ -266,11 +266,6 @@ ${encodeURIComponent(' #AskMakers #AskMakersco')}
               isAnswered: true
             })
         ])
-        try {
-          await this.$axios.get(`https://askmakers.co/tweet/${id}`)
-        } catch (err) {
-          console.log(err)
-        }
         this.answer = ''
         this.$toast.open({
           message: 'Successfuly submitted',
