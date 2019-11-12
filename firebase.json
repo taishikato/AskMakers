@@ -25,10 +25,6 @@
         "function": "func"
       },
       {
-        "source": "/tweet/**",
-        "function": "func"
-      },
-      {
         "source": "/sp/**",
         "function": "func"
       },

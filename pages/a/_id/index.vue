@@ -30,6 +30,29 @@
         />
       </div>
     </div>
+    <!-- モーダル -->
+    <b-modal :active.sync="showShareModal" :width="showModalWidth">
+      <div id="share-modal-wrapper" class="has-text-centered">
+        <p class="title is-4">
+          Thank you for answering
+        </p>
+        <p class="subtitle is-6">
+          Please share your answer with friends on Twitter.
+        </p>
+        <a
+          class="button twitter is-rounded"
+          :href="`https://twitter.com/intent/tweet?text=${shareAnswerText}`"
+          target="_blank"
+        >
+          <span class="icon">
+            <i class="fab fa-twitter"></i>
+          </span>
+          <span>
+            Share on Twitter
+          </span>
+        </a>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -66,7 +89,10 @@ export default {
       answer: {},
       aId: '',
       showThankyouBox: false,
-      isLoading: true
+      isLoading: true,
+      showShareModal: false,
+      showModalWidth: '400px',
+      shareAnswerText: ''
     }
   },
   validate({ params }) {
@@ -104,6 +130,14 @@ export default {
         answer,
         question: questionData.data(),
         user: userData.data()
+      }
+
+      if (this.$route.query.answered === 'true') {
+        const shareAnswerText = `${this.answer.answer.content}
+https://askmakers.co/sa/${this.aId}
+#AskMakers #AskMakersco`
+        this.shareAnswerText = encodeURIComponent(shareAnswerText)
+        this.showShareModal = true
       }
     } catch (err) {
       console.log(err)
@@ -145,6 +179,15 @@ export default {
 
 #share-wrappper {
   margin-bottom: 20px;
+}
+
+#share-modal-wrapper {
+  background-color: white;
+  border-radius: 3px;
+  padding: 20px 10px;
+  .twitter {
+    color: white;
+  }
 }
 
 @media only screen and (max-width: 768px) {
