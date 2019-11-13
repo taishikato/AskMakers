@@ -25,17 +25,6 @@
         >
           <div class="control has-text-centered">
             <textarea v-model="answer" class="textarea"></textarea>
-            <label class="checkbox">
-              <input
-                v-model="$store.getters.getUserInfo.isEnabletoShareOnTwitter"
-                type="checkbox"
-                @change="onCheckBoxChange()"
-              />
-              Share on
-              <span class="icon is-medium">
-                <i class="fab fa-twitter fa-lg"></i>
-              </span>
-            </label>
           </div>
         </div>
         <div v-if="$store.getters.getLoginStatus" id="answer-btn" class="field">
@@ -216,11 +205,6 @@ export default {
               isAnswered: true
             })
         ])
-        try {
-          await this.$axios.get(`https://askmakers.co/tweet/${id}`)
-        } catch (err) {
-          console.log(err)
-        }
         this.answer = ''
         this.$toast.open({
           message: 'Successfuly submitted',
