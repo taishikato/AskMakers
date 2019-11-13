@@ -74,7 +74,7 @@
         <a
           :href="
             `
-https://twitter.com/share?url=https://askmakers.co/s/${question.question.id}&text=Answer by @${question.user.username} ${question.answer.content}
+https://twitter.com/share?url=https://askmakers.co/s/${question.question.slug}&text=Answer by @${question.user.username} ${question.answer.content}
 `
           "
           class="twitter-share"
