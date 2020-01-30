@@ -1,0 +1,21 @@
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+    height: 100%;
+}
+
+/* div#__next > div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+} */
+
+/* div#__next > div {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+} */
+
+.border-3 { border-width: 3px; }

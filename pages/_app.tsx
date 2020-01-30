@@ -1,0 +1,65 @@
+import React from 'react'
+import App from 'next/app'
+import Router from 'next/router'
+import Head from 'next/head'
+import { Provider } from 'react-redux'
+import withRedux from 'next-redux-wrapper'
+import NextNprogress from 'nextjs-progressbar'
+import withGA from 'next-ga'
+import '../css/tailwind.css'
+import '../css/main.css'
+
+class MyApp extends App<Props> {
+    render() {
+      const { Component, pageProps, store } = this.props
+      const title = 'Vaping Astronaut | Vape Reviews'
+      const url = 'https://vapingastronaut.com/'
+      const description = 'Vaping Astronaut helps vape lovers explore, understand and make better-informed decisions around vape with product reviews.'
+      return (
+        // <Provider store={store}>
+        <>
+          <Head>
+            <title>{title}</title>
+            <link key="manifest" rel='manifest' href='/manifest.json' />
+            <link key="canonical" rel="canonical" href={url} />
+            <meta
+              key="description"
+              name="description"
+              content={description}
+            />
+            <meta
+              key="keywords"
+              name="keywords"
+              content="vape, review, kits, mods, tanks, pods"
+            />
+            <meta
+              key="og:titl"
+              property="og:title"
+              content={title}
+            />
+            <meta
+              key="og:description"
+              property="og:description"
+              content={description}
+            />
+            <meta key="og:site_name" property="og:site_name" content={title} />
+            <meta key="og:url" property="og:url" content={url} />
+            <meta key="og:image" property="og:image" content={`${url}ogimage.png`} />
+            <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
+          </Head>
+          <NextNprogress />
+          <Component {...pageProps} />
+          {/* <Auth>
+            <Component {...pageProps} />
+          </Auth> */}
+        {/* // </Provider> */}
+        </>
+      )
+    }
+  }
+
+interface Props {
+  store: any
+}
+
+export default withGA('UA-27648393-24', Router)(MyApp)
