@@ -30,8 +30,13 @@ const Navbar: NextPage = props => {
         </button>
       </div>
       <div className="pt-4 md:p-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto">
-        <div className="mt-4 lg:mt-0">
-          Sign up
+        <div className="text-sm lg:flex-grow"></div>
+        <div className="mt-4 lg:mt-0 font-semibold">
+          <Link href="/login">
+            <a>
+              Sign up / Login
+            </a>
+          </Link>
         </div>
       </div>
     </nav>

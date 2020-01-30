@@ -6,18 +6,19 @@ import { Provider } from 'react-redux'
 import withRedux from 'next-redux-wrapper'
 import NextNprogress from 'nextjs-progressbar'
 import withGA from 'next-ga'
+import { initializeStore } from '../store/store'
 import '../css/tailwind.css'
 import '../css/main.css'
 
-class MyApp extends App<Props> {
+const MyApp = withRedux(initializeStore)(
+  class MyApp extends App<Props> {
     render() {
       const { Component, pageProps, store } = this.props
       const title = 'Vaping Astronaut | Vape Reviews'
       const url = 'https://vapingastronaut.com/'
       const description = 'Vaping Astronaut helps vape lovers explore, understand and make better-informed decisions around vape with product reviews.'
       return (
-        // <Provider store={store}>
-        <>
+        <Provider store={store}>
           <Head>
             <title>{title}</title>
             <link key="manifest" rel='manifest' href='/manifest.json' />
@@ -47,16 +48,16 @@ class MyApp extends App<Props> {
             <meta key="og:image" property="og:image" content={`${url}ogimage.png`} />
             <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
           </Head>
-          <NextNprogress />
+          <NextNprogress color="#23d160" />
           <Component {...pageProps} />
           {/* <Auth>
             <Component {...pageProps} />
           </Auth> */}
-        {/* // </Provider> */}
-        </>
+        </Provider>
       )
     }
   }
+)
 
 interface Props {
   store: any
