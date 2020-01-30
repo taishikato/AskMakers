@@ -38,7 +38,37 @@ const QuestionWrapper: NextPage<Props> = props => {
             </a>
           </Link>
         </h3>
-        <Tag color="magenta">magenta</Tag>
+        {questionObj.question.topics.map((topic, index) => {
+          let color = ''
+          switch(topic) {
+            case 'idea':
+              color = 'lime'
+              break;
+            case 'build':
+              color = 'geekblue'
+              break;
+            case 'launch':
+              color = 'volcano'
+              break;
+            case 'grow':
+              color = 'green'
+              break;
+            case 'monetize':
+              color = 'gold'
+              break;
+            case 'automate':
+              color = 'orange'
+              break;
+            case 'exit':
+              color = 'purple'
+              break
+            default:
+              break;
+          }
+          return (
+              <Tag color={color} key={index}>{topic}</Tag>
+          )
+        })}
       </div>
     </div>
   )

@@ -37,6 +37,7 @@ const Home: NextPage<Props> = props => (
 Home.getInitialProps = async () => {
   const questionData = await db
     .collection('questions')
+    .where('isGeneral', '==', true)
     .orderBy('created', 'desc')
     .limit(10)
     .get()
