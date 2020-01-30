@@ -1,9 +1,13 @@
 import React from 'react'
+import { NextPage } from 'next'
 
-const TwitterLoginButton = () => {
+const TwitterLoginButton: NextPage<Props> = props => {
   return (
     <>
-      <button className="p-3 twitter text-white rounded font-semibold focus:outline-none">
+      <button
+        onClick={props.handleLogin}
+        className="p-3 twitter text-white rounded font-semibold focus:outline-none"
+      >
         Login With Twitter
       </button>
       <style jsx>{`
@@ -16,6 +20,10 @@ const TwitterLoginButton = () => {
       `}</style>
     </>
   )
+}
+
+interface Props {
+  handleLogin: any
 }
 
 export default TwitterLoginButton

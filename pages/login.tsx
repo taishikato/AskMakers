@@ -1,6 +1,12 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import TwitterLoginButton from '../components/TwitterLoginButton'
+import firebase from '../plugins/firebase'
+const twitterProvider = new firebase.auth.TwitterAuthProvider()
+
+const handleSignIn = () => {
+  firebase.auth().signInWithRedirect(twitterProvider)
+}
 
 const Login = () => {
   return (
@@ -13,7 +19,7 @@ const Login = () => {
           Join a community of experts, share your best products and discover your next favorites tools.
         </p>
         <div className="w-full w-3/12 m-auto">
-          <TwitterLoginButton />
+          <TwitterLoginButton handleLogin={handleSignIn} />
         </div>
       </div>
     </Layout>

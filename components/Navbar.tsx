@@ -1,12 +1,27 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
+import { connect } from 'react-redux'
+import { loginUser, logoutUser } from '../store/action'
+import firebase from '../plugins/firebase'
 
-const Navbar: NextPage = props => {
+const Navbar: NextPage<Props> = props => {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
+  const { isLogin, loginUser, signOut } = props
+
+  const handleHumburger = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const handleDropDown = () => {
+    setIsOpenDropDown(!isOpenDropDown)
+  }
+
   return (
     <nav
       style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
-      className="flex items-center justify-between flex-wrap px-6 py-5 text-white bg-gray-900	"
+      className="flex items-center justify-between flex-wrap px-6 text-white bg-gray-900	"
     >
       <div className="flex items-center flex-shrink-0 mr-6">
         <Link href="/">
@@ -31,16 +46,73 @@ const Navbar: NextPage = props => {
       </div>
       <div className="pt-4 md:p-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto">
         <div className="text-sm lg:flex-grow"></div>
-        <div className="mt-4 lg:mt-0 font-semibold">
-          <Link href="/login">
-            <a>
-              Sign up / Login
-            </a>
-          </Link>
+        <div className="mt-4 lg:mt-0">
+          {isLogin ?
+            <div className="relative">
+              <button onClick={handleDropDown} className="relative z-10 block h-10 w-10 rounded-full overflow-hidden border-2 border-gray-600 focus:outline-none focus:border-white">
+                <img className="h-full w-full object-cover" src={loginUser.picture} alt={loginUser.name} />
+              </button>
+              <div className={`${(isOpenDropDown ? 'show' : 'hidden')} absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
+                {/* <span className="block px-4 py-2 text-gray-800"> */}
+                  <Link href="/member/[username]" as={`/member/${loginUser.username}`}>
+                    <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                      Profile
+                    </a>
+                  </Link>
+                {/* </span> */}
+                {/* <a href="#" className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Profile</a>
+                <a href="#" className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Settings</a> */}
+                <a
+                  onClick={signOut}
+                  className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">
+                  Sign out
+                </a>
+              </div>
+            </div>
+            :
+            <Link href="/login">
+              <a className="font-semibold">
+                Sign up / Login
+              </a>
+            </Link>
+          }
         </div>
       </div>
+      <style jsx>{`
+      nav {
+        height: 60px;
+      }
+      `}</style>
     </nav>
   )
 }
 
-export default Navbar
+interface Props {
+  isLogin: boolean,
+  loginUser: any,
+  signOut: () => Promise<any>
+}
+
+const mapStateToProps = state => {
+  return {
+    isLogin: state.isLogin,
+    loginUser: state.loginUser
+  }
+}
+
+const mapDispachToProps = dispatch => {
+  return {
+    userLogin: () => {
+      dispatch(loginUser({}))
+    },
+    signOut: async () => {
+      await firebase.auth().signOut()
+      dispatch(logoutUser())
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispachToProps
+)(Navbar)

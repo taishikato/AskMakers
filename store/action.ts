@@ -4,7 +4,7 @@ export const DONE_CHECKING = 'doneChecking'
 
 export const loginUser = (user: any) => ({
   type: LOGIN,
-  name: user.name,
+  name: user.customName,
   uid: user.uid,
   picture: user.picture,
   username: user.username,

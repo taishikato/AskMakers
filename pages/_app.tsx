@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { Provider } from 'react-redux'
 import withRedux from 'next-redux-wrapper'
 import NextNprogress from 'nextjs-progressbar'
+import Auth from '../components/Auth'
 import withGA from 'next-ga'
 import { initializeStore } from '../store/store'
 import '../css/tailwind.css'
@@ -49,10 +50,9 @@ const MyApp = withRedux(initializeStore)(
             <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
           </Head>
           <NextNprogress color="#23d160" />
-          <Component {...pageProps} />
-          {/* <Auth>
+          <Auth>
             <Component {...pageProps} />
-          </Auth> */}
+          </Auth>
         </Provider>
       )
     }
