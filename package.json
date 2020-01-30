@@ -1,57 +1,15 @@
 {
-  "name": "ama",
-  "version": "1.0.0",
-  "description": "AMA for Indie Makers",
-  "author": "taishikato",
+  "name": "askmakers-next",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "serve": "yarn build && firebase serve",
-    "deploy-all": "yarn build && firebase deploy",
-    "deploy-hosting": "yarn build && firebase deploy --only hosting",
-    "deploy-db-rule": "firebase deploy --only firestore:rules",
-    "deploy-func": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "lint-staged": {
-    "*.{js,vue}": "yarn lint"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.5.4",
-    "@nuxtjs/google-analytics": "^2.2.0",
-    "@nuxtjs/moment": "^1.2.0",
-    "@nuxtjs/pwa": "^2.6.0",
-    "bulma-divider": "^0.2.0",
-    "firebase": "^6.3.4",
-    "nuxt": "^2.0.0",
-    "nuxt-buefy": "0.3.8",
-    "sanitize-html": "^1.20.1",
-    "uuid": "^3.3.2",
-    "vue-content-loader": "^0.2.2",
-    "vuexfire": "3.0.0-alpha.14"
-  },
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.1",
-    "@nuxtjs/eslint-config": "^1.0.1",
-    "@nuxtjs/eslint-module": "^1.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.15.1",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-plugin-nuxt": ">=0.4.2",
-    "eslint-plugin-prettier": "^3.0.1",
-    "husky": "^2.6.0",
-    "lint-staged": "^8.2.1",
-    "node-sass": "^4.12.0",
-    "prettier": "^1.16.4",
-    "sass-loader": "^7.1.0"
+    "next": "9.2.1",
+    "react": "16.12.0",
+    "react-dom": "16.12.0"
   }
 }
