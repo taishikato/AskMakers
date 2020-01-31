@@ -8,16 +8,17 @@ import 'react-mde/lib/styles/css/react-mde-all.css'
 import moment from 'moment'
 import asyncForEach from '../../plugins/asyncForEach'
 import getUnixTime from '../../plugins/getUnixTime'
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from 'react-redux'
 import uuid from 'uuid/v4'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
-import { Comment, Tooltip, Avatar } from 'antd'
+import { Tooltip } from 'antd'
 import 'antd/lib/avatar/style/index.css'
 import 'antd/lib/tooltip/style/index.css'
 import 'antd/lib/comment/style/index.css'
 import ReactMarkdown from 'react-markdown'
+import AntCommentWrapper from '../../components/AntCommentWrapper'
 import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
 
@@ -34,22 +35,17 @@ const QuestionsSlug = props => {
   const [answerValue, setAnswerValue] = React.useState('')
   const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
   const [isPosting, setIsPosting] = React.useState(false)
-  const [upvoteAnswers, setUpvoteAnswers] = React.useState(0)
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false)
   const { question, answers } = props
   const loginUser = useSelector(state => state.loginUser)
-  // const [loginUserData, setLoginUserData] = React.useState(loginUser)
 
   React.useEffect(() => {
     const checkUpvoted = async () => {
-      console.log({loginUser})
-      console.log({question})
       const questionUpvoteData = await db
         .collection('questionUpvotes')
         .where('userId', '==', loginUser.uid)
         .where('questionId', '==', question.id)
         .get()
-      console.log({questionUpvoteData})
       if (questionUpvoteData.size === 0) {
         return
       }
@@ -98,17 +94,6 @@ const QuestionsSlug = props => {
     setIsPosting(false)
   }
 
-  const actions = [
-    <span key="comment-basic-like" className="flex flex-wrapper items-center">
-      <Tooltip title="Upvote">
-        <button>
-          <FontAwesomeIcon icon={faArrowAltCircleUp} size="xs" className="h-4 w-4" />
-        </button>
-      </Tooltip>
-      <span style={{ paddingLeft: 8, cursor: 'auto' }}>{upvoteAnswers}</span>
-    </span>,
-  ]
-
   return (
     <Layout>
       <div className="w-7/12 mt-8 m-auto p-3">
@@ -145,24 +130,7 @@ const QuestionsSlug = props => {
         </h2>
         {answers.map((answer, index) => (
           <div key={index}>
-            <Comment
-              actions={actions}
-              author={<a>{answer.user.customName}</a>}
-              avatar={
-                <Avatar
-                  src={answer.user.picture}
-                  alt={answer.user.customName}
-                />
-              }
-              content={
-                <ReactMarkdown source={answer.answer.content} />
-              }
-              datetime={
-                <Tooltip title={moment.unix(answer.answer.created).format('YYYY-MM-DD HH:mm:ss')}>
-                  <span>{moment.unix(answer.answer.created).fromNow()}</span>
-                </Tooltip>
-              }
-            />
+            <AntCommentWrapper answerData={answer} db={db} />
             <Divider />
           </div>
         ))}
