@@ -21,7 +21,7 @@ const Navbar: NextPage<Props> = props => {
   return (
     <nav
       style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
-      className="flex items-center justify-between flex-wrap px-6 text-white bg-gray-900	"
+      className="flex items-center justify-between flex-wrap px-6 py-4 text-white bg-gray-900"
     >
       <div className="flex items-center flex-shrink-0 mr-6">
         <Link href="/">
@@ -32,6 +32,7 @@ const Navbar: NextPage<Props> = props => {
       </div>
       <div className="block lg:hidden">
         <button
+          onClick={handleHumburger}
           className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white"
         >
           <svg
@@ -44,7 +45,9 @@ const Navbar: NextPage<Props> = props => {
           </svg>
         </button>
       </div>
-      <div className="pt-4 md:p-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto">
+      <div
+        className={`mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${(isOpen ? 'block': 'hidden')}`}
+      >
         <div className="text-sm lg:flex-grow"></div>
         <div className="mt-4 lg:mt-0">
           {isLogin ?
@@ -54,14 +57,11 @@ const Navbar: NextPage<Props> = props => {
               </button>
               <div className={`${(isOpenDropDown ? 'show' : 'hidden')} absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
                 {/* <span className="block px-4 py-2 text-gray-800"> */}
-                  <Link href="/member/[username]" as={`/member/${loginUser.username}`}>
+                  <Link href="/[username]" as={`/${loginUser.username}`}>
                     <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
                       Profile
                     </a>
                   </Link>
-                {/* </span> */}
-                {/* <a href="#" className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Profile</a>
-                <a href="#" className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">Settings</a> */}
                 <a
                   onClick={signOut}
                   className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">
@@ -78,11 +78,11 @@ const Navbar: NextPage<Props> = props => {
           }
         </div>
       </div>
-      <style jsx>{`
+      {/* <style jsx>{`
       nav {
         height: 60px;
       }
-      `}</style>
+      `}</style> */}
     </nav>
   )
 }

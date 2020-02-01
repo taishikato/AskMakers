@@ -10,14 +10,22 @@ import getUnixTime from '../plugins/getUnixTime'
 import uuid from 'uuid/v4'
 import { useSelector } from 'react-redux'
 import asyncForEach from '../plugins/asyncForEach'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const AntCommentWrapper: NextPage<Props> = props => {
   const { answerData, db } = props
   const [upvoteAnswerCount, setUpvoteAnswerCount] = React.useState(0)
   const [isUpvoted, setIsUpvoted] = React.useState(false)
   const loginUser = useSelector(state => state.loginUser)
+  const isLogin = useSelector(state => state.isLogin)
+  const router = useRouter()
 
   const handleUpvote = async () => {
+    if (!isLogin) {
+      router.push('/login')
+      return
+    }
     const id = uuid().split('-').join('')
     await db
       .collection('upvotes')
@@ -34,16 +42,17 @@ const AntCommentWrapper: NextPage<Props> = props => {
   }
 
   const handleUnUpvote = async () => {
+    if (!isLogin) {
+      router.push('/login')
+      return
+    }
     const upvoteData = await db
       .collection('upvotes')
       .where('answerId', '==', answerData.answer.id)
       .where('senderId', '==', loginUser.uid)
       .get()
     await asyncForEach(upvoteData.docs, async doc => {
-      await db
-        .collection('upvotes')
-        .doc(doc.id)
-        .delete()
+      await db.collection('upvotes').doc(doc.id).delete()
     })
     setUpvoteAnswerCount(upvoteAnswerCount - 1)
     setIsUpvoted(false)
@@ -103,10 +112,15 @@ const AntCommentWrapper: NextPage<Props> = props => {
       actions={actions}
       author={<a>{answerData.user.customName}</a>}
       avatar={
-        <Avatar
-          src={answerData.user.picture}
-          alt={answerData.user.customName}
-        />
+        <Link href="/[username]" as={`/${answerData.user.username}`}>
+          <a>
+            <Avatar
+              src={answerData.user.picture}
+              alt={answerData.user.customName}
+              className="w-4 h-4"
+            />
+          </a>
+        </Link>
       }
       content={
         <ReactMarkdown source={answerData.answer.content} />

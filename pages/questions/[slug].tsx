@@ -71,7 +71,6 @@ const QuestionsSlug = props => {
   }
 
   const handleUnUpvoteQuestion = async () => {
-    console.log('handleUpvoteQuestion')
     const upvoteData = await db
       .collection('questionUpvotes')
       .where('userId', '==', loginUser.uid)
@@ -96,7 +95,7 @@ const QuestionsSlug = props => {
 
   return (
     <Layout>
-      <div className="w-7/12 mt-8 m-auto p-3">
+      <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
         <div>
           <div className="flex flex-wrapper items-center mb-3">
             {!isQuestionUpvoted ?

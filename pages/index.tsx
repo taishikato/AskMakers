@@ -14,19 +14,19 @@ const db = firebase.firestore()
 const Home: NextPage<Props> = props => (
   <Layout>
     <Hero />
-    <div>
+    <div className="mb-10">
       <Head>
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="w-9/12 m-auto flex flex-wrapper">
-        <div className="w-8/12 pr-5">
+      <div className="w-full px-3 md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
+        <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
           {props.questions.map((question, index) => (
             <QuestionWrapper question={question} key={index} />
           ))}
         </div>
-        <aside className="w-4/12">
+        <aside className="w-full md:w-4/12 lg:w-4/12">
           <WelcomeBox class="border border-gray-300 rounded p-3" />
         </aside>
       </div>
@@ -44,7 +44,7 @@ Home.getInitialProps = async () => {
   const questions: any = []
   await asyncForEach(questionData.docs, async doc => {
     const question = doc.data()
-    const [userData, answerData] = await Promise.all([
+    const [userData, answerData, upvoteData] = await Promise.all([
       db
         .collection('publicUsers')
         .doc(question.fromUserId)
@@ -52,11 +52,16 @@ Home.getInitialProps = async () => {
       db
         .collection('answers')
         .where('questionId', '==', question.id)
+        .get(),
+      db
+        .collection('questionUpvotes')
+        .where('questionId', '==', question.id)
         .get()
     ])
     const user = userData.data()
     const answerCount = answerData.size
-    questions.push({ question, user, answerCount })
+    const upvoteCount = upvoteData.size
+    questions.push({ question, user, answerCount, upvoteCount })
   })
   return { questions }
 }
