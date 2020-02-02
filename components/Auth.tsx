@@ -1,5 +1,4 @@
 import React from 'react'
-import uuid from 'uuid/v4'
 import { connect } from 'react-redux'
 import auth from '../plugins/auth'
 import getUnixTime from '../plugins/getUnixTime'
@@ -23,48 +22,52 @@ const authUserFunc = async (userLogin: any, isLogin: any, router: NextRouter, ch
   }
   const result = await getRedirectResult()
   if (result.user !== null) {
+    // 公開
+    const publicUsersRef = db
+      .collection('publicUsers')
+      .doc(result.user.uid)
+    // 秘密
+    const secretUsersRef = db
+      .collection('secretUsers')
+      .doc(result.user.uid)
     if (result.additionalUserInfo.isNewUser) {
       const created = getUnixTime()
       // Sign Up
       // ユーザー保存
       const userData = result.user
       const userUid = userData.uid
-      const username = `user-${uuid().split('-')[0]}`
       const newPublicUserData: any = {
         uid: userUid,
-        name: userData.displayName,
+        customName: userData.displayName,
+        social: {
+          twitter: result.additionalUserInfo.username
+        },
+        username: result.additionalUserInfo.username,
         picture: userData.photoURL.replace('_normal', ''),
         created,
-        username,
-        badges: ['earlybird']
+        tagline: result.additionalUserInfo.profile.description
       }
 
       const newSecretUserData = {
         uid: userUid,
         email: userData.email,
-        created
+        created,
+        provider: [result.additionalUserInfo.providerId],
       }
       await Promise.all([
-        db
-          .collection('users')
-          .doc(userUid)
-          .set(newPublicUserData),
-        db
-          .collection('secretUsers')
-          .doc(userUid)
-          .set(newSecretUserData)
+        publicUsersRef.set(newPublicUserData),
+        secretUsersRef.set(newSecretUserData)
       ])
       userLogin(newPublicUserData)
       checkingLoginDoneAction()
-      router.push('/set-username')
+      router.push('/welcome')
     } else {
-      const user = await db
-        .collection('publicUsers')
-        .doc(authUser.uid)
-        .get()
+      console.log({result})
+      const user = await publicUsersRef.get()
       userLogin(user.data() as any)
       checkingLoginDoneAction()
-      router.push('/')
+      // router.push('/')
+      router.push('/welcome')
     }
     return
   }

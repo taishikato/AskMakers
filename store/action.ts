@@ -4,10 +4,13 @@ export const DONE_CHECKING = 'doneChecking'
 
 export const loginUser = (user: any) => ({
   type: LOGIN,
-  name: user.customName,
+  customName: user.customName,
   uid: user.uid,
   picture: user.picture,
-  username: user.username,
+  username: user.social.twitter,
+  tagline: user.tagline,
+  website: user.website,
+  social: user.social
 })
 export const logoutUser = () => ({
   type: LOGOUT

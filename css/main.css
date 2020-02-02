@@ -19,3 +19,7 @@ div#__next > div {
 } */
 
 .border-3 { border-width: 3px; }
+
+.ant-upload .anticon.anticon-plus svg {
+    margin: 0 auto;
+}

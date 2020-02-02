@@ -13,10 +13,12 @@ const loginUser = (state = {}, action: any) => {
     case LOGIN:
       return {
         uid: action.uid,
-        name: action.name,
+        customName: action.customName,
         picture: action.picture,
         username: action.username,
-        badges: action.badges,
+        tagline: action.tagline,
+        social: action.social,
+        website: action.website
       }
       case LOGOUT:
         return {}

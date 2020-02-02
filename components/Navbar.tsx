@@ -57,11 +57,16 @@ const Navbar: NextPage<Props> = props => {
               </button>
               <div className={`${(isOpenDropDown ? 'show' : 'hidden')} absolute z-40 right-0 mt-2 py-2 w-full md:w-48 lg:w-48 bg-white rounded-lg shadow-xl`}>
                 {/* <span className="block px-4 py-2 text-gray-800"> */}
-                  <Link href="/[username]" as={`/${loginUser.username}`}>
-                    <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                      Profile
-                    </a>
-                  </Link>
+                <Link href="/[username]" as={`/${loginUser.username}`}>
+                  <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    Profile
+                  </a>
+                </Link>
+                <Link href="/settings">
+                  <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    Settings
+                  </a>
+                </Link>
                 <a
                   onClick={signOut}
                   className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white">

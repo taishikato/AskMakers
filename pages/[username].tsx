@@ -2,11 +2,13 @@ import React from 'react'
 import { NextPage } from 'next'
 import Layout from '../components/Layout'
 import QuestionWrapper from '../components/QuestionWrapper'
+import TwitterIcon from '../components/TwitterIcon'
+import ProducthuntIcon from '../components/ProducthuntIcon'
+import GitHubIcon from '../components/GitHubIcon'
+import PatreonIcon from '../components/PatreonIcon'
 import asyncForEach from '../plugins/asyncForEach'
-import { Tabs, Icon } from 'antd'
+import { Tabs } from 'antd'
 import { Empty } from 'antd'
-import 'antd/lib/tabs/style/index.css'
-import 'antd/lib/empty/style/index.css'
 import firebase from '../plugins/firebase'
 import 'firebase/firestore'
 
@@ -31,40 +33,80 @@ const Username: NextPage<Props> = props => {
               <div>
                 {user.tagline}
               </div>
+              {user.website !== undefined && user.website !== '' &&
+              <div>
+                <a href={user.website} target="_blank">
+                  {user.website}
+                </a>
+              </div>
+              }
             </div>
           </div>
         </div>
       </div>
-      <div className="w-full md:w-8/12 lg:w-8/12 mt-5 m-auto p-3">
-        <Tabs defaultActiveKey="1">
-          <TabPane
-            tab={
-              <span>
-                Questions
-              </span>
-            }
-            key="1"
-          >
-            {questionsData.length === 0 &&
-              <Empty description="No question yet" />
-            }
-            {questionsData.length > 0 &&
-              questionsData.map(question => (
-                <QuestionWrapper question={{ question, answerCount, upvoteCount }} />
-              ))
-            }
-          </TabPane>
-          {/* <TabPane
-            tab={
-              <span>
-                Answers
-              </span>
-            }
-            key="2"
-          >
-            Tab 2
-          </TabPane> */}
-        </Tabs>
+      <div className="w-full md:w-9/12 lg:w-9/12 mt-5 m-auto p-3">
+        <div className="flex flex-wrap -mx-3">
+          <div className="w-full md:w-8/12 lg:w-8/12 px-3">
+            <Tabs defaultActiveKey="1">
+              <TabPane
+                tab={
+                  <span>
+                    Questions
+                  </span>
+                }
+                key="1"
+              >
+                {questionsData.length === 0 &&
+                  <Empty description="No question yet" />
+                }
+                {questionsData.length > 0 &&
+                  questionsData.map((question, index) => (
+                    <div key={index}>
+                      <QuestionWrapper question={{ question, answerCount, upvoteCount }} />
+                    </div>
+                  ))
+                }
+              </TabPane>
+              {/* <TabPane
+                tab={
+                  <span>
+                    Answers
+                  </span>
+                }
+                key="2"
+              >
+                Tab 2
+              </TabPane> */}
+            </Tabs>
+          </div>
+          <div className="w-full md:w-3/12 lg:w-3/12 px-3">
+            <div className="border border-gray-300 rounded p-3">
+              <h3 className="font-semibold text-xl mb-2">Social</h3>
+              <div className="flex flex-wrap">
+                {user.social.twitter !== undefined &&
+                  <div className="w-4/12">
+                    <TwitterIcon name={user.social.twitter} />
+                  </div>
+                }
+                {user.social.productHunt !== undefined &&
+                  <div className="w-4/12">
+                    <ProducthuntIcon name={user.social.productHunt} />
+                  </div>
+                }
+                {user.social.gitHub !== undefined &&
+                  <div className="w-4/12">
+                    <GitHubIcon name={user.social.gitHub} />
+                  </div>
+                }
+                {user.social.patreon !== undefined &&
+                  <div className="w-4/12">
+                    <PatreonIcon name={user.social.patreon} />
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   )
@@ -81,6 +123,8 @@ Username.getInitialProps = async ({ query }) => {
     customName: user.customName,
     tagline: user.tagline,
     picture: user.picture,
+    social: user.social,
+    website: user.website,
   }
 
   let returnQuestion: any = []
