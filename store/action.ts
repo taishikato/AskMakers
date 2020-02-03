@@ -7,7 +7,7 @@ export const loginUser = (user: any) => ({
   customName: user.customName,
   uid: user.uid,
   picture: user.picture,
-  username: user.social.twitter,
+  username: user.username,
   tagline: user.tagline,
   website: user.website,
   social: user.social

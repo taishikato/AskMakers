@@ -3,7 +3,7 @@ import Layout from '../../components/Layout'
 import { Divider } from 'antd'
 import 'antd/lib/divider/style/index.css'
 import ReactMde from 'react-mde'
-import * as Showdown from 'showdown'
+import MarkdownIt from 'markdown-it'
 import 'react-mde/lib/styles/css/react-mde-all.css'
 import moment from 'moment'
 import asyncForEach from '../../plugins/asyncForEach'
@@ -21,17 +21,14 @@ import ReactMarkdown from 'react-markdown'
 import AntCommentWrapper from '../../components/AntCommentWrapper'
 import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
+import { useRouter } from 'next/router'
 
 const db = firebase.firestore()
 
-const converter = new Showdown.Converter({
-  tables: true,
-  simplifiedAutoLink: true,
-  strikethrough: true,
-  tasklists: true
-})
+const mdParser = new MarkdownIt()
 
 const QuestionsSlug = props => {
+  const router = useRouter()
   const [answerValue, setAnswerValue] = React.useState('')
   const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
   const [isPosting, setIsPosting] = React.useState(false)
@@ -93,6 +90,15 @@ const QuestionsSlug = props => {
     setIsPosting(false)
   }
 
+  const handleDeleteQuestion = async e => {
+    e.preventDefault()
+    if (!window.confirm('Are you sure to delete this question?')) {
+      return
+    }
+    await db.collection('questions').doc(question.id).delete()
+    router.push('/')
+  }
+
   return (
     <Layout>
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
@@ -121,18 +127,42 @@ const QuestionsSlug = props => {
                 {` ${moment.unix(question.created).fromNow()}`}
               </span>
             </li>
+            {question.fromUserId === loginUser.uid &&
+              <>
+                <li className="text-gray-600 text-xs ml-3">
+                  <a className="cursor-pointer hover:underline">Edit</a>
+                </li>
+                <li className="text-gray-600 text-xs ml-3">
+                  <button
+                    onClick={handleDeleteQuestion}
+                    className="cursor-pointer hover:underline focus:outline-none"
+                  >
+                    Delete
+                  </button>
+                </li>
+              </>
+            }
           </ul>
         </div>
-        <Divider />
-        <h2 className="text-xl mb-5">
-          Answer
-        </h2>
-        {answers.map((answer, index) => (
-          <div key={index}>
-            <AntCommentWrapper answerData={answer} db={db} />
+        {question.body !== undefined &&
+          <div className="mt-5">
+            <ReactMarkdown source={question.body} />
             <Divider />
           </div>
-        ))}
+        }
+        {answers.length > 0 &&
+        <>
+          <h2 className="text-xl my-5">
+            Answer
+          </h2>
+          {answers.map((answer, index) => (
+            <div key={index}>
+              <AntCommentWrapper answerData={answer} db={db} />
+              <Divider />
+            </div>
+          ))}
+        </>
+        }
         <h2 className="text-xl mb-5">
           Your answer
         </h2>
@@ -144,7 +174,7 @@ const QuestionsSlug = props => {
             selectedTab={selectedTab}
             onTabChange={setSelectedTab}
             generateMarkdownPreview={markdown =>
-              Promise.resolve(converter.makeHtml(markdown))
+              Promise.resolve(mdParser.render(markdown))
             }
           />
         </div>
@@ -184,10 +214,15 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     .where('slug', '==', slug)
     .get()
   const question = questionData.docs[0].data()
-  const returnQuestion = {
+  // console.log({question})
+  const returnQuestion: IReturnQuestion = {
     created: question.created,
     text: question.text,
-    id: question.id
+    id: question.id,
+    fromUserId: question.fromUserId
+  }
+  if (question.body !== undefined) {
+    returnQuestion.body = question.body
   }
 
   const answerData = await db
@@ -215,6 +250,14 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     })
   }
   return { question: returnQuestion, answers }
+}
+
+interface IReturnQuestion {
+  created: number
+  text: string
+  id: string
+  fromUserId: string
+  body?: string
 }
 
 export default QuestionsSlug

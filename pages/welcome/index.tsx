@@ -1,11 +1,12 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
 import Layout from '../../components/Layout'
 import Input from '../../components/Input'
 import Upload from '../../components/Upload'
-import { useSelector } from 'react-redux'
 import uploadToStorage from '../../plugins/uploadToStorage'
 import uuid from 'uuid/v4'
-import { useRouter, NextRouter } from 'next/router'
+import getBase64 from '../../plugins/getBase64'
 import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
 
@@ -25,6 +26,14 @@ const Welcome = props => {
   const [isLoadingImage, setIsLoadingImage] = React.useState(false)
   const [imageUrl, setImageUrl] = React.useState('')
   const [isSaving, setIsSaving] = React.useState(false)
+
+  const handleChangeName = e => setName(e.target.value)
+  const handleChangeTagline = e => setTagline(e.target.value)
+  const handleChangeWebsite = e => setWebsite(e.target.value)
+  const handleChangeTwitter = e => setTwitter(e.target.value)
+  const handleChangeProducthunt = e => setProducthunt(e.target.value)
+  const handleChangeGithub = e => setGithub(e.target.value)
+  const handleChangePatreon = e => setPatreon(e.target.value)
 
   React.useEffect(() => {
     setName(loginUser.customName)
@@ -74,12 +83,6 @@ const Welcome = props => {
     // setIsSaving(false)
   }
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
-
   const handleChangeImage = info => {
     if (info.file.status === 'uploading') {
       setIsLoadingImage(true)
@@ -93,14 +96,6 @@ const Welcome = props => {
       })
     }
   }
-
-  const handleChangeName = e => setName(e.target.value)
-  const handleChangeTagline = e => setTagline(e.target.value)
-  const handleChangeWebsite = e => setWebsite(e.target.value)
-  const handleChangeTwitter = e => setTwitter(e.target.value)
-  const handleChangeProducthunt = e => setProducthunt(e.target.value)
-  const handleChangeGithub = e => setGithub(e.target.value)
-  const handleChangePatreon = e => setPatreon(e.target.value)
 
   return (
     <Layout>
@@ -140,18 +135,18 @@ const Welcome = props => {
               <Input label="Patreon Handle" placeholder="jackconte" id="patreon" type="text" value={patreon} handleChange={handleChangePatreon} />
             </div>
           </div>
-          <div className="px-2">
+          <div className="px-2 md:px-0 lg:px-0">
             {isSaving ?
               <button
                 disabled
-                className="rounded px-4 py-2 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
+                className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
               >
                 Loading…
               </button>
               :
               <button
                 type="submit"
-                className="rounded px-4 py-2 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
+                className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
               >
                 Save
               </button>
@@ -174,7 +169,7 @@ interface IUpdateData {
 interface ISocial {
   twitter: string,
   productHunt?: string,
-  github?: string,
+  gitHub?: string,
   patreon?: string
 }
 

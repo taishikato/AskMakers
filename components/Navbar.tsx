@@ -1,14 +1,25 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { connect } from 'react-redux'
-import { loginUser, logoutUser } from '../store/action'
+import { logoutUser } from '../store/action'
 import firebase from '../plugins/firebase'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { useSelector, useDispatch } from 'react-redux'
+import { useRouter, NextRouter } from 'next/router'
 
-const Navbar: NextPage<Props> = props => {
+const Navbar: NextPage = props => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
-  const { isLogin, loginUser, signOut } = props
+  const isLogin = useSelector(state => state.isLogin)
+  const loginUser = useSelector(state => state.loginUser)
+  const dispatch = useDispatch()
+  const router = useRouter()
+
+  const signOut = async () => {
+    await firebase.auth().signOut()
+    dispatch(logoutUser())
+  }
 
   const handleHumburger = () => {
     setIsOpen(!isOpen)
@@ -18,6 +29,15 @@ const Navbar: NextPage<Props> = props => {
     setIsOpenDropDown(!isOpenDropDown)
   }
 
+  const handleAskButtonClick = e => {
+    e.preventDefault()
+    if (!isLogin) {
+      router.push('/login')
+      return
+    }
+    router.push('/ask-question')
+  }
+
   return (
     <nav
       style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
@@ -25,8 +45,8 @@ const Navbar: NextPage<Props> = props => {
     >
       <div className="flex items-center flex-shrink-0 mr-6">
         <Link href="/">
-          <a>
-            Ask Makers
+          <a className="font-extrabold text-green-400">
+            AskMakers
           </a>
         </Link>
       </div>
@@ -49,6 +69,15 @@ const Navbar: NextPage<Props> = props => {
         className={`mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${(isOpen ? 'block': 'hidden')}`}
       >
         <div className="text-sm lg:flex-grow"></div>
+        <button
+          onClick={handleAskButtonClick}
+          className="font-semibold focus:outline-none flex flex-wrap items-center mr-5"
+        >
+          <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
+          <span className="ml-1">
+            Ask Question
+          </span>
+        </button>
         <div className="mt-4 lg:mt-0">
           {isLogin ?
             <div className="relative">
@@ -83,41 +112,9 @@ const Navbar: NextPage<Props> = props => {
           }
         </div>
       </div>
-      {/* <style jsx>{`
-      nav {
-        height: 60px;
-      }
-      `}</style> */}
     </nav>
   )
 }
 
-interface Props {
-  isLogin: boolean,
-  loginUser: any,
-  signOut: () => Promise<any>
-}
+export default Navbar
 
-const mapStateToProps = state => {
-  return {
-    isLogin: state.isLogin,
-    loginUser: state.loginUser
-  }
-}
-
-const mapDispachToProps = dispatch => {
-  return {
-    userLogin: () => {
-      dispatch(loginUser({}))
-    },
-    signOut: async () => {
-      await firebase.auth().signOut()
-      dispatch(logoutUser())
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispachToProps
-)(Navbar)

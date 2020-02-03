@@ -83,22 +83,22 @@ const Username: NextPage<Props> = props => {
             <div className="border border-gray-300 rounded p-3">
               <h3 className="font-semibold text-xl mb-2">Social</h3>
               <div className="flex flex-wrap">
-                {user.social.twitter !== undefined &&
+                {user.social.twitter !== undefined && user.social.twitter !== '' &&
                   <div className="w-4/12">
                     <TwitterIcon name={user.social.twitter} />
                   </div>
                 }
-                {user.social.productHunt !== undefined &&
+                {user.social.productHunt !== undefined && user.social.productHunt !== '' &&
                   <div className="w-4/12">
                     <ProducthuntIcon name={user.social.productHunt} />
                   </div>
                 }
-                {user.social.gitHub !== undefined &&
+                {user.social.gitHub !== undefined && user.social.gitHub !== '' &&
                   <div className="w-4/12">
                     <GitHubIcon name={user.social.gitHub} />
                   </div>
                 }
-                {user.social.patreon !== undefined &&
+                {user.social.patreon !== undefined && user.social.patreon !== '' &&
                   <div className="w-4/12">
                     <PatreonIcon name={user.social.patreon} />
                   </div>

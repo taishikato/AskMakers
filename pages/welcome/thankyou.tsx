@@ -13,7 +13,7 @@ const Thankyou = () => {
           <h3 className="text-xl font-base mb-4">
             Now it's time to ask a question!
           </h3>
-          <Link href="/a">
+          <Link href="/ask-question">
             <a className="px-6 py-3 bg-green-400 rounded text-white font-semibold">
               Ask a Question!
             </a>

@@ -2,11 +2,17 @@ import React from 'react'
 import { NextPage } from 'next'
 
 const Input: NextPage<Props> = props => {
-  const { type, value, handleChange, label, placeholder, id } = props
+  const { type, value, handleChange, label, placeholder, id, requied } = props
   return (
     <>
-      {label !== undefined &&
+      {label !== undefined && requied === undefined &&
         <label className="font-semibold mb-2 block" htmlFor={id}>
+          {label}
+        </label>
+      }
+      {label !== undefined && requied !== undefined &&
+        <label className="font-semibold mb-2 block" htmlFor={id}>
+          <span className="text-red-400">*</span>
           {label}
         </label>
       }
@@ -29,6 +35,7 @@ interface Props {
   type: string,
   label?: string,
   placeholder?: string,
+  requied?: boolean
 }
 
 export default Input
