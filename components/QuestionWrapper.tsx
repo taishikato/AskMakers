@@ -2,7 +2,6 @@ import React from 'react'
 import { Tag } from 'antd'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import 'antd/lib/tag/style/index.css'
 
 const QuestionWrapper: NextPage<Props> = props => {
   const questionObj = props.question

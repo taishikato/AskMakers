@@ -1,31 +1,46 @@
 import React from 'react'
-import { useRouter } from 'next/router'
-import Layout from '../components/Layout'
-import Input from '../components/Input'
-import getUnixTime from '../plugins/getUnixTime'
-import generateSlug from '../plugins/generateSlug'
-import { useSelector } from 'react-redux'
-import uuid from 'uuid/v4'
+import { NextPage } from 'next'
+import Link from 'next/link'
+import Error from 'next/error'
+import Layout from '../../components/Layout'
+import Input from '../../components/Input'
+import getUnixTime from '../../plugins/getUnixTime'
 import ReactMde from 'react-mde'
 import MarkdownIt from 'markdown-it'
+import { useSelector } from 'react-redux'
 import { Checkbox, message } from 'antd'
-import firebase from '../plugins/firebase'
+import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
+
 const db = firebase.firestore()
 
 const mdParser = new MarkdownIt()
 
-const AskQuestion = () => {
+const EditQuestionSlug: NextPage<Props> = props => {
   const loginUser = useSelector(state => state.loginUser)
-  const router = useRouter()
-  const [title, setTitle] = React.useState('')
+  const { question, e } = props
+
+  if (e === 'not allowed') {
+    return <Error statusCode={404} />
+  }
+
+
+  const [title, setTitle] = React.useState(question.text)
   const [body, setBody] = React.useState('')
   const [topic, setTopic] = React.useState([])
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
-  const handleTitleChange = e => setTitle(e.target.value)
 
-  const onChange = (checkedValues) => setTopic(checkedValues)
+  React.useEffect(() => {
+    if (question.topics.length > 0) {
+      setTopic(question.topics)
+    }
+    if (question.body !== undefined) {
+      setBody(question.body)
+    }
+  }, [])
+
+
   const topicOptions = [
     { label: 'Idea', value: 'idea' },
     { label: 'Build', value: 'build' },
@@ -40,23 +55,16 @@ const AskQuestion = () => {
     e.preventDefault()
     setIsSubmitting(true)
     try {
-      const id = uuid().split('-').join('')
-      const slug = await generateSlug(title)
       await db
         .collection('questions')
-        .doc(id)
-        .set({
-          id,
-          created: getUnixTime(),
+        .doc(question.id)
+        .update({
+          updated: getUnixTime(),
           text: title,
-          fromUserId: loginUser.uid,
           body,
-          slug,
           topics: topic,
-          isGeneral: true
         })
       message.success('Submitted successfully')
-      router.push('/questions/[slug]', `/questions/${slug}`)
     } catch(err) {
       message.error('An error occured. Please try again.')
     } finally {
@@ -74,7 +82,7 @@ const AskQuestion = () => {
               value={title}
               id="title"
               type="text"
-              handleChange={handleTitleChange}
+              handleChange={e => setTitle(e.target.value)}
               label="Title"
               placeholder="How do you validate your idea?"
               requied={true}
@@ -101,7 +109,7 @@ const AskQuestion = () => {
               Topic
             </label>
             <div className="flex flex-wrap">
-              <Checkbox.Group options={topicOptions} onChange={onChange} />
+              <Checkbox.Group options={topicOptions} onChange={(checkedValues) => setTopic(checkedValues)} value={topic} />
             </div>
           </div>
           <div>
@@ -109,7 +117,7 @@ const AskQuestion = () => {
               <button
                 className="px-6 py-3 bg-green-300 rounded text-white font-semibold cursor-not-allowed focus:outline-none"
               >
-                Post your question
+                Update your question
               </button>
             }
             {!isSubmitting && title !== '' && body !== '' &&
@@ -117,7 +125,7 @@ const AskQuestion = () => {
                 className="px-6 py-3 bg-green-400 rounded text-white font-semibold hover:bg-green-500 focus:outline-none"
                 type="submit"
               >
-                Post your question
+                Update your question
               </button>
             }
             {isSubmitting &&
@@ -128,6 +136,11 @@ const AskQuestion = () => {
                 Submitting…
               </button>
             }
+            <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
+              <a className="px-6 py-3 bg-white rounded font-semibold hover:underline">
+                Go back to the question page
+              </a>
+            </Link>
           </div>
         </form>
       </div>
@@ -135,4 +148,23 @@ const AskQuestion = () => {
   )
 }
 
-export default AskQuestion
+EditQuestionSlug.getInitialProps = async (ctx: any) => {
+  const slug = ctx.query.slug
+  const questionData = await db
+    .collection('questions')
+    .where('slug', '==', slug)
+    .get()
+  const question = questionData.docs[0].data()
+
+  const loginUser = ctx.store.getState().loginUser
+  if (loginUser.uid !== question.fromUserId) return { question: {}, e: 'not allowed' }
+
+  return { question }
+}
+
+interface Props {
+  question: any,
+  e?: string
+}
+
+export default EditQuestionSlug

@@ -6,9 +6,9 @@ import firebase from '../plugins/firebase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { useRouter, NextRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
-const Navbar: NextPage = props => {
+const Navbar: NextPage = () => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [isOpenDropDown, setIsOpenDropDown] = React.useState(false)
   const isLogin = useSelector(state => state.isLogin)
@@ -19,6 +19,7 @@ const Navbar: NextPage = props => {
   const signOut = async () => {
     await firebase.auth().signOut()
     dispatch(logoutUser())
+    router.push('/')
   }
 
   const handleHumburger = () => {
@@ -69,15 +70,17 @@ const Navbar: NextPage = props => {
         className={`mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${(isOpen ? 'block': 'hidden')}`}
       >
         <div className="text-sm lg:flex-grow"></div>
-        <button
-          onClick={handleAskButtonClick}
-          className="font-semibold focus:outline-none flex flex-wrap items-center mr-5"
-        >
-          <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
-          <span className="ml-1">
-            Ask Question
-          </span>
-        </button>
+        {isLogin &&
+          <button
+            onClick={handleAskButtonClick}
+            className="font-semibold focus:outline-none flex flex-wrap items-center mr-5"
+          >
+            <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
+            <span className="ml-1">
+              Ask Question
+            </span>
+          </button>
+        }
         <div className="mt-4 lg:mt-0">
           {isLogin ?
             <div className="relative">

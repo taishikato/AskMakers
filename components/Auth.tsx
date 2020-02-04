@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import auth from '../plugins/auth'
 import getUnixTime from '../plugins/getUnixTime'
 import getRedirectResult from '../plugins/getRedirectResult'
@@ -10,14 +10,10 @@ import 'firebase/firestore'
 
 const db = firebase.firestore()
 
-const authUserFunc = async (userLogin: any, isLogin: any, router: NextRouter, checkingLoginDoneAction) => {
+const authUserFunc = async (router: NextRouter, dispatch) => {
   const authUser = await auth()
-  if (!authUser && router.pathname === '/create-review/[slug]') {
-    checkingLoginDoneAction()
-    return router.push('/sign')
-  }
   if (!authUser) {
-    checkingLoginDoneAction()
+    dispatch(checkingLoginDone())
     return
   }
   const result = await getRedirectResult()
@@ -58,14 +54,13 @@ const authUserFunc = async (userLogin: any, isLogin: any, router: NextRouter, ch
         publicUsersRef.set(newPublicUserData),
         secretUsersRef.set(newSecretUserData)
       ])
-      userLogin(newPublicUserData)
-      checkingLoginDoneAction()
+      dispatch(loginUser(newPublicUserData))
+      dispatch(checkingLoginDone())
       router.push('/welcome')
     } else {
-      console.log({result})
       const user = await publicUsersRef.get()
-      userLogin(user.data() as any)
-      checkingLoginDoneAction()
+      dispatch(loginUser(user.data() as any))
+      dispatch(checkingLoginDone())
       // router.push('/')
       router.push('/welcome')
     }
@@ -76,37 +71,18 @@ const authUserFunc = async (userLogin: any, isLogin: any, router: NextRouter, ch
     .collection('publicUsers')
     .doc(authUser.uid)
     .get()
-  userLogin(user.data() as any)
-  checkingLoginDoneAction()
+  dispatch(loginUser(user.data() as any))
+  dispatch(checkingLoginDone())
 }
 
 const Auth = props => {
   const router = useRouter()
+  const dispatch = useDispatch()
   React.useEffect(() => {
-    authUserFunc(props.userLogin, props.isLogin, router, props.checkingLoginDoneAction);
+    authUserFunc(router, dispatch);
   }, [])
 
   return props.children
 }
 
-const mapStateToProps = state => {
-  return {
-    isLogin: state.isLogin
-  }
-}
-
-const mapDispachToProps = dispatch => {
-  return {
-    userLogin: (user) => {
-      dispatch(loginUser(user))
-    },
-    checkingLoginDoneAction: () => {
-      dispatch(checkingLoginDone())
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispachToProps
-)(Auth)
+export default Auth

@@ -1,13 +1,16 @@
 import React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
+import AntCommentWrapper from '../../components/AntCommentWrapper'
+import asyncForEach from '../../plugins/asyncForEach'
+import getUnixTime from '../../plugins/getUnixTime'
 import { Divider } from 'antd'
 import 'antd/lib/divider/style/index.css'
 import ReactMde from 'react-mde'
 import MarkdownIt from 'markdown-it'
 import 'react-mde/lib/styles/css/react-mde-all.css'
 import moment from 'moment'
-import asyncForEach from '../../plugins/asyncForEach'
-import getUnixTime from '../../plugins/getUnixTime'
 import { useSelector } from 'react-redux'
 import uuid from 'uuid/v4'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -18,10 +21,8 @@ import 'antd/lib/avatar/style/index.css'
 import 'antd/lib/tooltip/style/index.css'
 import 'antd/lib/comment/style/index.css'
 import ReactMarkdown from 'react-markdown'
-import AntCommentWrapper from '../../components/AntCommentWrapper'
 import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
-import { useRouter } from 'next/router'
 
 const db = firebase.firestore()
 
@@ -130,7 +131,11 @@ const QuestionsSlug = props => {
             {question.fromUserId === loginUser.uid &&
               <>
                 <li className="text-gray-600 text-xs ml-3">
-                  <a className="cursor-pointer hover:underline">Edit</a>
+                  <Link href="/edit-question/[slug]" as={`/edit-question/${question.slug}`}>
+                    <a className="cursor-pointer hover:underline">
+                      Edit
+                    </a>
+                  </Link>
                 </li>
                 <li className="text-gray-600 text-xs ml-3">
                   <button
@@ -214,11 +219,11 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     .where('slug', '==', slug)
     .get()
   const question = questionData.docs[0].data()
-  // console.log({question})
   const returnQuestion: IReturnQuestion = {
     created: question.created,
     text: question.text,
     id: question.id,
+    slug: question.slug,
     fromUserId: question.fromUserId
   }
   if (question.body !== undefined) {
@@ -257,6 +262,7 @@ interface IReturnQuestion {
   text: string
   id: string
   fromUserId: string
+  slug: string
   body?: string
 }
 
