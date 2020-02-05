@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import { InstantSearch, Hits, connectStateResults, Configure } from 'react-instantsearch-dom'
+import algoliasearch from 'algoliasearch/lite'
+import SearchHit from './SearchHit'
+import CustomSearchBox from './CustomSearchBox'
 
 const Navbar: NextPage = () => {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -39,6 +43,28 @@ const Navbar: NextPage = () => {
     router.push('/ask-question')
   }
 
+  const searchClient = algoliasearch(
+    'XZIR7RVDZD',
+    'ba8ffe5c871cb0ebae6e7c04762a2048'
+  )
+
+  const Content = connectStateResults(({ searchState, searchResults }) => {
+    if (searchResults && searchResults.nbHits !== 0 && searchState.query) {
+      return (
+        <div className="w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-10">
+          <Hits hitComponent={SearchHit} />
+        </div>
+      )
+    } else if (searchResults && searchResults.nbHits === 0 && searchState.query) {
+      return <div className="text-white">
+        No results has been found for{' '}
+        {searchState.query}
+      </div>
+    } else {
+      return <div></div>
+    }
+  });
+
   return (
     <nav
       style={{ boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.06)' }}
@@ -69,7 +95,14 @@ const Navbar: NextPage = () => {
       <div
         className={`mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${(isOpen ? 'block': 'hidden')}`}
       >
-        <div className="text-sm lg:flex-grow"></div>
+        <div className="text-sm lg:flex-grow text-gray-700">
+          <InstantSearch searchClient={searchClient} indexName="questions">
+            {/* <SearchBox defaultRefinement="" /> */}
+            <Configure hitsPerPage={5} />
+            <CustomSearchBox />
+            <Content />
+          </InstantSearch>
+        </div>
         {isLogin &&
           <button
             onClick={handleAskButtonClick}
