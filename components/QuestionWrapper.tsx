@@ -1,7 +1,7 @@
 import React from 'react'
-import { Tag } from 'antd'
 import { NextPage } from 'next'
 import Link from 'next/link'
+import { Tag } from 'antd'
 
 const QuestionWrapper: NextPage<Props> = props => {
   const questionObj = props.question
@@ -9,14 +9,14 @@ const QuestionWrapper: NextPage<Props> = props => {
     <div className="flex flex-wrapper tems-center py-3 border-b border-gray-300 rounded">
       <div className="w-2/12 flex flex-wrapper items-center justify-between text-gray-600 hidden md:flex lg:flex">
         <div className="flex flex-col items-center p-2">
-          <span>{questionObj.upvoteCount}</span>
-          {questionObj.upvoteCount === 0 &&
+          <span>{questionObj.questionUpvoteCount}</span>
+          {questionObj.questionUpvoteCount === 0 &&
             <span className="text-xs">upvote</span>
           }
-          {questionObj.upvoteCount === 1 &&
+          {questionObj.questionUpvoteCount === 1 &&
             <span className="text-xs">upvote</span>
           }
-          {questionObj.upvoteCount > 1 &&
+          {questionObj.questionUpvoteCount > 1 &&
             <span className="text-xs">votes</span>
           }
         </div>
@@ -66,7 +66,7 @@ const QuestionWrapper: NextPage<Props> = props => {
         </ul>
         <h3 className="text-lg">
           <Link href="/questions/[slug]" as={`/questions/${questionObj.question.slug}`}>
-            <a>
+            <a className="text-gray-800">
               {questionObj.question.text}
             </a>
           </Link>

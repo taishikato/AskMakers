@@ -2,6 +2,7 @@ import React from 'react'
 import { NextPage } from 'next'
 import Layout from '../components/Layout'
 import QuestionWrapper from '../components/QuestionWrapper'
+import AnswerWrapper from '../components/AnswerWrapper'
 import TwitterIcon from '../components/TwitterIcon'
 import ProducthuntIcon from '../components/ProducthuntIcon'
 import GitHubIcon from '../components/GitHubIcon'
@@ -15,7 +16,7 @@ import 'firebase/firestore'
 const db = firebase.firestore()
 
 const Username: NextPage<Props> = props => {
-  const { user, questionsData, answerCount, upvoteCount } = props
+  const { user, questionsData, answerCount, questionUpvoteCount, answerData } = props
   const { TabPane } = Tabs
 
   return (
@@ -62,12 +63,12 @@ const Username: NextPage<Props> = props => {
                 {questionsData.length > 0 &&
                   questionsData.map((question, index) => (
                     <div key={index}>
-                      <QuestionWrapper question={{ question, answerCount, upvoteCount }} />
+                      <QuestionWrapper question={{ question, answerCount, questionUpvoteCount }} />
                     </div>
                   ))
                 }
               </TabPane>
-              {/* <TabPane
+              <TabPane
                 tab={
                   <span>
                     Answers
@@ -75,8 +76,17 @@ const Username: NextPage<Props> = props => {
                 }
                 key="2"
               >
-                Tab 2
-              </TabPane> */}
+                {answerData.length === 0 &&
+                  <Empty description="No question yet" />
+                }
+                {answerData.length > 0 &&
+                  answerData.map((answerRelatedData, index) => (
+                    <div key={index}>
+                      <AnswerWrapper answerData={answerRelatedData} />
+                    </div>
+                  ))
+                }
+              </TabPane>
             </Tabs>
           </div>
           <div className="w-full md:w-3/12 lg:w-3/12 px-3">
@@ -129,7 +139,7 @@ Username.getInitialProps = async ({ query }) => {
 
   let returnQuestion: any = []
   let answerCount = 0
-  let upvoteCount = 0
+  let questionUpvoteCount = 0
   const [questionData, answerData] = await Promise.all([
     db
       .collection('questions')
@@ -157,35 +167,49 @@ Username.getInitialProps = async ({ query }) => {
         created: question.created
       })
       answerCount = asnswerData.size
-      upvoteCount = upvoteData.size
+      questionUpvoteCount = upvoteData.size
     })
   }
   // Answer
-  // let returnAnswer: any = []
-  // if (answerData.size > 0) {
-  //   await asyncForEach(answerData.docs, async doc => {
-  //     const answer = doc.data()
-  //     returnAnswer.push({
-  //       content: answer.content,
-
-  //     })
-  //     console.log({answer})
-  //   })
-  // }
+  let returnAnswerData: any = []
+  if (answerData.size > 0) {
+    await asyncForEach(answerData.docs, async doc => {
+      const answer = doc.data()
+      const [questionData, upvoteData] = await Promise.all([
+        db
+          .collection('questions')
+          .where('id', '==', answer.questionId)
+          .get(),
+        db
+          .collection('upvotes')
+          .where('answerId', '==', answer.id)
+          .get(),
+      ])
+      const question = questionData.docs[0].data()
+      returnAnswerData.push({
+        answerContent: answer.content,
+        answerId: answer.id,
+        answerUpvoteCount: upvoteData.size,
+        questionSlug: question.slug,
+        questionText: question.text,
+      })
+    })
+  }
   return {
     user: returnUser,
     questionsData: returnQuestion,
-    // answerData: returnAnswer,
+    answerData: returnAnswerData,
     answerCount,
-    upvoteCount
+    questionUpvoteCount
   }
 }
 
 interface Props {
-  user: any,
-  questionsData: any,
-  answerCount: number,
-  upvoteCount: number
+  user: any
+  questionsData: any
+  answerCount: number
+  questionUpvoteCount: number
+  answerData: any
 }
 
 export default Username

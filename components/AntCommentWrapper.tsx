@@ -1,8 +1,8 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
+import { faArrowAltCircleUp, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
-import { Comment, Tooltip, Avatar } from 'antd'
+import { Comment, Tooltip, Avatar, message } from 'antd'
 import { NextPage } from 'next'
 import moment from 'moment'
 import ReactMarkdown from 'react-markdown'
@@ -89,6 +89,14 @@ const AntCommentWrapper: NextPage<Props> = props => {
     }
   }, [loginUser])
 
+  // const handleDelete = async () => {
+  //   await db
+  //     .collection('answers')
+  //     .doc(answerData.answer.id)
+  //     .delete()
+  //   message.success('Deleted successfully')
+  // }
+
   const actions = [
     <span key="comment-basic-like" className="flex flex-wrapper items-center">
       {!isUpvoted ?
@@ -105,6 +113,15 @@ const AntCommentWrapper: NextPage<Props> = props => {
       }
       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{upvoteAnswerCount}</span>
     </span>,
+    <span>
+      {loginUser.uid === answerData.answer.answerUserId &&
+        <Tooltip title="Delete">
+          <button onClick={() => props.handleDeleteAnswer(answerData.answer.id)} className="focus:outline-none">
+            <FontAwesomeIcon icon={faTrashAlt} size="xs" className="h-4 w-4" />
+          </button>
+        </Tooltip>
+      }
+    </span>
   ]
 
   return (
@@ -137,6 +154,7 @@ const AntCommentWrapper: NextPage<Props> = props => {
 interface Props {
   answerData: any,
   db: any
+  handleDeleteAnswer: any
 }
 
 export default AntCommentWrapper

@@ -1,39 +1,50 @@
 import React from 'react'
+import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Layout from '../../components/Layout'
-import AntCommentWrapper from '../../components/AntCommentWrapper'
-import asyncForEach from '../../plugins/asyncForEach'
-import upvoteQuestion from '../../plugins/upvoteQuestion'
-import unUpvoteQuestion from '../../plugins/unUpvoteQuestion'
-import postAnswer from '../../plugins/postAnswer'
-import ReactMde from 'react-mde'
-import MarkdownIt from 'markdown-it'
-import 'react-mde/lib/styles/css/react-mde-all.css'
-import moment from 'moment'
+import Layout from '../../../components/Layout'
+import AntCommentWrapper from '../../../components/AntCommentWrapper'
+import upvoteQuestion from '../../../plugins/upvoteQuestion'
+import unUpvoteQuestion from '../../../plugins/unUpvoteQuestion'
+import postAnswer from '../../../plugins/postAnswer'
 import { useSelector } from 'react-redux'
+import moment from 'moment'
 import uuid from 'uuid/v4'
+import ReactMde from 'react-mde'
+import 'react-mde/lib/styles/css/react-mde-all.css'
+import MarkdownIt from 'markdown-it'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
-import { Tooltip, message, Divider } from 'antd'
-import 'antd/lib/avatar/style/index.css'
+import firebase from '../../../plugins/firebase'
+import { Tooltip, Divider, message } from 'antd'
 import ReactMarkdown from 'react-markdown'
-import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
 
 const db = firebase.firestore()
 
 const mdParser = new MarkdownIt()
 
-const QuestionsSlug = props => {
+const AnswersSlugId: NextPage<Props> = props => {
+  const { question, answer, user } = props
   const router = useRouter()
   const [answerValue, setAnswerValue] = React.useState('')
-  const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
   const [isPosting, setIsPosting] = React.useState(false)
+  const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false)
-  const { question, answers } = props
   const loginUser = useSelector(state => state.loginUser)
+
+  const handleDeleteAnswer = async (answerId) => {
+    if (!window.confirm('Are you sure to delete this answer?')) {
+      return
+    }
+    await db
+      .collection('answers')
+      .doc(answerId)
+      .delete()
+    message.success('Deleted successfully')
+    router.push('/questions/[slug]', `/questions/${question.slug}`)
+  }
 
   React.useEffect(() => {
     const checkUpvoted = async () => {
@@ -52,25 +63,16 @@ const QuestionsSlug = props => {
     }
   }, [loginUser])
 
-  const handlePostAnswer = async () => {
-    setIsPosting(true)
-    const id = uuid().split('-').join('')
-    await postAnswer(db, loginUser, question, id, answerValue)
-    setIsPosting(false)
-    setAnswerValue('')
-    message.success('Submitted successfully')
+  const handleUpvoteQuestion = async e => {
+    e.preventDefault()
+    await upvoteQuestion(db, loginUser, question)
+    setIsQuestionUpvoted(true)
   }
 
-  const handleDeleteAnswer = async (answerId) => {
-    if (!window.confirm('Are you sure to delete this answer?')) {
-      return
-    }
-    await db
-      .collection('answers')
-      .doc(answerId)
-      .delete()
-    message.success('Deleted successfully')
-    router.push('/questions/[slug]', `/questions/${question.slug}`)
+  const handleUnUpvoteQuestion = async e => {
+    e.preventDefault()
+    await unUpvoteQuestion(db, loginUser, question)
+    setIsQuestionUpvoted(false)
   }
 
   const handleDeleteQuestion = async e => {
@@ -82,16 +84,13 @@ const QuestionsSlug = props => {
     router.push('/')
   }
 
-  const handleUpvoteQuestion = async e => {
-    e.preventDefault()
-    await upvoteQuestion(db, loginUser, question)
-    setIsQuestionUpvoted(true)
-  }
-
-  const handleUnUpvoteQuestion = async e => {
-    e.preventDefault()
-    await unUpvoteQuestion(db, loginUser, question)
-    setIsQuestionUpvoted(false)
+  const handlePostAnswer = async () => {
+    setIsPosting(true)
+    const id = uuid().split('-').join('')
+    await postAnswer(db, loginUser, question, id, answerValue)
+    setIsPosting(false)
+    setAnswerValue('')
+    message.success('Submitted successfully')
   }
 
   return (
@@ -112,7 +111,11 @@ const QuestionsSlug = props => {
               </Tooltip>
             }
             <h1 className="text-2xl ml-2">
-              {question.text}
+              <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
+                <a>
+                  {question.text}
+                </a>
+              </Link>
             </h1>
           </div>
           <ul className="flex flex-wrapper items-center">
@@ -149,19 +152,11 @@ const QuestionsSlug = props => {
             <Divider />
           </div>
         }
-        {answers.length > 0 &&
-        <>
-          <h2 className="text-xl my-5">
-            Answer
-          </h2>
-          {answers.map((answer, index) => (
-            <div key={index}>
-              <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} />
-              <Divider />
-            </div>
-          ))}
-        </>
-        }
+        <h2 className="text-xl my-5">
+          Answer
+        </h2>
+        <AntCommentWrapper answerData={{ answer, user }} db={db} handleDeleteAnswer={handleDeleteAnswer} />
+        <Divider />
         <h2 className="text-xl mb-5">
           Your answer
         </h2>
@@ -206,58 +201,39 @@ const QuestionsSlug = props => {
   )
 }
 
-QuestionsSlug.getInitialProps = async ({ query }) => {
-  const slug = query.slug
-  const questionData = await db
-    .collection('questions')
-    .where('slug', '==', slug)
-    .get()
+AnswersSlugId.getInitialProps = async ({ query }) => {
+  const [questionData, answerData] = await Promise.all([
+    db
+      .collection('questions')
+      .where('slug', '==', query.slug)
+      .get(),
+    db
+      .collection('answers')
+      .where('id', '==', query.id)
+      .get()
+  ])
   const question = questionData.docs[0].data()
-  const returnQuestion: IReturnQuestion = {
-    created: question.created,
-    text: question.text,
-    id: question.id,
-    slug: question.slug,
-    fromUserId: question.fromUserId
-  }
-  if (question.body !== undefined) {
-    returnQuestion.body = question.body
-  }
-
-  const answerData = await db
-    .collection('answers')
-    .where('questionId', '==', question.id)
+  const answer =　answerData.docs[0].data()
+  const userData = await db
+    .collection('publicUsers')
+    .where('uid', '==', answer.answerUserId)
     .get()
-  const answers: any = []
-  if (answerData.size > 0) {
-    await asyncForEach(answerData.docs, async doc => {
-      const answer = doc.data()
-      const userData = await db
-        .collection('publicUsers')
-        .doc(answer.answerUserId)
-        .get()
-      const user = userData.data()
-      const returnUser = {
-        username: user.username,
-        customName: user.customName,
-        picture: user.picture
-      }
-      answers.push({
-        answer,
-        user: returnUser
-      })
-    })
+  const user = userData.docs[0].data()
+  return {
+    question,
+    answer,
+    user: {
+      customName: user.customName,
+      username: user.username,
+      picture: user.picture
+    }
   }
-  return { question: returnQuestion, answers }
 }
 
-interface IReturnQuestion {
-  created: number
-  text: string
-  id: string
-  fromUserId: string
-  slug: string
-  body?: string
+interface Props {
+  question: any
+  answer: any,
+  user: any
 }
 
-export default QuestionsSlug
+export default AnswersSlugId

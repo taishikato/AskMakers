@@ -60,8 +60,8 @@ Home.getInitialProps = async () => {
     ])
     const user = userData.data()
     const answerCount = answerData.size
-    const upvoteCount = upvoteData.size
-    questions.push({ question, user, answerCount, upvoteCount })
+    const questionUpvoteCount = upvoteData.size
+    questions.push({ question, user, answerCount, questionUpvoteCount })
   })
   return { questions }
 }
