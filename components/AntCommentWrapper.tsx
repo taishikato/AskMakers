@@ -12,9 +12,10 @@ import { useSelector } from 'react-redux'
 import asyncForEach from '../plugins/asyncForEach'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons'
 
 const AntCommentWrapper: NextPage<Props> = props => {
-  const { answerData, db } = props
+  const { answerData, db, questionSlug, questionTitle } = props
   const [upvoteAnswerCount, setUpvoteAnswerCount] = React.useState(0)
   const [isUpvoted, setIsUpvoted] = React.useState(false)
   const loginUser = useSelector(state => state.loginUser)
@@ -89,13 +90,7 @@ const AntCommentWrapper: NextPage<Props> = props => {
     }
   }, [loginUser])
 
-  // const handleDelete = async () => {
-  //   await db
-  //     .collection('answers')
-  //     .doc(answerData.answer.id)
-  //     .delete()
-  //   message.success('Deleted successfully')
-  // }
+  const shareUrl = `https://askmakers.co/answers/${questionSlug}/${answerData.answer.id}`
 
   const actions = [
     <span key="comment-basic-like" className="flex flex-wrapper items-center">
@@ -113,6 +108,16 @@ const AntCommentWrapper: NextPage<Props> = props => {
       }
       <span style={{ paddingLeft: 8, cursor: 'auto' }}>{upvoteAnswerCount}</span>
     </span>,
+    <span className="flex flex-wrapper items-center">
+      <a href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=The answer to ${questionTitle} by @${answerData.user.username}`} target="_blank" className="twitter-share">
+        <FontAwesomeIcon icon={faTwitter} size="xs" className="h-4 w-4" />
+      </a>
+    </span>,
+    <span className="flex flex-wrapper items-center">
+      <a href={`https://www.facebook.com/share.php?u=${shareUrl}`} target="_blank" className="facebook-share">
+        <FontAwesomeIcon icon={faFacebook} size="xs" className="h-4 w-4" />
+      </a>
+    </span>,
     <span>
       {loginUser.uid === answerData.answer.answerUserId &&
         <Tooltip title="Delete">
@@ -125,6 +130,7 @@ const AntCommentWrapper: NextPage<Props> = props => {
   ]
 
   return (
+    <>
     <Comment
       actions={actions}
       author={<a>{answerData.user.customName}</a>}
@@ -148,13 +154,24 @@ const AntCommentWrapper: NextPage<Props> = props => {
         </Tooltip>
       }
     />
+    <style jsx>{`
+    .twitter-share {
+      color: #1DA1F2;
+    }
+    .facebook-share {
+      color: #4267B2;
+    }
+    `}</style>
+    </>
   )
 }
 
 interface Props {
   answerData: any,
   db: any
-  handleDeleteAnswer: any
+  handleDeleteAnswer: any,
+  questionSlug: string,
+  questionTitle: string
 }
 
 export default AntCommentWrapper

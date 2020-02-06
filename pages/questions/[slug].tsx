@@ -169,7 +169,7 @@ const QuestionsSlug = props => {
           </h2>
           {answers.map((answer, index) => (
             <div key={index}>
-              <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} />
+              <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={question.text} />
               <Divider />
             </div>
           ))}
