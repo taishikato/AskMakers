@@ -1,11 +1,12 @@
 import React from 'react'
-import Layout from '../../components/Layout'
 import Link from 'next/link'
+import Layout from '../../components/Layout'
+import PickedUpAnswer from '../../components/PickedUpAnswer'
 
 const Thankyou = () => {
   return (
     <Layout>
-      <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
+      <div className="w-full md:w-8/12 lg:w-8/12 my-10 m-auto p-2">
         <h1 className="text-3xl font-bold mb-4">
           Thank you for completing your profile!
         </h1>
@@ -21,8 +22,9 @@ const Thankyou = () => {
         </div>
         <div>
           <h3 className="text-xl font-base mb-2">
-            Or, browse picked up questions.
+            Or, browse picked up answers!
           </h3>
+          <PickedUpAnswer />
         </div>
       </div>
     </Layout>
