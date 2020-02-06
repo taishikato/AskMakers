@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import uuid from 'uuid/v4'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons'
+import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons'
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
 import { Tooltip, message, Divider } from 'antd'
 import 'antd/lib/avatar/style/index.css'
@@ -34,6 +35,8 @@ const QuestionsSlug = props => {
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false)
   const { question, answers } = props
   const loginUser = useSelector(state => state.loginUser)
+
+  const shareUrl = `https://askmakers.co${router.asPath}`
 
   React.useEffect(() => {
     const checkUpvoted = async () => {
@@ -122,6 +125,16 @@ const QuestionsSlug = props => {
                 {` ${moment.unix(question.created).fromNow()}`}
               </span>
             </li>
+            <li className="ml-3">
+              <a href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`} target="_blank" className="twitter-share">
+                <FontAwesomeIcon icon={faTwitter} size="xs" className="h-4 w-4" />
+              </a>
+            </li>
+            <li className="ml-2">
+              <a href={`https://www.facebook.com/share.php?u=${shareUrl}`} target="_blank" className="facebook-share">
+                <FontAwesomeIcon icon={faFacebook} size="xs" className="h-4 w-4" />
+              </a>
+            </li>
             {question.fromUserId === loginUser.uid &&
               <>
                 <li className="text-gray-600 text-xs ml-3">
@@ -202,6 +215,14 @@ const QuestionsSlug = props => {
           </button>
         }
       </div>
+      <style jsx>{`
+      .twitter-share {
+        color: #1DA1F2;
+      }
+      .facebook-share {
+        color: #4267B2;
+      }
+      `}</style>
     </Layout>
   )
 }
