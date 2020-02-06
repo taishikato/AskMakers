@@ -94,7 +94,7 @@ const AnswersSlugId: NextPage<Props> = props => {
     message.success('Submitted successfully')
   }
 
-  const title = `The answer to ${question.text} by ${user.username} | AskMakers - Ask experienced makers questions`
+  const title = `The answer to ${question.text} by @${user.username} | AskMakers - Ask experienced makers questions`
   const url = `https://askmakers.co${router.asPath}`
   const description = answer.content
 
