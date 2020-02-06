@@ -6,15 +6,15 @@ const PickedUpAnswer = () => {
   return (
     <ul>
       <li className="my-5">
-        <div className="flex flex-wrap">
-          <div className="w-1/12">
+        <div className="flex">
+          <div className="flex-shrink-0 mr-3">
             <Link href="/[username]" as="/mijustin">
               <a>
                 <img src="https://pbs.twimg.com/profile_images/932726689485828097/n86GsuLG.jpg" className="w8 h-8 rounded-full" />
               </a>
             </Link>
           </div>
-          <div className="w-11/12">
+          <div>
             <div>
               <Link href="/[username]" as="/mijustin">
                 <a>
@@ -41,15 +41,15 @@ const PickedUpAnswer = () => {
         </div>
       </li>
       <li className="my-5">
-        <div className="flex flex-wrap">
-          <div className="w-1/12">
+        <div className="flex">
+          <div className="flex-shrink-0 mr-3">
             <Link href="/[username]" as="/1HaKr">
               <a>
                 <img src="https://pbs.twimg.com/profile_images/1150157842222989312/eZfA0Oki.jpg" className="w8 h-8 rounded-full" />
               </a>
             </Link>
           </div>
-          <div className="w-11/12">
+          <div>
             <div>
               <Link href="/[username]" as="/1HaKr">
                 <a>
@@ -76,15 +76,15 @@ const PickedUpAnswer = () => {
         </div>
       </li>
       <li className="my-5">
-        <div className="flex flex-wrap">
-          <div className="w-1/12">
+        <div className="flex">
+          <div className="flex-shrink-0 mr-3">
             <Link href="/[username]" as="/hyper_yolo">
               <a>
                 <img src="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/users%2Fe4UAYSdg99RXMzkk0yfsxqGJVzy2.jpg?alt=media&token=ad286fcf-9915-416b-a7ff-aec257382f4f" className="w8 h-8 rounded-full" />
               </a>
             </Link>
           </div>
-          <div className="w-11/12">
+          <div>
             <div>
               <Link href="/[username]" as="/hyper_yolo">
                 <a>
