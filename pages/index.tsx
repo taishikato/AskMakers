@@ -15,7 +15,7 @@ const db = firebase.firestore()
 const Home: NextPage<Props> = props => (
   <Layout>
     <Hero />
-    <div className="mb-10">
+    <div className="mt-5 mb-10">
       <Head>
         <title>Home</title>
         <link rel="icon" href="/favicon.ico" />

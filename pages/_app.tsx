@@ -58,6 +58,7 @@ const MyApp = withRedux(initializeStore)(
             <meta key="og:url" property="og:url" content={url} />
             <meta key="og:image" property="og:image" content={`${url}ogimage.png`} />
             <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
+            <script key="drift" src="/drift.js"></script>
           </Head>
           <NextNprogress color="#23d160" />
           <Auth>
