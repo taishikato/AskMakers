@@ -6,10 +6,10 @@ const WelcomeBox: NextPage<Props> = props => {
     <div className={props.class}>
       <p className="font-bold">Welcome, new makers :)</p>
       <p>
-        The Product Hunt team and I have been quietly working on YourStack. Now it's time to build in public. Welcome to the beta.
+        I have been working on AskMakers 2.0 for a couple of weeks.
       </p>
       <p>
-        We welcome any and all feedback. Shoot me a note here or at ryan@yourstack.com 😄
+        We welcome any and all feedback. Shoot me a note on chat box or at taishi.k0903@gmail.com 👍
       </p>
     </div>
   )
