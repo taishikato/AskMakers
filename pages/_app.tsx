@@ -26,14 +26,13 @@ const MyApp = withRedux(initializeStore)(
   class MyApp extends App<Props> {
     render() {
       const { Component, pageProps, store } = this.props
-      const title = 'Vaping Astronaut | Vape Reviews'
-      const url = 'https://vapingastronaut.com/'
-      const description = 'Vaping Astronaut helps vape lovers explore, understand and make better-informed decisions around vape with product reviews.'
+      const title = 'AskMakers - Ask experienced makers questions'
+      const url = 'https://askmakers.co/'
+      const description = 'The best place to ask experienced and successful makers questions anonymously. Let\'s get together Indie Makers!'
       return (
         <Provider store={store}>
           <Head>
             <title>{title}</title>
-            <link key="manifest" rel='manifest' href='/manifest.json' />
             <link key="canonical" rel="canonical" href={url} />
             <meta
               key="description"
@@ -43,7 +42,7 @@ const MyApp = withRedux(initializeStore)(
             <meta
               key="keywords"
               name="keywords"
-              content="vape, review, kits, mods, tanks, pods"
+              content="Indie Maker,Startup,question,social network,product hunt,creative,maker,creation"
             />
             <meta
               key="og:titl"
