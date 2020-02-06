@@ -1,4 +1,6 @@
 import React from 'react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import Error from 'next/error'
@@ -7,7 +9,6 @@ import Input from '../../components/Input'
 import getUnixTime from '../../plugins/getUnixTime'
 import ReactMde from 'react-mde'
 import MarkdownIt from 'markdown-it'
-import { useSelector } from 'react-redux'
 import { Checkbox, message } from 'antd'
 import firebase from '../../plugins/firebase'
 import 'firebase/firestore'
@@ -17,7 +18,6 @@ const db = firebase.firestore()
 const mdParser = new MarkdownIt()
 
 const EditQuestionSlug: NextPage<Props> = props => {
-  const loginUser = useSelector(state => state.loginUser)
   const { question, e } = props
 
   if (e === 'not allowed') {
@@ -72,8 +72,36 @@ const EditQuestionSlug: NextPage<Props> = props => {
     }
   }
 
+  const router = useRouter()
+
+  const pagetitle = `Edit question | AskMakers - Ask experienced makers questions`
+  const url = `https://askmakers.co${router.asPath}`
+  const description = 'Check out this question and post your answer!'
+
   return (
     <Layout>
+      <Head>
+        <meta key="robots" name="robots" content="noindex" />
+        <title key="title">{pagetitle}</title>
+        <meta
+          key="og:title"
+          property="og:title"
+          content={pagetitle}
+        />
+        <meta key="og:site_name" property="og:site_name" content={pagetitle} />
+        <meta key="og:url" property="og:url" content={url} />
+        <link key="canonical" rel="canonical" href={url} />
+        <meta
+          key="description"
+          name="description"
+          content={description}
+        />
+        <meta
+          key="og:description"
+          property="og:description"
+          content={description}
+        />
+      </Head>
       <div className="w-full p-2 md:p-0 lg:p-0 md:w-8/12 lg:w-8/12 m-auto my-10">
         <h1 className="text-3xl font-medium mb-5">Ask a question</h1>
         <form onSubmit={handleSubmit}>

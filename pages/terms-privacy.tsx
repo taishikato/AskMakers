@@ -1,6 +1,25 @@
+import Head from 'next/head'
 import Layout from '../components/Layout'
+import { useRouter } from 'next/router'
 
-const TermsPrivacy = () => (
+const TermsPrivacy = () => {
+  const router = useRouter()
+  const title = 'Terms of Service & Privacy | AskMakers - Ask experienced makers questions'
+  const url = `https://askmakers.co${router.asPath}`
+
+  return (
+  <>
+  <Head>
+    <title key="title">{title}</title>
+    <meta
+      key="og:title"
+      property="og:title"
+      content={title}
+    />
+    <meta key="og:site_name" property="og:site_name" content={title} />
+    <meta key="og:url" property="og:url" content={url} />
+    <link key="canonical" rel="canonical" href={url} />
+  </Head>
   <Layout>
     <div id="terms-privacy" className="mt-10 mb-12 w-8/12 m-auto">
       <div className="columns">
@@ -226,6 +245,7 @@ const TermsPrivacy = () => (
     }
     `}</style>
   </Layout>
-)
+  </>
+)}
 
 export default TermsPrivacy

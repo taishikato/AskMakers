@@ -1,4 +1,6 @@
 import React from 'react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { NextPage } from 'next'
 import Layout from '../components/Layout'
 import QuestionWrapper from '../components/QuestionWrapper'
@@ -18,9 +20,23 @@ const db = firebase.firestore()
 const Username: NextPage<Props> = props => {
   const { user, questionsData, answerCount, questionUpvoteCount, answerData } = props
   const { TabPane } = Tabs
+  const router = useRouter()
+  const title = 'Terms of Service & Privacy | AskMakers - Ask experienced makers questions'
+  const url = `https://askmakers.co${router.asPath}`
 
   return (
     <Layout>
+      <Head>
+        <title key="title">{title}</title>
+        <meta
+          key="og:title"
+          property="og:title"
+          content={title}
+        />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+        <meta key="og:url" property="og:url" content={url} />
+        <link key="canonical" rel="canonical" href={url} />
+      </Head>
       <div className="bg-gray-100">
         <div className="py-8 m-auto w-9/12">
           <div className="flex flex-wrapper">

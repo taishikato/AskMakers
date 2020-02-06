@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 import Layout from '../components/Layout'
 import Input from '../components/Input'
 import getUnixTime from '../plugins/getUnixTime'
@@ -66,6 +67,9 @@ const AskQuestion = () => {
 
   return (
     <Layout>
+      <Head>
+        <meta key="robots" name="robots" content="noindex" />
+      </Head>
       <div className="w-full p-2 md:p-0 lg:p-0 md:w-8/12 lg:w-8/12 m-auto my-10">
         <h1 className="text-3xl font-medium mb-5">Ask a question</h1>
         <form onSubmit={handleSubmit}>

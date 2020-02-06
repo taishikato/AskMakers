@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import { useSelector, useDispatch } from 'react-redux'
 import { loginUser as loginUserAction } from '../store/action'
 import Layout from '../components/Layout'
@@ -112,8 +113,20 @@ const Settings = () => {
       })
     }
   }
+  const title = 'Settings | AskMakers - Ask experienced makers questions'
 
   return (
+    <>
+    <Head>
+      <meta key="robots" name="robots" content="noindex" />
+      <title key="title">{title}</title>
+      <meta
+        key="og:title"
+        property="og:title"
+        content={title}
+      />
+      <meta key="og:site_name" property="og:site_name" content={title} />
+    </Head>
     <Layout>
       <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
         <h1 className="text-4xl font-bold mb-8">
@@ -168,6 +181,7 @@ const Settings = () => {
         </form>
       </div>
     </Layout>
+    </>
   )
 }
 

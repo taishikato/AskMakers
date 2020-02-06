@@ -32,11 +32,16 @@ const MyApp = withRedux(initializeStore)(
       return (
         <Provider store={store}>
           <Head>
-            <title>{title}</title>
+            <title key="title">{title}</title>
             <link key="canonical" rel="canonical" href={url} />
             <meta
               key="description"
               name="description"
+              content={description}
+            />
+            <meta
+              key="og:description"
+              property="og:description"
               content={description}
             />
             <meta
@@ -45,14 +50,9 @@ const MyApp = withRedux(initializeStore)(
               content="Indie Maker,Startup,question,social network,product hunt,creative,maker,creation"
             />
             <meta
-              key="og:titl"
+              key="og:title"
               property="og:title"
               content={title}
-            />
-            <meta
-              key="og:description"
-              property="og:description"
-              content={description}
             />
             <meta key="og:site_name" property="og:site_name" content={title} />
             <meta key="og:url" property="og:url" content={url} />

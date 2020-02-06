@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import Layout from '../../components/Layout'
@@ -97,8 +98,23 @@ const Welcome = props => {
     }
   }
 
+  const title = 'Welcome | AskMakers - Ask experienced makers questions'
+  const url = `https://askmakers.co${router.asPath}`
+
   return (
     <Layout>
+      <Head>
+        <meta key="robots" name="robots" content="noindex" />
+        <title key="title">{title}</title>
+        <meta
+          key="og:title"
+          property="og:title"
+          content={title}
+        />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+        <meta key="og:url" property="og:url" content={url} />
+        <link key="canonical" rel="canonical" href={url} />
+      </Head>
       <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
         <h1 className="text-4xl font-bold">
           Welcome to AskMakers!

@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from 'next/head'
 import Link from 'next/link'
 import { NextPage } from 'next'
 import Layout from '../components/Layout'
@@ -17,10 +16,6 @@ const Home: NextPage<Props> = props => (
   <Layout>
     <Hero />
     <div className="mt-5 mb-10">
-      <Head>
-        <title>Home</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
       <div className="w-full px-3 md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
         <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">

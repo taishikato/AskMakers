@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
@@ -98,8 +99,33 @@ const QuestionsSlug = props => {
     setIsQuestionUpvoted(false)
   }
 
+  const title = `${question.text} | AskMakers - Ask experienced makers questions`
+  const url = `https://askmakers.co${router.asPath}`
+  const description = 'Check out this question and post your answer!'
+
   return (
     <Layout>
+      <Head>
+        <title key="title">{title}</title>
+        <meta
+          key="og:title"
+          property="og:title"
+          content={title}
+        />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+        <meta key="og:url" property="og:url" content={url} />
+        <link key="canonical" rel="canonical" href={url} />
+        <meta
+          key="description"
+          name="description"
+          content={description}
+        />
+        <meta
+          key="og:description"
+          property="og:description"
+          content={description}
+        />
+      </Head>
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
         <div>
           <div className="flex flex-wrapper items-center mb-3">
