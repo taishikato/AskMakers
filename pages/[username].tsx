@@ -63,7 +63,7 @@ const Username: NextPage<Props> = props => {
                 {questionsData.length > 0 &&
                   questionsData.map((question, index) => (
                     <div key={index}>
-                      <QuestionWrapper question={{ question, answerCount, questionUpvoteCount }} />
+                      <QuestionWrapper question={{ question }} />
                     </div>
                   ))
                 }
@@ -164,10 +164,10 @@ Username.getInitialProps = async ({ query }) => {
       returnQuestion.push({
         text: question.text,
         slug: question.slug,
-        created: question.created
+        created: question.created,
+        answerCount: asnswerData.size,
+        questionUpvoteCount: upvoteData.size
       })
-      answerCount = asnswerData.size
-      questionUpvoteCount = upvoteData.size
     })
   }
   // Answer

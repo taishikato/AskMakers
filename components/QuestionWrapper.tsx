@@ -9,26 +9,26 @@ const QuestionWrapper: NextPage<Props> = props => {
     <div className="flex flex-wrapper tems-center py-3 border-b border-gray-300 rounded">
       <div className="w-2/12 flex flex-wrapper items-center justify-between text-gray-600 hidden md:flex lg:flex">
         <div className="flex flex-col items-center p-2">
-          <span>{questionObj.questionUpvoteCount}</span>
-          {questionObj.questionUpvoteCount === 0 &&
+          <span>{questionObj.question.questionUpvoteCount}</span>
+          {questionObj.question.questionUpvoteCount === 0 &&
             <span className="text-xs">upvote</span>
           }
-          {questionObj.questionUpvoteCount === 1 &&
+          {questionObj.question.questionUpvoteCount === 1 &&
             <span className="text-xs">upvote</span>
           }
-          {questionObj.questionUpvoteCount > 1 &&
+          {questionObj.question.questionUpvoteCount > 1 &&
             <span className="text-xs">votes</span>
           }
         </div>
         <div className="flex flex-col items-center p-2">
-          <span>{questionObj.answerCount}</span>
-          {questionObj.answerCount === 0 &&
+          <span>{questionObj.question.answerCount}</span>
+          {questionObj.question.answerCount === 0 &&
             <span className="text-xs">answer</span>
           }
-          {questionObj.answerCount === 1 &&
+          {questionObj.question.answerCount === 1 &&
             <span className="text-xs">answer</span>
           }
-          {questionObj.answerCount > 1 &&
+          {questionObj.question.answerCount > 1 &&
             <span className="text-xs">answers</span>
           }
         </div>
@@ -41,25 +41,25 @@ const QuestionWrapper: NextPage<Props> = props => {
         <ul className="flex flex-wrap items-center text-gray-600 text-xs block md:hidden lg:hidden">
           <li className="flex flex-wrap items-center">
             <span className="font-medium pr-1">1</span>
-            {questionObj.upvoteCount === 0 &&
+            {questionObj.question.questionUpvoteCount === 0 &&
               <span className="text-xs">upvote</span>
             }
-            {questionObj.upvoteCount === 1 &&
+            {questionObj.question.questionUpvoteCount === 1 &&
               <span className="text-xs">upvote</span>
             }
-            {questionObj.upvoteCount > 1 &&
+            {questionObj.question.questionUpvoteCount > 1 &&
               <span className="text-xs">votes</span>
             }
           </li>
           <li className="flex flex-wrap items-center ml-3">
-            <span className="font-medium pr-1">{questionObj.answerCount}</span>
-            {questionObj.answerCount === 0 &&
+            <span className="font-medium pr-1">{questionObj.question.answerCount}</span>
+            {questionObj.question.answerCount === 0 &&
               <span>answer</span>
             }
-            {questionObj.answerCount === 1 &&
+            {questionObj.question.answerCount === 1 &&
               <span>answer</span>
             }
-            {questionObj.answerCount > 1 &&
+            {questionObj.question.answerCount > 1 &&
               <span>answers</span>
             }
           </li>
