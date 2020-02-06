@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { NextPage } from 'next'
 import Layout from '../components/Layout'
 import Hero from '../components/Hero'
+import FeaturedMaker from '../components/FeaturedMaker'
 import WelcomeBox from '../components/WelcomeBox'
 import QuestionWrapper from '../components/QuestionWrapper'
 import asyncForEach from '../plugins/asyncForEach'
@@ -27,7 +28,8 @@ const Home: NextPage<Props> = props => (
           ))}
         </div>
         <aside className="w-full md:w-4/12 lg:w-4/12">
-          <WelcomeBox class="border border-gray-300 rounded p-3" />
+          <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
+          <FeaturedMaker class="border border-gray-300 rounded p-3" />
         </aside>
       </div>
     </div>
