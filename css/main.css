@@ -23,3 +23,7 @@ div#__next > div {
 .ant-upload .anticon.anticon-plus svg {
     margin: 0 auto;
 }
+
+#content a {
+  color: #4299e1;
+}

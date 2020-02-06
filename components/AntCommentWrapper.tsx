@@ -2,7 +2,8 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowAltCircleUp, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
-import { Comment, Tooltip, Avatar, message } from 'antd'
+import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons'
+import { Comment, Tooltip, Avatar } from 'antd'
 import { NextPage } from 'next'
 import moment from 'moment'
 import ReactMarkdown from 'react-markdown'
@@ -12,7 +13,6 @@ import { useSelector } from 'react-redux'
 import asyncForEach from '../plugins/asyncForEach'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons'
 
 const AntCommentWrapper: NextPage<Props> = props => {
   const { answerData, db, questionSlug, questionTitle } = props

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
 import AntCommentWrapper from '../../components/AntCommentWrapper'
+import Comment from '../../components/Comment'
 import asyncForEach from '../../plugins/asyncForEach'
 import upvoteQuestion from '../../plugins/upvoteQuestion'
 import unUpvoteQuestion from '../../plugins/unUpvoteQuestion'
@@ -169,7 +170,8 @@ const QuestionsSlug = props => {
           </h2>
           {answers.map((answer, index) => (
             <div key={index}>
-              <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={question.text} />
+              <Comment handleDeleteAnswer={handleDeleteAnswer} name={answer.user.customName} userId={answer.answer.answerUserId} username={answer.user.username} picture={answer.user.picture} datetime={answer.answer.created} answer={answer.answer.content} answerId={answer.answer.id} questionSlug={question.slug} questionTitle={question.text} db={db} />
+              {/* <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={question.text} /> */}
               <Divider />
             </div>
           ))}

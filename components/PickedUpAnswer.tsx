@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import ReactMarkdown from 'react-markdown'
 
 const PickedUpAnswer = () => {
   return (
@@ -15,9 +14,9 @@ const PickedUpAnswer = () => {
             </Link>
           </div>
           <div>
-            <div>
+            <div className="text-sm mb-3">
               <Link href="/[username]" as="/mijustin">
-                <a>
+                <a className="text-gray-600">
                   Justin Jackson
                 </a>
               </Link>
@@ -50,9 +49,9 @@ const PickedUpAnswer = () => {
             </Link>
           </div>
           <div>
-            <div>
+            <div className="text-sm mb-3">
               <Link href="/[username]" as="/1HaKr">
-                <a>
+                <a className="text-gray-600">
                   𝙷𝚊𝙺𝚛
                 </a>
               </Link>
@@ -85,9 +84,9 @@ const PickedUpAnswer = () => {
             </Link>
           </div>
           <div>
-            <div>
+            <div className="text-sm mb-3">
               <Link href="/[username]" as="/hyper_yolo">
-                <a>
+                <a className="text-gray-600">
                   Amie Chen
                 </a>
               </Link>

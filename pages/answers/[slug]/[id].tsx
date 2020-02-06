@@ -155,7 +155,7 @@ const AnswersSlugId: NextPage<Props> = props => {
         <h2 className="text-xl my-5">
           Answer
         </h2>
-        <AntCommentWrapper answerData={{ answer, user }} db={db} handleDeleteAnswer={handleDeleteAnswer} />
+        <AntCommentWrapper answerData={{ answer, user }} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={answer.text} />
         <Divider />
         <h2 className="text-xl mb-5">
           Your answer
