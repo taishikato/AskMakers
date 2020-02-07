@@ -61,8 +61,8 @@ const authUserFunc = async (router: NextRouter, dispatch) => {
       const user = await publicUsersRef.get()
       dispatch(loginUser(user.data() as any))
       dispatch(checkingLoginDone())
-      // router.push('/')
-      router.push('/welcome')
+      router.push('/')
+      // router.push('/welcome')
     }
     return
   }
