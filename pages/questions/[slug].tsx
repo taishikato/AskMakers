@@ -84,7 +84,7 @@ const QuestionsSlug = props => {
       return
     }
     await db.collection('questions').doc(question.id).delete()
-    router.push('/')
+    router.push('/[username]', `/${loginUser.username}`)
   }
 
   const handleUpvoteQuestion = async e => {

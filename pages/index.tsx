@@ -12,40 +12,85 @@ import 'firebase/firestore'
 
 const db = firebase.firestore()
 
-const Home: NextPage<Props> = props => (
-  <Layout>
-    <Hero />
-    <div className="mt-5 mb-10">
+const Home: NextPage<Props> = props => {
+  const { questions } = props
+  const [quesionsContainer, setQuesionsContainer] = React.useState(questions)
+  const [lastQuestion, setLastQuestion] = React.useState<ISingleQuestion>()
 
-      <div className="px-3 w-full md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
-        <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
-          {props.questions.map((question, index) => (
-            <QuestionWrapper question={question} key={index} />
-          ))}
-        </div>
-        <aside className="w-full md:w-4/12 lg:w-4/12">
-          <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
-          <FeaturedMaker class="border border-gray-300 rounded p-3 mb-5" />
-          <div className="text-xs text-gray-600">
-            <div className="mb-3">
-              <Link href="/">
+  React.useEffect(() => {
+    setLastQuestion(quesionsContainer[quesionsContainer.length - 1].question)
+  }, [quesionsContainer])
+
+  const loadQuestions = async e => {
+    e.preventDefault()
+    const quesionsContainerCopy = quesionsContainer.concat()
+    console.log({quesionsContainerCopy})
+    const questionData = await db
+      .collection('questions')
+      .where('isGeneral', '==', true)
+      .orderBy('created', 'desc')
+      .startAfter(lastQuestion.created)
+      .limit(10)
+      .get()
+    await asyncForEach(questionData.docs, async doc => {
+      const question = doc.data()
+      const [userData, answerData, upvoteData] = await Promise.all([
+        db
+          .collection('publicUsers')
+          .doc(question.fromUserId)
+          .get(),
+        db
+          .collection('answers')
+          .where('questionId', '==', question.id)
+          .get(),
+        db
+          .collection('questionUpvotes')
+          .where('questionId', '==', question.id)
+          .get()
+      ])
+      const user = userData.data()
+      question.answerCount = answerData.size
+      question.questionUpvoteCount = upvoteData.size
+      quesionsContainerCopy.push({ question, user })
+    })
+    setQuesionsContainer(quesionsContainerCopy)
+  }
+
+  return (
+    <Layout>
+      <Hero />
+      <div className="mt-5 mb-10">
+        <div className="px-3 w-full md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
+          <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
+            {quesionsContainer.map((question, index) => (
+              <QuestionWrapper question={question} key={index} />
+            ))}
+            {/* <button onClick={loadQuestions}>Load more</button> */}
+          </div>
+          <aside className="w-full md:w-4/12 lg:w-4/12">
+            <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
+            <FeaturedMaker class="border border-gray-300 rounded p-3 mb-5" />
+            <div className="text-xs text-gray-600">
+              <div className="mb-3">
+                <Link href="/">
+                  <a>
+                    AskMakers
+                  </a>
+                </Link>
+                , made by Taishi Kato Ⓒ 2020
+              </div>
+              <Link href="/terms-privacy">
                 <a>
-                  AskMakers
+                  Terms of Service & Privacy
                 </a>
               </Link>
-              , made by Taishi Kato Ⓒ 2020
             </div>
-            <Link href="/terms-privacy">
-              <a>
-                Terms of Service & Privacy
-              </a>
-            </Link>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </div>
-    </div>
-  </Layout>
-)
+    </Layout>
+  )
+}
 
 Home.getInitialProps = async () => {
   const questionData = await db
@@ -81,6 +126,20 @@ Home.getInitialProps = async () => {
 
 interface Props {
   questions: any
+}
+
+interface ISingleQuestion {
+  created: number
+  fromUserId: string
+  id: string
+  image: string
+  isAnswered: boolean
+  isGeneral: boolean
+  slug: string
+  text: string
+  topics: {}
+  answerCount: number
+  questionUpvoteCount: number
 }
 
 export default Home
