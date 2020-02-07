@@ -61,7 +61,7 @@ const Home: NextPage<Props> = props => {
       <Hero />
       <div className="mt-5 mb-10">
         <div className="px-3 w-full md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
-          <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
+          <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
             {quesionsContainer.map((question, index) => (
               <QuestionWrapper question={question} key={index} />
             ))}
