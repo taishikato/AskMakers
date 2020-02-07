@@ -56,7 +56,7 @@ const MyApp = withRedux(initializeStore)(
             />
             <meta key="og:site_name" property="og:site_name" content={title} />
             <meta key="og:url" property="og:url" content={url} />
-            <meta key="og:image" property="og:image" content={`${url}ogimage.png`} />
+            <meta key="og:image" property="og:image" content={`${url}ogimage-2.png`} />
             <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
             <script key="drift" src="/drift.js"></script>
           </Head>
