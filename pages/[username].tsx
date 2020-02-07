@@ -39,11 +39,11 @@ const Username: NextPage<Props> = props => {
       </Head>
       <div className="bg-gray-100">
         <div className="py-8 m-auto w-9/12">
-          <div className="flex flex-wrapper">
-            <div>
-              <img src={user.picture} width="160px" className="rounded-full" alt={user.customName} />
+          <div className="flex flex-wrap text-center md:text-left lg:text-left">
+            <div className="w-full md:w-auto lg:w-auto">
+              <img src={user.picture} width="160px" className="rounded-full m-auto md:m-0 lg:m-0" alt={user.customName} />
             </div>
-            <div className="ml-5">
+            <div className="w-full md:w-auto lg:w-auto ml-0 md:ml-5 lg:ml-5">
               <h1 className="font-bold text-4xl">
                 {user.customName}
               </h1>
@@ -63,7 +63,7 @@ const Username: NextPage<Props> = props => {
       </div>
       <div className="w-full md:w-9/12 lg:w-9/12 mt-5 m-auto p-3">
         <div className="flex flex-wrap -mx-3">
-          <div className="w-full md:w-8/12 lg:w-8/12 px-3">
+          <div className="w-full md:w-8/12 lg:w-8/12 px-3 mb-5 md:mb-0 lg:mb-0">
             <Tabs defaultActiveKey="1">
               <TabPane
                 tab={
@@ -105,22 +105,22 @@ const Username: NextPage<Props> = props => {
               </TabPane>
             </Tabs>
           </div>
-          <div className="w-full md:w-3/12 lg:w-3/12 px-3">
+          <div className="w-full md:w-3/12 lg:w-3/12 px-3 mb-10 md:mb-0 lg:mb-0">
             <div className="border border-gray-300 rounded p-3">
               <h3 className="font-semibold text-xl mb-2">Social</h3>
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap justify-between">
                 {user.social.twitter !== undefined && user.social.twitter !== '' &&
-                  <div className="w-4/12">
+                  <div className="w-3/12 flex justify-center">
                     <TwitterIcon name={user.social.twitter} />
                   </div>
                 }
                 {user.social.productHunt !== undefined && user.social.productHunt !== '' &&
-                  <div className="w-4/12">
+                  <div className="w-3/12 flex justify-center">
                     <ProducthuntIcon name={user.social.productHunt} />
                   </div>
                 }
                 {user.social.gitHub !== undefined && user.social.gitHub !== '' &&
-                  <div className="w-4/12">
+                  <div className="w-3/12 flex justify-center">
                     <GitHubIcon name={user.social.gitHub} />
                   </div>
                 }

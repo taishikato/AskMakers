@@ -9,15 +9,9 @@ const GitHubIcon: NextPage<Props> = props => {
     <a
       href={`https://github.com/${name}`}
       target="_blank"
-      className="twitter-icon-sns rounded-full w-10 h-10 block text-white"
+      className="github-icon-sns rounded-full w-10 h-10 block text-white"
     >
       <FontAwesomeIcon icon={faGithub} size="xs" className="w-6 h-6" />
-      <style jsx>{`
-      .twitter-icon-sns {
-        background-color: #000000;
-        padding: 8px;
-      }
-      `}</style>
     </a>
   )
 }

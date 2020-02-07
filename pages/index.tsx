@@ -17,7 +17,7 @@ const Home: NextPage<Props> = props => (
     <Hero />
     <div className="mt-5 mb-10">
 
-      <div className="w-full px-3 md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
+      <div className="px-3 w-full md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
         <div className="w-full md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
           {props.questions.map((question, index) => (
             <QuestionWrapper question={question} key={index} />
@@ -26,7 +26,7 @@ const Home: NextPage<Props> = props => (
         <aside className="w-full md:w-4/12 lg:w-4/12">
           <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
           <FeaturedMaker class="border border-gray-300 rounded p-3 mb-5" />
-          <div className="text-sm text-gray-600">
+          <div className="text-xs text-gray-600">
             <div className="mb-3">
               <Link href="/">
                 <a>

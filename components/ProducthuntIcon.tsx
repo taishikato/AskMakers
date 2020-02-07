@@ -9,15 +9,9 @@ const ProducthuntIcon: NextPage<Props> = props => {
     <a
       href={`https://www.producthunt.com/@${name}`}
       target="_blank"
-      className="twitter-icon-sns rounded-full w-10 h-10 block text-white"
+      className="producthunt-icon-sns rounded-full w-10 h-10 block text-white"
     >
       <FontAwesomeIcon icon={faProductHunt} size="xs" className="w-6 h-6" />
-      <style jsx>{`
-      .twitter-icon-sns {
-        background-color: #DA552F;
-        padding: 8px;
-      }
-      `}</style>
     </a>
   )
 }

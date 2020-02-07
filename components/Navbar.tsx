@@ -51,7 +51,7 @@ const Navbar: NextPage = () => {
   const Content = connectStateResults(({ searchState, searchResults }) => {
     if (searchResults && searchResults.nbHits !== 0 && searchState.query) {
       return (
-        <div className="w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-10">
+        <div className="w-full md:w-4/12 lg:w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-40">
           <Hits hitComponent={SearchHit} />
         </div>
       )
@@ -80,7 +80,7 @@ const Navbar: NextPage = () => {
       <div className="block lg:hidden">
         <button
           onClick={handleHumburger}
-          className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white"
+          className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white focus:outline-none"
         >
           <svg
             className="fill-current h-3 w-3"
@@ -106,7 +106,7 @@ const Navbar: NextPage = () => {
         {isLogin &&
           <button
             onClick={handleAskButtonClick}
-            className="font-semibold focus:outline-none flex flex-wrap items-center mr-5"
+            className="font-semibold focus:outline-none flex flex-wrap items-center mr-5 pt-3 md:pt-0 lg:pt-0"
           >
             <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
             <span className="ml-1">

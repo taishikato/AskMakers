@@ -12,12 +12,6 @@ const TwitterIcon: NextPage<Props> = props => {
       className="twitter-icon-sns rounded-full w-10 h-10 block text-white"
     >
       <FontAwesomeIcon icon={faTwitter} size="xs" className="w-6 h-6" />
-      <style jsx>{`
-      .twitter-icon-sns {
-        background-color: #1DA1F2;
-        padding: 8px;
-      }
-      `}</style>
     </a>
   )
 }

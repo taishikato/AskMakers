@@ -27,3 +27,23 @@ div#__next > div {
 #content a {
   color: #4299e1;
 }
+
+.patreon-icon-sns {
+    background-color: #f96854;
+    padding: 8px;
+}
+
+.twitter-icon-sns {
+    background-color: #1DA1F2;
+    padding: 8px;
+}
+
+.producthunt-icon-sns {
+    background-color: #DA552F;
+    padding: 8px;
+}
+
+.github-icon-sns {
+    background-color: #000000;
+    padding: 8px;
+}

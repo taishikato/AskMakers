@@ -9,15 +9,9 @@ const PatreonIcon: NextPage<Props> = props => {
     <a
       href={`https://www.patreon.com/${name}`}
       target="_blank"
-      className="twitter-icon-sns rounded-full w-10 h-10 block text-white"
+      className="patreon-icon-sns rounded-full w-10 h-10 block text-white"
     >
       <FontAwesomeIcon icon={faPatreon} size="xs" className="w-6 h-6" />
-      <style jsx>{`
-      .twitter-icon-sns {
-        background-color: #f96854;
-        padding: 8px;
-      }
-      `}</style>
     </a>
   )
 }
