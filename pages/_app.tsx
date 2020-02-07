@@ -8,6 +8,7 @@ import NextNprogress from 'nextjs-progressbar'
 import Auth from '../components/Auth'
 import withGA from 'next-ga'
 import { initializeStore } from '../store/store'
+import Drift from 'react-driftjs'
 import 'antd/lib/tabs/style/index.css'
 import 'antd/lib/empty/style/index.css'
 import 'antd/lib/upload/style/index.css'
@@ -58,12 +59,13 @@ const MyApp = withRedux(initializeStore)(
             <meta key="og:url" property="og:url" content={url} />
             <meta key="og:image" property="og:image" content={`${url}ogimage-2.png`} />
             <meta key="twitter:card" property="twitter:card" content="summary_large_image" />
-            <script key="drift" src="/drift.js"></script>
+            {/* <script key="drift" src="/drift.js"></script> */}
           </Head>
           <NextNprogress color="#23d160" />
           <Auth>
             <Component {...pageProps} />
           </Auth>
+          <Drift appId="gddhzz5hzvkm" />
         </Provider>
       )
     }
