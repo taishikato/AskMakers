@@ -140,17 +140,17 @@ const EditQuestionSlug: NextPage<Props> = props => {
               <Checkbox.Group options={topicOptions} onChange={(checkedValues) => setTopic(checkedValues)} value={topic} />
             </div>
           </div>
-          <div>
+          <div className="flex flex-wrap">
             {!isSubmitting && (title === '' || body === '') &&
               <button
-                className="px-6 py-3 bg-green-300 rounded text-white font-semibold cursor-not-allowed focus:outline-none"
+                className="w-full md:w-auto lg:w-auto px-6 py-3 bg-green-300 rounded text-white font-semibold cursor-not-allowed focus:outline-none"
               >
                 Update your question
               </button>
             }
             {!isSubmitting && title !== '' && body !== '' &&
               <button
-                className="px-6 py-3 bg-green-400 rounded text-white font-semibold hover:bg-green-500 focus:outline-none"
+                className="w-full md:w-auto lg:w-auto px-6 py-3 bg-green-400 rounded text-white font-semibold hover:bg-green-500 focus:outline-none"
                 type="submit"
               >
                 Update your question
@@ -159,13 +159,13 @@ const EditQuestionSlug: NextPage<Props> = props => {
             {isSubmitting &&
               <button
                 disabled
-                className="px-6 py-3 bg-green-300 rounded text-white font-semibold focus:outline-none"
+                className="w-full md:w-auto lg:w-auto px-6 py-3 bg-green-300 rounded text-white font-semibold focus:outline-none"
               >
                 Submitting…
               </button>
             }
             <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
-              <a className="px-6 py-3 bg-white rounded font-semibold hover:underline">
+              <a className="w-full md:w-auto lg:w-auto block text-center md:text-left lg:text-left px-6 py-3 bg-white rounded font-semibold hover:underline">
                 Go back to the question page
               </a>
             </Link>
