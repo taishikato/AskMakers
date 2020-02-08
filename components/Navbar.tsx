@@ -51,7 +51,7 @@ const Navbar: NextPage = () => {
   const Content = connectStateResults(({ searchState, searchResults }) => {
     if (searchResults && searchResults.nbHits !== 0 && searchState.query) {
       return (
-        <div className="w-full md:w-4/12 lg:w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-40">
+        <div className="w-11/12 md:w-4/12 lg:w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-40">
           <Hits hitComponent={SearchHit} />
         </div>
       )
