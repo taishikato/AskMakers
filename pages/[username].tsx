@@ -7,11 +7,11 @@ import QuestionWrapper from '../components/QuestionWrapper'
 import AnswerWrapper from '../components/AnswerWrapper'
 import TwitterIcon from '../components/TwitterIcon'
 import ProducthuntIcon from '../components/ProducthuntIcon'
+import FeaturedMaker from '../components/FeaturedMaker'
 import GitHubIcon from '../components/GitHubIcon'
 import PatreonIcon from '../components/PatreonIcon'
 import asyncForEach from '../plugins/asyncForEach'
-import { Tabs } from 'antd'
-import { Empty } from 'antd'
+import { Tabs, Empty, Tag } from 'antd'
 import firebase from '../plugins/firebase'
 import 'firebase/firestore'
 
@@ -57,6 +57,28 @@ const Username: NextPage<Props> = props => {
                 </a>
               </div>
               }
+              <div className="flex flex-wrap mt-4 justify-between md:justify-start lg:justify-start">
+                {user.social.twitter !== undefined && user.social.twitter !== '' &&
+                  <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <TwitterIcon name={user.social.twitter} />
+                  </div>
+                }
+                {user.social.productHunt !== undefined && user.social.productHunt !== '' &&
+                  <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <ProducthuntIcon name={user.social.productHunt} />
+                  </div>
+                }
+                {user.social.gitHub !== undefined && user.social.gitHub !== '' &&
+                  <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <GitHubIcon name={user.social.gitHub} />
+                  </div>
+                }
+                {user.social.patreon !== undefined && user.social.patreon !== '' &&
+                  <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <PatreonIcon name={user.social.patreon} />
+                  </div>
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -106,30 +128,8 @@ const Username: NextPage<Props> = props => {
             </Tabs>
           </div>
           <div className="w-full md:w-3/12 lg:w-3/12 px-3 mb-10 md:mb-0 lg:mb-0">
-            <div className="border border-gray-300 rounded p-3">
-              <h3 className="font-semibold text-xl mb-2">Social</h3>
-              <div className="flex flex-wrap justify-between">
-                {user.social.twitter !== undefined && user.social.twitter !== '' &&
-                  <div className="w-3/12 flex justify-center">
-                    <TwitterIcon name={user.social.twitter} />
-                  </div>
-                }
-                {user.social.productHunt !== undefined && user.social.productHunt !== '' &&
-                  <div className="w-3/12 flex justify-center">
-                    <ProducthuntIcon name={user.social.productHunt} />
-                  </div>
-                }
-                {user.social.gitHub !== undefined && user.social.gitHub !== '' &&
-                  <div className="w-3/12 flex justify-center">
-                    <GitHubIcon name={user.social.gitHub} />
-                  </div>
-                }
-                {user.social.patreon !== undefined && user.social.patreon !== '' &&
-                  <div className="w-3/12 flex justify-center">
-                    <PatreonIcon name={user.social.patreon} />
-                  </div>
-                }
-              </div>
+            <div className="mt-5">
+              <FeaturedMaker class="rounded mb-5" />
             </div>
           </div>
         </div>

@@ -69,7 +69,7 @@ const Home: NextPage<Props> = props => {
           </div>
           <aside className="w-full md:w-4/12 lg:w-4/12">
             <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
-            <FeaturedMaker class="border border-gray-300 rounded p-3 mb-5" />
+            <FeaturedMaker class="rounded mb-5" />
             <div className="text-xs text-gray-600">
               <div className="mb-3">
                 <Link href="/">
