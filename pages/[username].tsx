@@ -125,7 +125,7 @@ const Username: NextPage<Props> = props => {
                   </div>
                 }
                 {user.social.patreon !== undefined && user.social.patreon !== '' &&
-                  <div className="w-4/12">
+                  <div className="w-3/12 flex justify-center">
                     <PatreonIcon name={user.social.patreon} />
                   </div>
                 }

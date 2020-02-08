@@ -36,7 +36,7 @@ const Login = () => {
             Login to AskMakers
           </h1>
           <p className="mb-5">
-            Join a community of experts, share your best products and discover your next favorites tools.
+            Join a community of experienced makers and share your knowledge, discover the way to grow your product.
           </p>
           <div className="w-full w-3/12 m-auto">
             <TwitterLoginButton handleLogin={handleSignIn} />

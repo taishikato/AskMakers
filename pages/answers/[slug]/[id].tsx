@@ -34,6 +34,7 @@ const AnswersSlugId: NextPage<Props> = props => {
   const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false)
   const loginUser = useSelector(state => state.loginUser)
+  const isLogin = useSelector(state => state.isLogin)
 
   const handleDeleteAnswer = async (answerId) => {
     if (!window.confirm('Are you sure to delete this answer?')) {
@@ -86,6 +87,10 @@ const AnswersSlugId: NextPage<Props> = props => {
   }
 
   const handlePostAnswer = async () => {
+    if (!isLogin) {
+      router.push('/login')
+      return
+    }
     setIsPosting(true)
     const id = uuid().split('-').join('')
     await postAnswer(db, loginUser, question, id, answerValue)
