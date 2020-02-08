@@ -29,7 +29,7 @@ const MyApp = withRedux(initializeStore)(
       const { Component, pageProps, store } = this.props
       const title = 'AskMakers - Ask experienced makers questions'
       const url = 'https://askmakers.co/'
-      const description = 'The best place to ask experienced and successful makers questions anonymously. Let\'s get together Indie Makers!'
+      const description = 'The best place to ask experienced and successful makers questions. Let\'s get together Indie Makers!'
       return (
         <Provider store={store}>
           <Head>
