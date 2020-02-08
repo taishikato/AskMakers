@@ -116,7 +116,7 @@ const Comment: NextPage<Props> = props => {
             </a>
           </Link>
         </div>
-        <div id="content" className="mb-2">
+        <div id="content" className="mb-2 whitespace-pre-wrap">
           <ReactMarkdown source={answer} />
         </div>
         <div className="flex items-center">
