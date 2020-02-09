@@ -1,7 +1,8 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import { Tag } from 'antd'
+import { Tag, Tooltip } from 'antd'
+import moment from 'moment'
 
 const QuestionWrapper: NextPage<Props> = props => {
   const questionObj = props.question
@@ -71,37 +72,47 @@ const QuestionWrapper: NextPage<Props> = props => {
             </a>
           </Link>
         </h3>
-        {questionObj.question.topics !== undefined && questionObj.question.topics.map((topic, index) => {
-          let color = ''
-          switch(topic) {
-            case 'idea':
-              color = 'lime'
-              break;
-            case 'build':
-              color = 'geekblue'
-              break;
-            case 'launch':
-              color = 'volcano'
-              break;
-            case 'grow':
-              color = 'green'
-              break;
-            case 'monetize':
-              color = 'gold'
-              break;
-            case 'automate':
-              color = 'orange'
-              break;
-            case 'exit':
-              color = 'purple'
-              break
-            default:
-              break;
-          }
-          return (
-              <Tag color={color} key={index}>{topic}</Tag>
-          )
-        })}
+        <div className="flex justify-between items-end mt-1">
+          <div>
+          {questionObj.question.topics !== undefined && questionObj.question.topics.map((topic, index) => {
+            let color = ''
+            switch(topic) {
+              case 'idea':
+                color = 'lime'
+                break;
+              case 'build':
+                color = 'geekblue'
+                break;
+              case 'launch':
+                color = 'volcano'
+                break;
+              case 'grow':
+                color = 'green'
+                break;
+              case 'monetize':
+                color = 'gold'
+                break;
+              case 'automate':
+                color = 'orange'
+                break;
+              case 'exit':
+                color = 'purple'
+                break
+              default:
+                break;
+            }
+            return (
+                <Tag color={color} key={index}>{topic}</Tag>
+            )
+          })}
+          </div>
+          <span className="text-xs text-gray-600">
+            asked
+            <Tooltip title={moment.unix(questionObj.question.created).format('YYYY-MM-DD HH:mm')}>
+              <span> {moment.unix(questionObj.question.created).fromNow()}</span>
+            </Tooltip>
+          </span>
+        </div>
       </div>
     </div>
   )
