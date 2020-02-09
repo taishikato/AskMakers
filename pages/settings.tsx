@@ -8,9 +8,10 @@ import Upload from '../components/Upload'
 import getBase64 from '../plugins/getBase64'
 import uploadToStorage from '../plugins/uploadToStorage'
 import { message } from 'antd'
-import uuid from 'uuid/v4'
+// import uuid from 'uuid/v4'
 import firebase from '../plugins/firebase'
 import 'firebase/firestore'
+import 'firebase/storage'
 
 const db = firebase.firestore()
 
@@ -30,7 +31,6 @@ const Settings = () => {
   const [isLoadingImage, setIsLoadingImage] = React.useState(false)
 
   React.useEffect(() => {
-    console.log({loginUser})
     setName(loginUser.customName)
     if (loginUser.tagline !== undefined) {
       setTagline(loginUser.tagline)
@@ -72,8 +72,8 @@ const Settings = () => {
 
       let pictureImage = ''
       if (imageUrl !== '') {
-        const id = uuid().split('-').join('')
-        pictureImage = await uploadToStorage(id, imageUrl, firebase)
+        // const id = uuid().split('-').join('')
+        pictureImage = await uploadToStorage(loginUser.uid, imageUrl, firebase)
         updateData.picture = pictureImage
       }
       updateData.tagline = tagline

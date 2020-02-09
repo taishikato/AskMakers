@@ -7,6 +7,7 @@ import { useRouter, NextRouter } from 'next/router'
 import { loginUser, checkingLoginDone } from '../store/action'
 import firebase from '../plugins/firebase'
 import 'firebase/firestore'
+import 'firebase/auth'
 
 const db = firebase.firestore()
 
