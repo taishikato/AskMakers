@@ -140,12 +140,12 @@ const Comment: NextPage<Props> = props => {
               <FontAwesomeIcon icon={faTwitter} size="xs" className="h-4 w-4" />
             </a>
           </span>
-          <span className="flex flex-wrapper items-center ml-2">
+          <span className="flex flex-wrapper items-center ml-3">
             <a href={`https://www.facebook.com/share.php?u=${shareUrl}`} target="_blank" className="facebook-share">
               <FontAwesomeIcon icon={faFacebook} size="xs" className="h-4 w-4" />
             </a>
           </span>
-          <span>
+          <span className="flex ml-3">
             {loginUser.uid === userId &&
               <Tooltip title="Delete">
                 <button onClick={() => props.handleDeleteAnswer(answerId)} className="focus:outline-none">
