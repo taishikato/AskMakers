@@ -1,18 +1,26 @@
+import { ReactNode } from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
 
 const SideUser: NextPage<Props> = props => {
-  const { name, username, picture, classes } = props
+  const { name, username, picture, classes, intro } = props
   return(
     <div className={classes}>
-      <Link href="/[username]" as={`/${username}`}>
-        <a className="flex flex-wrap items-center">
-          <img src={picture} className="w-10 h-10 rounded-full" alt={name} />
-          <span className="hover:underline ml-3 font-semibold hover:no-underline">
+      <div className="flex flex-wrap">
+        <Link href="/[username]" as={`/${username}`}>
+          <a>
+            <img src={picture} className="w-10 h-10 rounded-full" alt={name} />
+          </a>
+        </Link>
+        <div className="ml-3">
+          <span className="hover:underline font-semibold hover:no-underline">
             {name}
           </span>
-        </a>
-      </Link>
+          <div className="text-sm text-gray-700">
+            {intro}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -22,6 +30,7 @@ interface Props {
   picture: string
   name: string
   classes: string
+  intro: ReactNode
 }
 
 export default SideUser
