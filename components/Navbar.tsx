@@ -103,17 +103,15 @@ const Navbar: NextPage = () => {
             <Content />
           </InstantSearch>
         </div>
-        {isLogin &&
-          <button
-            onClick={handleAskButtonClick}
-            className="font-semibold focus:outline-none flex flex-wrap items-center mr-5 pt-3 md:pt-0 lg:pt-0"
-          >
-            <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
-            <span className="ml-1">
-              Ask Question
-            </span>
-          </button>
-        }
+        <button
+          onClick={handleAskButtonClick}
+          className="font-semibold focus:outline-none flex flex-wrap items-center mr-5 pt-3 md:pt-0 lg:pt-0"
+        >
+          <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
+          <span className="ml-1">
+            Ask Question
+          </span>
+        </button>
         <div className="mt-4 lg:mt-0">
           {isLogin ?
             <div className="relative">

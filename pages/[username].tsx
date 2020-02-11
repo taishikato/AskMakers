@@ -43,7 +43,7 @@ const Username: NextPage<Props> = props => {
             <div className="w-full md:w-auto lg:w-auto">
               <img src={user.picture} width="160px" className="rounded-full m-auto md:m-0 lg:m-0" alt={user.customName} />
             </div>
-            <div className="w-full md:w-auto lg:w-auto ml-0 md:ml-5 lg:ml-5">
+            <div className="w-full md:w-7/12 lg:w-7/12 ml-0 md:ml-5 lg:ml-5">
               <h1 className="font-bold text-4xl">
                 {user.customName}
               </h1>

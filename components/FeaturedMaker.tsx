@@ -54,6 +54,17 @@ const FeaturedMaker: NextPage<Props> = props => {
             </div>
           }
         />
+        <SideUser
+          classes="py-4 border-b border-gray-300"
+          name="Jaime Tatsubana"
+          username="jtatsubana"
+          picture="https://pbs.twimg.com/profile_images/1207030389291663360/SXCrFkCv.jpg"
+          intro={
+            <div>
+              Maker of <a href="https://footystats.org/" target="_blank" className="text-blue-500">Football</a>
+            </div>
+          }
+        />
       </div>
     </div>
   )
