@@ -21,7 +21,7 @@ const Username: NextPage<Props> = props => {
   const { user, questionsData, answerCount, questionUpvoteCount, answerData } = props
   const { TabPane } = Tabs
   const router = useRouter()
-  const title = 'Terms of Service & Privacy | AskMakers - Ask experienced makers questions'
+  const title = `${user.customName} | AskMakers - Ask experienced makers questions`
   const url = `https://askmakers.co${router.asPath}`
 
   return (
