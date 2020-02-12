@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
-import AntCommentWrapper from '../../components/AntCommentWrapper'
 import Comment from '../../components/Comment'
 import asyncForEach from '../../plugins/asyncForEach'
 import upvoteQuestion from '../../plugins/upvoteQuestion'
@@ -37,6 +36,7 @@ const QuestionsSlug = props => {
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false)
   const { question, answers } = props
   const loginUser = useSelector(state => state.loginUser)
+  const isLogin = useSelector(state => state.isLogin)
 
   const shareUrl = `https://askmakers.co${router.asPath}`
 
@@ -206,6 +206,14 @@ const QuestionsSlug = props => {
         <h2 className="text-xl mb-5">
           Your answer
         </h2>
+        {!isLogin &&
+          <Link href="/login">
+            <a className="font-semibold text-blue-500 pb-16">
+              Please login or sign up to answer the question.
+            </a>
+          </Link>
+        }
+        {isLogin &&
         <div className="mb-3">
           <ReactMde
             value={answerValue}
@@ -218,7 +226,8 @@ const QuestionsSlug = props => {
             }
           />
         </div>
-        {isPosting &&
+        }
+        {isPosting && isLogin &&
           <button
             disabled
             className="text-white p-3 rounded font-medium bg-green-400 hover:bg-green-500 focus:outline-none opacity-50"
@@ -226,7 +235,7 @@ const QuestionsSlug = props => {
             Posting…
           </button>
         }
-        {answerValue === '' && !isPosting &&
+        {answerValue === '' && !isPosting && isLogin &&
           <button
             disabled
             className="text-white p-3 rounded font-medium bg-green-400 focus:outline-none opacity-50"
@@ -234,7 +243,7 @@ const QuestionsSlug = props => {
             Post your answer
           </button>
         }
-        {answerValue !== '' && !isPosting &&
+        {answerValue !== '' && !isPosting && isLogin &&
           <button
             onClick={handlePostAnswer}
             className="text-white p-3 rounded font-medium bg-green-400 hover:bg-green-500 focus:outline-none"
