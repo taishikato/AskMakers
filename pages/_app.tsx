@@ -8,7 +8,6 @@ import NextNprogress from 'nextjs-progressbar'
 import Auth from '../components/Auth'
 import withGA from 'next-ga'
 import { initializeStore } from '../store/store'
-import Drift from 'react-driftjs'
 import 'antd/lib/tabs/style/index.css'
 import 'antd/lib/empty/style/index.css'
 import 'antd/lib/upload/style/index.css'
@@ -69,7 +68,7 @@ const MyApp = withRedux(initializeStore)(
           <Auth>
             <Component {...pageProps} />
           </Auth>
-          <Drift appId="gddhzz5hzvkm" />
+          {/* <Drift appId="gddhzz5hzvkm" /> */}
         </Provider>
       )
     }
