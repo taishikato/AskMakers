@@ -6,6 +6,7 @@ import Hero from '../components/Hero'
 import FeaturedMaker from '../components/FeaturedMaker'
 import WelcomeBox from '../components/WelcomeBox'
 import QuestionWrapper from '../components/QuestionWrapper'
+import RecentAnswer from '../components/RecentAnswer'
 import asyncForEach from '../plugins/asyncForEach'
 import firebase from '../plugins/firebase'
 import 'firebase/firestore'
@@ -70,6 +71,7 @@ const Home: NextPage<Props> = props => {
           <aside className="w-full md:w-4/12 lg:w-4/12">
             <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
             <FeaturedMaker class="rounded mb-5" />
+            <RecentAnswer />
             <div className="text-xs text-gray-600">
               <div className="mb-3">
                 <Link href="/">
