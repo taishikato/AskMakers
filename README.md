@@ -13,6 +13,10 @@ Check it on [Product Hunt](https://www.producthunt.com/posts/askmakers) :cat:
   <img alt="nextjs-logo" width="110" src="https://user-images.githubusercontent.com/980588/75617544-6bd84d80-5b15-11ea-906c-26430584fa97.png" />
 </a>
 
+<a href="https://www.typescriptlang.org/" target="_blank">
+  <img width="50" alt="typeScript" src="https://user-images.githubusercontent.com/980588/75617806-07b78880-5b19-11ea-9eae-b4dc17f3b1c3.png" />
+</a>
+
 <a href="https://zeit.co" target="_blank">
   <img width="70" alt="now-logo" src="https://user-images.githubusercontent.com/980588/75617580-cbcef400-5b15-11ea-9529-c0340f68aa6c.jpeg" />
 </a>
@@ -39,6 +43,7 @@ Check it on [Product Hunt](https://www.producthunt.com/posts/askmakers) :cat:
 ## :hammer_and_wrench: Stack
 
 * Next.js
+* TypeScript
 * Redux
   * Storing login state and loggedin user info
 * Now
