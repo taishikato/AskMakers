@@ -40,6 +40,11 @@ Check it on [Product Hunt](https://www.producthunt.com/posts/askmakers) :cat:
 
 </div>
 
+## :man_shrugging: Why I created this app?
+
+I want to make a Quora for Indie makers. So I created AskMakers. <br />Makers can ask experienced/successful makers questions.<br /> AskMakers help makers are successful with their products.
+
+
 ## :hammer_and_wrench: Stack
 
 * Next.js
