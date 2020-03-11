@@ -45,6 +45,11 @@ Check it on [Product Hunt](https://www.producthunt.com/posts/askmakers) :cat:
 I want to make a Quora for Indie makers. So I created AskMakers. <br />Makers can ask experienced/successful makers questions.<br /> AskMakers help makers are successful with their products.
 
 
+## :computer: Architecture
+![AskMakers-architecture](https://user-images.githubusercontent.com/980588/76456093-b9657d80-6393-11ea-9365-fb7254a2e228.png)
+
+
+
 ## :hammer_and_wrench: Stack
 
 * Next.js
