@@ -1,13 +1,15 @@
 import React from 'react'
 import { NextPage } from 'next'
-import  { Tag } from 'antd'
+import { Tag } from 'antd'
 import SideUser from './SideUser'
 
-const FeaturedMaker: NextPage<Props> = props => {
+const FeaturedMaker: NextPage<Props> = (props) => {
   return (
     <div className={props.class}>
       <h2>
-        <Tag color="#68d391" className="font-semibold">FEATURED MAKERS</Tag>
+        <Tag color="#68d391" className="font-semibold">
+          FEATURED MAKERS
+        </Tag>
       </h2>
       <div>
         <SideUser
@@ -17,7 +19,14 @@ const FeaturedMaker: NextPage<Props> = props => {
           picture="https://pbs.twimg.com/profile_images/932726689485828097/n86GsuLG.jpg"
           intro={
             <div>
-              Maker of <a href="https://transistor.fm/" target="_blank" className="text-blue-500">Transistor</a>
+              Maker of{' '}
+              <a
+                href="https://transistor.fm/"
+                target="_blank"
+                className="text-blue-500"
+              >
+                Transistor
+              </a>
             </div>
           }
         />
@@ -28,7 +37,14 @@ const FeaturedMaker: NextPage<Props> = props => {
           picture="https://pbs.twimg.com/profile_images/1150157842222989312/eZfA0Oki.jpg"
           intro={
             <div>
-              Maker of <a href="https://visalist.io/" target="_blank" className="text-blue-500">Visa List</a>
+              Maker of{' '}
+              <a
+                href="https://visalist.io/"
+                target="_blank"
+                className="text-blue-500"
+              >
+                Visa List
+              </a>
             </div>
           }
         />
@@ -39,7 +55,14 @@ const FeaturedMaker: NextPage<Props> = props => {
           picture="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/users%2Fe4UAYSdg99RXMzkk0yfsxqGJVzy2.jpg?alt=media&token=ad286fcf-9915-416b-a7ff-aec257382f4f"
           intro={
             <div>
-              Maker of <a href="https://tryspider.com/" target="_blank" className="text-blue-500">Spider Pro</a>
+              Maker of{' '}
+              <a
+                href="https://tryspider.com/"
+                target="_blank"
+                className="text-blue-500"
+              >
+                Spider Pro
+              </a>
             </div>
           }
         />
@@ -50,7 +73,14 @@ const FeaturedMaker: NextPage<Props> = props => {
           picture="https://pbs.twimg.com/profile_images/860439311879155713/szwSvKLt.jpg"
           intro={
             <div>
-              Maker of <a href="https://emailoctopus.com/" target="_blank" className="text-blue-500">EmailOctopus</a>
+              Maker of{' '}
+              <a
+                href="https://emailoctopus.com/"
+                target="_blank"
+                className="text-blue-500"
+              >
+                EmailOctopus
+              </a>
             </div>
           }
         />
@@ -61,7 +91,14 @@ const FeaturedMaker: NextPage<Props> = props => {
           picture="https://pbs.twimg.com/profile_images/1207030389291663360/SXCrFkCv.jpg"
           intro={
             <div>
-              Maker of <a href="https://footystats.org/" target="_blank" className="text-blue-500">Football</a>
+              Maker of{' '}
+              <a
+                href="https://footystats.org/"
+                target="_blank"
+                className="text-blue-500"
+              >
+                FootyStats
+              </a>
             </div>
           }
         />
