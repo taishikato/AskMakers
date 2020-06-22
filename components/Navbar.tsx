@@ -184,7 +184,7 @@ const Navbar: NextPage = () => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
           },
           content: {
-            padding: 0,
+            padding: '1.25rem',
             width: '600px',
             maxWidth: '100%',
             position: 'absolute',
@@ -193,7 +193,7 @@ const Navbar: NextPage = () => {
             bottom: 'none',
             transform: 'translateY(-50%)translateX(-50%)',
             border: 'none',
-            backgroundColor: 'white',
+            backgroundColor: '#f9f9f9',
           },
         }}
       >

@@ -12,7 +12,7 @@ const handleSignIn = () => {
 
 const SignUpModal = () => {
   return (
-    <div className="p-5">
+    <div className="p-5 bg-white rounded">
       <img
         src="/askmakers-300.png"
         alt="AskMakers logo"
