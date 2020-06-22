@@ -1,14 +1,20 @@
 import React from 'react'
 import firebase from '../../plugins/firebase'
+import 'firebase/auth'
 import TwitterLoginButton from '../Common/TwitterLoginButton'
 import GoogleLoginButton from '../Common/GoogleLoginButton'
 import FacebookLoginButton from '../Common/FacebookLoginButton'
 
 const twitterProvider = new firebase.auth.TwitterAuthProvider()
+const googleProvider = new firebase.auth.GoogleAuthProvider()
+const facebookProvider = new firebase.auth.FacebookAuthProvider()
 
-const handleSignIn = () => {
+const handleTwitterSignIn = () =>
   firebase.auth().signInWithRedirect(twitterProvider)
-}
+const handleGoogleSignIn = () =>
+  firebase.auth().signInWithRedirect(googleProvider)
+const handleFacebookSignIn = () =>
+  firebase.auth().signInWithRedirect(facebookProvider)
 
 const SignUpModal = () => {
   return (
@@ -26,10 +32,13 @@ const SignUpModal = () => {
         discover the way to grow your product.
       </p>
       <div className="flex flex-wrap items-center justify-between">
-        <TwitterLoginButton handleLogin={handleSignIn} />
-        <GoogleLoginButton handleLogin={handleSignIn} />
-        <FacebookLoginButton handleLogin={handleSignIn} />
+        <TwitterLoginButton handleLogin={handleTwitterSignIn} />
+        <GoogleLoginButton handleLogin={handleGoogleSignIn} />
+        <FacebookLoginButton handleLogin={handleFacebookSignIn} />
       </div>
+      <p className="text-center text-gray-600 text-xs font-light mt-2">
+        We'll never post to any of your accounts without your permission.
+      </p>
     </div>
   )
 }

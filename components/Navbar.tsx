@@ -18,10 +18,12 @@ import SearchHit from './SearchHit'
 import CustomSearchBox from './CustomSearchBox'
 import Modal from 'react-modal'
 import SignUpModal from './Navbar/SignUpModal'
+import LoginModal from './Navbar/LoginModal'
 
 const Navbar: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenDropDown, setIsOpenDropDown] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
   const isLogin = useSelector((state) => state.isLogin)
   const loginUser = useSelector((state) => state.loginUser)
@@ -162,18 +164,49 @@ const Navbar: NextPage = () => {
                 </div>
               </div>
             ) : (
-              // <Link href="/login">
-              <a
-                className="font-semibold cursor-pointer"
-                onClick={() => setIsSignupModalOpen(true)}
-              >
-                Sign up / Login
-              </a>
-              // </Link>
+              <>
+                <a
+                  className="font-semibold cursor-pointer mr-3"
+                  onClick={() => setIsLoginModalOpen(true)}
+                >
+                  Log in
+                </a>
+                <a
+                  className="font-semibold cursor-pointer"
+                  onClick={() => setIsSignupModalOpen(true)}
+                >
+                  Sign up
+                </a>
+              </>
             )}
           </div>
         </div>
       </nav>
+      <Modal
+        isOpen={isLoginModalOpen}
+        onRequestClose={() => setIsLoginModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            padding: '1.25rem',
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: '#f9f9f9',
+          },
+        }}
+      >
+        <LoginModal />
+      </Modal>
       <Modal
         isOpen={isSignupModalOpen}
         onRequestClose={() => setIsSignupModalOpen(false)}
@@ -197,7 +230,6 @@ const Navbar: NextPage = () => {
           },
         }}
       >
-        {/* <SignupForm closeModal={() => setIsSignupModalOpen(false)} /> */}
         <SignUpModal />
       </Modal>
     </>
