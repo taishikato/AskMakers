@@ -1,62 +1,60 @@
-import React, { useState } from 'react'
-import { NextPage } from 'next'
-import Link from 'next/link'
-import { logoutUser } from '../store/action'
-import firebase from '../plugins/firebase'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useSelector, useDispatch } from 'react-redux'
-import { useRouter } from 'next/router'
+import React, { useState } from 'react';
+import { NextPage } from 'next';
+import Link from 'next/link';
+import { logoutUser } from '../../store/action';
+import firebase from '../../plugins/firebase';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import {
   InstantSearch,
   Hits,
   connectStateResults,
   Configure,
-} from 'react-instantsearch-dom'
-import algoliasearch from 'algoliasearch/lite'
-import SearchHit from './SearchHit'
-import CustomSearchBox from './CustomSearchBox'
-import Modal from 'react-modal'
-import SignUpModal from './Navbar/SignUpModal'
-import LoginModal from './Navbar/LoginModal'
+} from 'react-instantsearch-dom';
+import algoliasearch from 'algoliasearch/lite';
+import SearchHit from '../SearchHit';
+import CustomSearchBox from '../CustomSearchBox';
+import Modal from 'react-modal';
+import SignUpModal from './SignUpModal';
 
 const Navbar: NextPage = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isOpenDropDown, setIsOpenDropDown] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
-  const isLogin = useSelector((state) => state.isLogin)
-  const loginUser = useSelector((state) => state.loginUser)
-  const dispatch = useDispatch()
-  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const isLogin = useSelector((state) => state.isLogin);
+  const loginUser = useSelector((state) => state.loginUser);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const signOut = async () => {
-    await firebase.auth().signOut()
-    dispatch(logoutUser())
-    router.push('/')
-  }
+    await firebase.auth().signOut();
+    dispatch(logoutUser());
+    router.push('/');
+  };
 
   const handleHumburger = () => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   const handleDropDown = () => {
-    setIsOpenDropDown(!isOpenDropDown)
-  }
+    setIsOpenDropDown(!isOpenDropDown);
+  };
 
   const handleAskButtonClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!isLogin) {
-      router.push('/login')
-      return
+      router.push('/login');
+      return;
     }
-    router.push('/ask-question')
-  }
+    router.push('/ask-question');
+  };
 
   const searchClient = algoliasearch(
     'XZIR7RVDZD',
     'ba8ffe5c871cb0ebae6e7c04762a2048'
-  )
+  );
 
   const Content = connectStateResults(({ searchState, searchResults }) => {
     if (searchResults && searchResults.nbHits !== 0 && searchState.query) {
@@ -64,7 +62,7 @@ const Navbar: NextPage = () => {
         <div className="w-11/12 md:w-4/12 lg:w-4/12 mt-1 border-gray-200 rounded border absolute bg-white z-40">
           <Hits hitComponent={SearchHit} />
         </div>
-      )
+      );
     } else if (
       searchResults &&
       searchResults.nbHits === 0 &&
@@ -74,11 +72,11 @@ const Navbar: NextPage = () => {
         <div className="text-white">
           No results has been found for {searchState.query}
         </div>
-      )
+      );
     } else {
-      return <div></div>
+      return <div></div>;
     }
-  })
+  });
 
   return (
     <>
@@ -167,7 +165,7 @@ const Navbar: NextPage = () => {
               <>
                 <a
                   className="font-semibold cursor-pointer mr-3"
-                  onClick={() => setIsLoginModalOpen(true)}
+                  onClick={() => setIsSignupModalOpen(true)}
                 >
                   Log in
                 </a>
@@ -182,31 +180,6 @@ const Navbar: NextPage = () => {
           </div>
         </div>
       </nav>
-      <Modal
-        isOpen={isLoginModalOpen}
-        onRequestClose={() => setIsLoginModalOpen(false)}
-        ariaHideApp={false}
-        style={{
-          overlay: {
-            zIndex: 100000,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          },
-          content: {
-            padding: '1.25rem',
-            width: '600px',
-            maxWidth: '100%',
-            position: 'absolute',
-            top: '40%',
-            left: '50%',
-            bottom: 'none',
-            transform: 'translateY(-50%)translateX(-50%)',
-            border: 'none',
-            backgroundColor: '#f9f9f9',
-          },
-        }}
-      >
-        <LoginModal />
-      </Modal>
       <Modal
         isOpen={isSignupModalOpen}
         onRequestClose={() => setIsSignupModalOpen(false)}
@@ -233,7 +206,7 @@ const Navbar: NextPage = () => {
         <SignUpModal />
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
