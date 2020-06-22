@@ -45,7 +45,7 @@ const Navbar: NextPage = () => {
   const handleAskButtonClick = (e) => {
     e.preventDefault();
     if (!isLogin) {
-      router.push('/login');
+      setIsSignupModalOpen(true);
       return;
     }
     router.push('/ask-question');
