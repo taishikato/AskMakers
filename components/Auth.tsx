@@ -14,7 +14,6 @@ const db = firebase.firestore();
 
 const authUserFunc = async (router: NextRouter, dispatch) => {
   const authUser = await auth();
-  console.log({ authUser });
   if (!authUser) {
     dispatch(checkingLoginDone());
     return;
@@ -63,13 +62,11 @@ const authUserFunc = async (router: NextRouter, dispatch) => {
       dispatch(loginUser(user.data() as any));
       dispatch(checkingLoginDone());
       router.push('/');
-      // router.push('/welcome')
     }
     return;
   }
   // 通常アクセス
   const user = await db.collection('publicUsers').doc(authUser.uid).get();
-  console.log(user.data());
   dispatch(loginUser(user.data() as any));
   dispatch(checkingLoginDone());
 };

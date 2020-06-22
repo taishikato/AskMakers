@@ -1,7 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser as loginUserAction } from '../../store/action';
 import Layout from '../../components/Layout';
 import Input from '../../components/Input';
 import Upload from '../../components/Upload';
@@ -19,6 +20,7 @@ const db = firebase.firestore();
 const Welcome = () => {
   const loginUser = useSelector((state) => state.loginUser);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [username, setUsername] = React.useState('');
   const [name, setName] = React.useState('');
@@ -31,6 +33,7 @@ const Welcome = () => {
   const [isLoadingImage, setIsLoadingImage] = React.useState(false);
   const [imageUrl, setImageUrl] = React.useState('');
   const [isSaving, setIsSaving] = React.useState(false);
+  const [usernameErr, setUsernameErr] = React.useState('');
 
   const handleChangeUsername = (e) => setUsername(e.target.value);
   const handleChangeName = (e) => setName(e.target.value);
@@ -76,16 +79,21 @@ const Welcome = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    setUsernameErr('');
+    if (username === '') {
+      setUsernameErr('Username can not be empty.');
+      setIsSaving(false);
+      return;
+    }
     const isValid = await checkIsUsernameValid(loginUser, username);
     if (!isValid) {
-      console.error('invalid username');
+      setUsernameErr('This username is already taken.');
       setIsSaving(false);
       return;
     }
     const updateData: IUpdateData = {} as IUpdateData;
     updateData.username = username;
     updateData.social = {} as ISocial;
-    // const id = uuid().split('-').join('');
     let pictureImage = '';
     if (imageUrl !== '') {
       pictureImage = await uploadImage(loginUser.uid, imageUrl, firebase);
@@ -106,8 +114,9 @@ const Welcome = () => {
     if (patreon) {
       updateData.social.patreon = patreon;
     }
-    console.log({ updateData });
     await db.collection('publicUsers').doc(loginUser.uid).update(updateData);
+    const user = await db.collection('publicUsers').doc(loginUser.uid).get();
+    dispatch(loginUserAction(user.data()));
     setIsSaving(false);
     // router.push('/welcome/thankyou');
   };
@@ -127,7 +136,7 @@ const Welcome = () => {
       </Head>
       <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
         <h1 className="text-4xl font-bold">Welcome to AskMakers!</h1>
-        <div className="mb-8">
+        <div className="mb-10">
           Please tell us about yourself! The AskMakers community can know you
           more.
         </div>
@@ -135,13 +144,21 @@ const Welcome = () => {
           <div className="flex flex-wrap justify-between -mx-3">
             <div className="w-full md:w-6/12 lg:w-6/12 px-3">
               <div className="mb-3">
-                <Input
-                  label="Username (which is very random right now, so please change it!)"
+                <label className="font-semibold mb-2 block" htmlFor="username">
+                  <span className="text-red-400">*</span>
+                  Username (which is very random right now, so please change
+                  it!)
+                </label>
+                <input
                   id="username"
                   type="text"
                   value={username}
-                  handleChange={handleChangeUsername}
+                  onChange={handleChangeUsername}
+                  className="w-full border-2 rounded px-3 py-1 border-gray-400 focus:border-gray-500 focus:outline-none"
                 />
+                {usernameErr && (
+                  <p className="text-red-500 text-sm italic">{usernameErr}</p>
+                )}
               </div>
               <div className="mb-3">
                 <Input
