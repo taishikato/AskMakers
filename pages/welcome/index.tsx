@@ -118,7 +118,7 @@ const Welcome = () => {
     const user = await db.collection('publicUsers').doc(loginUser.uid).get();
     dispatch(loginUserAction(user.data()));
     setIsSaving(false);
-    // router.push('/welcome/thankyou');
+    router.push('/welcome/thankyou');
   };
 
   const title = 'Welcome | AskMakers - Ask experienced makers questions';
