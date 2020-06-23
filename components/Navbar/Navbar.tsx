@@ -45,7 +45,7 @@ const Navbar: NextPage = () => {
   const handleAskButtonClick = (e) => {
     e.preventDefault();
     if (!isLogin) {
-      router.push('/login');
+      setIsSignupModalOpen(true);
       return;
     }
     router.push('/ask-question');
@@ -164,13 +164,13 @@ const Navbar: NextPage = () => {
             ) : (
               <>
                 <a
-                  className="font-semibold cursor-pointer mr-3"
+                  className="font-semibold cursor-pointer mr-4"
                   onClick={() => setIsSignupModalOpen(true)}
                 >
                   Log in
                 </a>
                 <a
-                  className="font-semibold cursor-pointer"
+                  className="bg-green-400 p-2 rounded font-semibold cursor-pointer"
                   onClick={() => setIsSignupModalOpen(true)}
                 >
                   Sign up

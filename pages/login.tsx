@@ -1,23 +1,23 @@
-import React from 'react'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Layout from '../components/Layout'
-import TwitterLoginButton from '../components/Common/TwitterLoginButton'
-import { useSelector } from 'react-redux'
-import { Spin } from 'antd'
-import firebase from '../plugins/firebase'
-const twitterProvider = new firebase.auth.TwitterAuthProvider()
+import React from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
+import TwitterLoginButton from '../components/Common/TwitterLoginButton';
+import { useSelector } from 'react-redux';
+import { Spin } from 'antd';
+import firebase from '../plugins/firebase';
+const twitterProvider = new firebase.auth.TwitterAuthProvider();
 
 const handleSignIn = () => {
-  firebase.auth().signInWithRedirect(twitterProvider)
-}
+  firebase.auth().signInWithRedirect(twitterProvider);
+};
 
 const Login = () => {
-  const router = useRouter()
+  const router = useRouter();
   const title =
-    'Login and SignUp | AskMakers - Ask experienced makers questions'
-  const url = `https://askmakers.co${router.asPath}`
-  const isCheckingLogin = useSelector((state) => state.isCheckingLogin)
+    'Login and SignUp | AskMakers - Ask experienced makers questions';
+  const url = `https://askmakers.co${router.asPath}`;
+  const isCheckingLogin = useSelector((state) => state.isCheckingLogin);
   return (
     <Layout>
       <Head>
@@ -34,13 +34,13 @@ const Login = () => {
             Join a community of experienced makers and share your knowledge,
             discover the way to grow your product.
           </p>
-          <div className="w-full w-3/12 m-auto">
+          <div className="w-11/12 w-3/12 m-auto flex justify-center">
             <TwitterLoginButton handleLogin={handleSignIn} />
           </div>
         </Spin>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
