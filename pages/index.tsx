@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { NextPage } from 'next';
+import { useSelector } from 'react-redux';
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
@@ -17,6 +18,7 @@ const Home: NextPage<Props> = (props) => {
   const { questions } = props;
   const [quesionsContainer, setQuesionsContainer] = React.useState(questions);
   const [lastQuestion, setLastQuestion] = React.useState<ISingleQuestion>();
+  const isLogin = useSelector((state) => state.isLogin);
 
   React.useEffect(() => {
     setLastQuestion(quesionsContainer[quesionsContainer.length - 1].question);
@@ -53,9 +55,9 @@ const Home: NextPage<Props> = (props) => {
 
   return (
     <Layout>
-      <Hero />
+      {!isLogin && <Hero />}
       <div className="mt-5 mb-10">
-        <div className="px-3 w-full md:w-9/12 lg:w-9/12 m-auto flex flex-wrap">
+        <div className="w-full md:w-11/12 lg:w-11/12 m-auto flex flex-wrap">
           <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
             {quesionsContainer.map((question, index) => (
               <QuestionWrapper question={question} key={index} />
