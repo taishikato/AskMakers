@@ -10,7 +10,7 @@ const Hero: NextPage = () => {
       id="hero-container"
       className="py-12 h-auto bg-cover text-white px-3 md:px-0 lg:px-0"
     >
-      <div className="mx-auto flex flex-wrap flex-col md:flex-row items-center z-10 h-full w-full md:w-11/12 lg:w-11/12">
+      <div className="mx-auto flex flex-wrap flex-col md:flex-row items-center z-10 h-full w-full md:w-10/12 lg:w-10/12">
         <div className="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left lg:text-left">
           <h1 className="my-4 text-3xl font-bold leading-tight">
             Ask experienced makers questions.
