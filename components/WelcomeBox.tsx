@@ -1,28 +1,25 @@
 import React from 'react';
-import { NextPage } from 'next';
+import Card from './Common/Card';
 
-const WelcomeBox: NextPage<Props> = (props) => {
+const WelcomeBox = () => {
   return (
-    <div className={props.class}>
-      <p className="font-bold">Welcome, new makers :)</p>
-      <p>I have been working on AskMakers 2.0 for a couple of weeks.</p>
-      <p>
-        We welcome any and all feedback. Shoot me a note at{' '}
-        <a
-          href="https://twitter.com/askmakers_app"
-          target="_blank"
-          className="text-blue-500"
-        >
-          @askmakers_app
-        </a>{' '}
-        👍
-      </p>
-    </div>
+    <Card header="Welcome, new makers :)">
+      <div>
+        <p>I have been working on AskMakers 2.0 for a couple of weeks.</p>
+        <p>
+          We welcome any and all feedback. Shoot me a note at{' '}
+          <a
+            href="https://twitter.com/askmakers_app"
+            target="_blank"
+            className="text-blue-500"
+          >
+            @askmakers_app
+          </a>{' '}
+          👍
+        </p>
+      </div>
+    </Card>
   );
 };
-
-interface Props {
-  class: any;
-}
 
 export default WelcomeBox;

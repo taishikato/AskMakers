@@ -56,17 +56,17 @@ const Home: NextPage<Props> = (props) => {
   return (
     <Layout>
       {!isLogin && <Hero />}
-      <div className="mt-5 mb-10">
-        <div className="w-full md:w-11/12 lg:w-11/12 m-auto flex flex-wrap">
-          <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:pr-5 lg:pr-5">
+      <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
+        <div className="w-full flex flex-wrap -mx-4">
+          <div className="w-full mb-5 md:w-8/12 lg:w-8/12 px-4">
             {quesionsContainer.map((question, index) => (
               <QuestionWrapper question={question} key={index} />
             ))}
             {/* <button onClick={loadQuestions}>Load more</button> */}
           </div>
-          <aside className="w-full md:w-4/12 lg:w-4/12">
-            <WelcomeBox class="border border-gray-300 rounded p-3 mb-5" />
-            <FeaturedMaker class="rounded mb-5" />
+          <aside className="w-full md:w-4/12 lg:w-4/12 px-4">
+            <WelcomeBox />
+            <FeaturedMaker />
             <RecentAnswer />
             <div className="text-xs text-gray-600">
               <div className="mb-3">

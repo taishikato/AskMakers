@@ -1,26 +1,23 @@
-import { NextPage } from 'next'
-import Link from 'next/link'
-import { Skeleton } from 'antd'
+import Link from 'next/link';
+import { Skeleton } from 'antd';
+import Image from './Common/Image';
 
-const RenderRecentAnswers: NextPage<Props> = ({ answerData }) => {
+interface IProps {
+  answerData: any;
+}
+
+const RenderRecentAnswers: React.FC<IProps> = ({ answerData }) => {
   if (answerData.length === 0) {
-    return <Skeleton avatar paragraph={{ rows: 2 }} />
+    return <Skeleton avatar paragraph={{ rows: 2 }} />;
   }
 
   return (
     <>
       {answerData.map((answerObj, index) => (
-        <div
-          className="flex flex-wrap py-4 border-b border-gray-300"
-          key={index}
-        >
+        <div className="flex flex-wrap py-2" key={index}>
           <Link href="/[username]" as={`/${answerObj.user.username}`}>
             <a className="w-2/12">
-              <img
-                src={answerObj.user.picture}
-                className="w-10 h-10 rounded-full"
-                alt={name}
-              />
+              <Image image={answerObj.user.picture} alt={name} />
             </a>
           </Link>
           <div className="w-9/12">
@@ -61,11 +58,7 @@ const RenderRecentAnswers: NextPage<Props> = ({ answerData }) => {
         </div>
       ))}
     </>
-  )
-}
+  );
+};
 
-interface Props {
-  answerData: any
-}
-
-export default RenderRecentAnswers
+export default RenderRecentAnswers;
