@@ -11,7 +11,7 @@ import FeaturedMaker from '../components/FeaturedMaker';
 import GitHubIcon from '../components/GitHubIcon';
 import PatreonIcon from '../components/PatreonIcon';
 import asyncForEach from '../plugins/asyncForEach';
-import { Tabs, Empty, Tag } from 'antd';
+import { Tabs, Empty } from 'antd';
 import firebase from '../plugins/firebase';
 import 'firebase/firestore';
 
@@ -89,9 +89,9 @@ const Username: NextPage<Props> = (props) => {
           </div>
         </div>
       </div>
-      <div className="w-full md:w-9/12 lg:w-9/12 mt-5 m-auto p-3">
-        <div className="flex flex-wrap -mx-3">
-          <div className="w-full md:w-8/12 lg:w-8/12 px-3 mb-5 md:mb-0 lg:mb-0">
+      <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
+        <div className="flex flex-wrap -mx-4">
+          <div className="w-full md:w-8/12 lg:w-8/12 px-4 mb-5 md:mb-0 lg:mb-0">
             <Tabs defaultActiveKey="1">
               <TabPane tab={<span>Questions</span>} key="1">
                 {questionsData.length === 0 && (
@@ -117,7 +117,7 @@ const Username: NextPage<Props> = (props) => {
               </TabPane>
             </Tabs>
           </div>
-          <div className="w-full md:w-3/12 lg:w-3/12 px-3 mb-10 md:mb-0 lg:mb-0">
+          <div className="w-full md:w-4/12 lg:w-4/12 px-4 mb-10 md:mb-0 lg:mb-0">
             <div className="mt-5">
               <FeaturedMaker />
             </div>
