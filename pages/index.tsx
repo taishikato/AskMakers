@@ -68,7 +68,7 @@ const Home: NextPage<Props> = (props) => {
             className="w-full md:w-4/12 lg:w-4/12 md:px-4 lg:px-4
           "
           >
-            <WelcomeBox />
+            {!isLogin && <WelcomeBox />}
             <FeaturedMaker />
             <RecentAnswer />
             <div className="text-xs text-gray-600">
@@ -81,6 +81,7 @@ const Home: NextPage<Props> = (props) => {
                   Taishi Kato
                 </a>{' '}
                 Ⓒ 2020
+                <div>Stay weird, stay creative ☁️</div>
               </div>
               <Link href="/terms-privacy">
                 <a>Terms of Service & Privacy</a>
