@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NextPage } from 'next';
 import { useSelector } from 'react-redux';
+import { Skeleton } from 'antd';
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
@@ -14,25 +15,57 @@ import 'firebase/firestore';
 
 const db = firebase.firestore();
 
-const Home: NextPage<Props> = (props) => {
-  const { questions } = props;
-  const [quesionsContainer, setQuesionsContainer] = React.useState(questions);
-  const [lastQuestion, setLastQuestion] = React.useState<ISingleQuestion>();
+const Home: NextPage<Props> = () => {
+  const [quesionsContainer, setQuesionsContainer] = useState([]);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
+  const [isLoadingMoreQuestions, setIsLoadingMoreQuestions] = useState(false);
+  const [lastQuestion, setLastQuestion] = useState<ISingleQuestion>();
   const isLogin = useSelector((state) => state.isLogin);
 
-  React.useEffect(() => {
-    setLastQuestion(quesionsContainer[quesionsContainer.length - 1].question);
+  useEffect(() => {
+    const getQuestions = async () => {
+      setIsLoadingQuestions(true);
+      const questionData = await db
+        .collection('questions')
+        .orderBy('created', 'desc')
+        .limit(10)
+        .get();
+      const questions: any = [];
+      await asyncForEach(questionData.docs, async (doc) => {
+        const question = doc.data();
+        const [userData, answerData, upvoteData] = await Promise.all([
+          db.collection('publicUsers').doc(question.fromUserId).get(),
+          db.collection('answers').where('questionId', '==', question.id).get(),
+          db
+            .collection('questionUpvotes')
+            .where('questionId', '==', question.id)
+            .get(),
+        ]);
+        const user = userData.data();
+        question.answerCount = answerData.size;
+        question.questionUpvoteCount = upvoteData.size;
+        questions.push({ question, user });
+      });
+      setQuesionsContainer(questions);
+      setIsLoadingQuestions(false);
+    };
+    getQuestions();
+  }, []);
+
+  useEffect(() => {
+    if (quesionsContainer.length > 0) {
+      setLastQuestion(quesionsContainer[quesionsContainer.length - 1].question);
+    }
   }, [quesionsContainer]);
 
-  const loadQuestions = async (e) => {
+  const loadMoreQuestions = async (e) => {
     e.preventDefault();
-    const quesionsContainerCopy = quesionsContainer.concat();
-    console.log({ quesionsContainerCopy });
+    setIsLoadingMoreQuestions(true);
+    const quesionsContainerCopy = [...quesionsContainer];
     const questionData = await db
       .collection('questions')
-      .where('isGeneral', '==', true)
+      .where('created', '<', lastQuestion.created)
       .orderBy('created', 'desc')
-      .startAfter(lastQuestion.created)
       .limit(10)
       .get();
     await asyncForEach(questionData.docs, async (doc) => {
@@ -51,6 +84,7 @@ const Home: NextPage<Props> = (props) => {
       quesionsContainerCopy.push({ question, user });
     });
     setQuesionsContainer(quesionsContainerCopy);
+    setIsLoadingMoreQuestions(false);
   };
 
   return (
@@ -59,10 +93,34 @@ const Home: NextPage<Props> = (props) => {
       <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
         <div className="w-full flex flex-wrap px-2 md:-mx-4 lg:-mx-4">
           <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:px-4 lg:px-4">
-            {quesionsContainer.map((question, index) => (
-              <ContentCard question={question} key={index} />
-            ))}
-            {/* <button onClick={loadQuestions}>Load more</button> */}
+            {isLoadingQuestions ? (
+              <>
+                <Skeleton active paragraph={{ rows: 3 }} />
+                <Skeleton active paragraph={{ rows: 3 }} />
+                <Skeleton active paragraph={{ rows: 3 }} />
+              </>
+            ) : (
+              <>
+                {quesionsContainer.map((question, index) => (
+                  <ContentCard question={question} key={index} />
+                ))}
+                {isLoadingMoreQuestions ? (
+                  <button
+                    className="block m-auto rounded bg-green-200 py-2 px-4 text-white"
+                    disabled
+                  >
+                    Loading…
+                  </button>
+                ) : (
+                  <button
+                    className="block m-auto rounded bg-green-400 py-2 px-4 text-white"
+                    onClick={loadMoreQuestions}
+                  >
+                    Load more
+                  </button>
+                )}
+              </>
+            )}
           </div>
           <aside
             className="w-full md:w-4/12 lg:w-4/12 md:px-4 lg:px-4
@@ -92,32 +150,6 @@ const Home: NextPage<Props> = (props) => {
       </div>
     </Layout>
   );
-};
-
-Home.getInitialProps = async () => {
-  const questionData = await db
-    .collection('questions')
-    .where('isGeneral', '==', true)
-    .orderBy('created', 'desc')
-    .limit(10)
-    .get();
-  const questions: any = [];
-  await asyncForEach(questionData.docs, async (doc) => {
-    const question = doc.data();
-    const [userData, answerData, upvoteData] = await Promise.all([
-      db.collection('publicUsers').doc(question.fromUserId).get(),
-      db.collection('answers').where('questionId', '==', question.id).get(),
-      db
-        .collection('questionUpvotes')
-        .where('questionId', '==', question.id)
-        .get(),
-    ]);
-    const user = userData.data();
-    question.answerCount = answerData.size;
-    question.questionUpvoteCount = upvoteData.size;
-    questions.push({ question, user });
-  });
-  return { questions };
 };
 
 interface Props {
