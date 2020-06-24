@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { NextPage } from 'next';
 import Link from 'next/link';
 import { logoutUser } from '../../store/action';
 import firebase from '../../plugins/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faUserCircle,
+  faCog,
+  faSignOutAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import {
@@ -19,7 +23,7 @@ import CustomSearchBox from '../CustomSearchBox';
 import Modal from 'react-modal';
 import SignUpModal from './SignUpModal';
 
-const Navbar: NextPage = () => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -144,19 +148,34 @@ const Navbar: NextPage = () => {
                 >
                   {/* <span className="block px-4 py-2 text-gray-800"> */}
                   <Link href="/[username]" as={`/${loginUser.username}`}>
-                    <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    <a className="flex items-center px-4 py-2 text-gray-800 cursor-pointer hover:bg-green-300 hover:text-white">
+                      <FontAwesomeIcon
+                        icon={faUserCircle}
+                        size="xs"
+                        className="mr-2 w-5 h-5"
+                      />{' '}
                       Profile
                     </a>
                   </Link>
                   <Link href="/settings">
-                    <a className="block px-4 py-2 text-gray-800 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                    <a className="flex items-center px-4 py-2 text-gray-800 cursor-pointer hover:bg-green-300 hover:text-white">
+                      <FontAwesomeIcon
+                        icon={faCog}
+                        size="xs"
+                        className="mr-2 w-5 h-5"
+                      />{' '}
                       Settings
                     </a>
                   </Link>
                   <a
                     onClick={signOut}
-                    className="cursor-pointer block px-4 py-2 text-gray-800 hover:bg-indigo-500 hover:text-white"
+                    className="flex items-center px-4 py-2 text-gray-800 cursor-pointer hover:bg-green-300 hover:text-white"
                   >
+                    <FontAwesomeIcon
+                      icon={faSignOutAlt}
+                      size="xs"
+                      className="mr-2 w-5 h-5"
+                    />{' '}
                     Sign out
                   </a>
                 </div>
