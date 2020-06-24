@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import Layout from '../components/Layout';
-import QuestionWrapper from '../components/QuestionWrapper';
+import ContentCard from '../components/Common/ContentCard';
 import AnswerWrapper from '../components/AnswerWrapper';
 import TwitterIcon from '../components/TwitterIcon';
 import ProducthuntIcon from '../components/ProducthuntIcon';
@@ -100,7 +100,7 @@ const Username: NextPage<Props> = (props) => {
                 {questionsData.length > 0 &&
                   questionsData.map((question, index) => (
                     <div key={index}>
-                      <QuestionWrapper question={{ question }} />
+                      <ContentCard question={{ question }} />
                     </div>
                   ))}
               </TabPane>
