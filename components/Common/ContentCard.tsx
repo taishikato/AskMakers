@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Tag, Tooltip } from 'antd';
-import moment from 'moment';
+import { Tag } from 'antd';
 
 interface Props {
   question: any;
@@ -110,19 +109,6 @@ const ContentCard: React.FC<Props> = ({ question }) => {
                   );
                 })}
             </div>
-            <span className="text-xs text-gray-600">
-              asked
-              <Tooltip
-                title={moment
-                  .unix(questionObj.question.created)
-                  .format('YYYY-MM-DD HH:mm')}
-              >
-                <span>
-                  {' '}
-                  {moment.unix(questionObj.question.created).fromNow()}
-                </span>
-              </Tooltip>
-            </span>
           </div>
         </div>
       </div>
