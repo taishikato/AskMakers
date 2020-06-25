@@ -1,32 +1,36 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
-import Layout from '../components/Layout'
-import Input from '../components/Input'
-import getUnixTime from '../plugins/getUnixTime'
-import generateSlug from '../plugins/generateSlug'
-import { useSelector } from 'react-redux'
-import uuid from 'uuid/v4'
-import ReactMde from 'react-mde'
-import MarkdownIt from 'markdown-it'
-import { Checkbox, message } from 'antd'
-import firebase from '../plugins/firebase'
-import 'firebase/firestore'
-const db = firebase.firestore()
+import React, { useContext } from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Layout from '../components/Layout';
+import Input from '../components/Input';
+import getUnixTime from '../plugins/getUnixTime';
+import generateSlug from '../plugins/generateSlug';
+import { useSelector } from 'react-redux';
+import uuid from 'uuid/v4';
+import ReactMde from 'react-mde';
+import MarkdownIt from 'markdown-it';
+import { Checkbox, message } from 'antd';
+import { FirestoreContext } from '../contexts/FirestoreContextProvider';
+// import firebase from '../plugins/firebase';
+// import 'firebase/firestore';
+// const db = firebase.firestore();
 
-const mdParser = new MarkdownIt()
+const mdParser = new MarkdownIt();
 
 const AskQuestion = () => {
-  const loginUser = useSelector(state => state.loginUser)
-  const router = useRouter()
-  const [title, setTitle] = React.useState('')
-  const [body, setBody] = React.useState('')
-  const [topic, setTopic] = React.useState([])
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
-  const [selectedTab, setSelectedTab] = React.useState<"write" | "preview">("write")
-  const handleTitleChange = e => setTitle(e.target.value)
+  const db = useContext(FirestoreContext);
+  const loginUser = useSelector((state) => state.loginUser);
+  const router = useRouter();
+  const [title, setTitle] = React.useState('');
+  const [body, setBody] = React.useState('');
+  const [topic, setTopic] = React.useState([]);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
+    'write'
+  );
+  const handleTitleChange = (e) => setTitle(e.target.value);
 
-  const onChange = (checkedValues) => setTopic(checkedValues)
+  const onChange = (checkedValues) => setTopic(checkedValues);
   const topicOptions = [
     { label: 'Idea', value: 'idea' },
     { label: 'Build', value: 'build' },
@@ -35,35 +39,39 @@ const AskQuestion = () => {
     { label: 'Monetize', value: 'monetize' },
     { label: 'Automate', value: 'automate' },
     { label: 'Exit', value: 'exit' },
-  ]
+  ];
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
     try {
-      const id = uuid().split('-').join('')
-      const slug = await generateSlug(title)
-      await db
-        .collection('questions')
-        .doc(id)
-        .set({
-          id,
-          created: getUnixTime(),
-          text: title,
-          fromUserId: loginUser.uid,
-          body,
-          slug,
-          topics: topic,
-          isGeneral: true
-        })
-      message.success('Submitted successfully')
-      router.push('/questions/[slug]', `/questions/${slug}`)
-    } catch(err) {
-      message.error('An error occured. Please try again.')
+      const id = uuid().split('-').join('');
+      const slug = await generateSlug(title);
+      await db.collection('questions').doc(id).set({
+        id,
+        created: getUnixTime(),
+        text: title,
+        fromUserId: loginUser.uid,
+        slug,
+        topics: topic,
+        isGeneral: true,
+      });
+      if (body !== '') {
+        await db
+          .collection('questions')
+          .doc(id)
+          .collection('body')
+          .add({ value: body });
+      }
+      message.success('Submitted successfully');
+      router.push('/questions/[slug]', `/questions/${slug}`);
+    } catch (err) {
+      console.log({ err });
+      message.error('An error occured. Please try again.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Layout>
@@ -92,51 +100,47 @@ const AskQuestion = () => {
             <ReactMde
               value={body}
               onChange={setBody}
-              classes={{textArea: 'focus:outline-none'}}
+              classes={{ textArea: 'focus:outline-none' }}
               selectedTab={selectedTab}
               onTabChange={setSelectedTab}
-              generateMarkdownPreview={markdown =>
+              generateMarkdownPreview={(markdown) =>
                 Promise.resolve(mdParser.render(markdown))
               }
             />
           </div>
           <div className="mb-5">
-            <label className="font-semibold mb-2 block">
-              Topic
-            </label>
+            <label className="font-semibold mb-2 block">Topic</label>
             <div className="flex flex-wrap">
               <Checkbox.Group options={topicOptions} onChange={onChange} />
             </div>
           </div>
           <div>
-            {!isSubmitting && (title === '' || body === '') &&
-              <button
-                className="px-6 py-3 bg-green-300 rounded text-white font-semibold cursor-not-allowed focus:outline-none"
-              >
+            {!isSubmitting && title === '' && (
+              <button className="px-6 py-3 bg-green-300 rounded text-white font-semibold cursor-not-allowed focus:outline-none">
                 Post your question
               </button>
-            }
-            {!isSubmitting && title !== '' && body !== '' &&
+            )}
+            {!isSubmitting && title !== '' && (
               <button
                 className="px-6 py-3 bg-green-400 rounded text-white font-semibold hover:bg-green-500 focus:outline-none"
                 type="submit"
               >
                 Post your question
               </button>
-            }
-            {isSubmitting &&
+            )}
+            {isSubmitting && (
               <button
                 disabled
                 className="px-6 py-3 bg-green-300 rounded text-white font-semibold focus:outline-none"
               >
                 Submitting…
               </button>
-            }
+            )}
           </div>
         </form>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default AskQuestion
+export default AskQuestion;
