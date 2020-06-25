@@ -10,8 +10,8 @@ const ContentCard: React.FC<Props> = ({ question }) => {
   const questionObj = question;
   return (
     <>
-      <div className="question-wrapper flex flex-wrapper items-center py-3 pr-3 mb-3 border-2 border-gray-200 rounded">
-        <div className="w-2/12 flex flex-wrapper items-center justify-between text-gray-600 hidden md:flex lg:flex">
+      <div className="question-wrapper flex flex-wrapper items-center py-2 pr-2 mb-3 border-b">
+        <div className="w-2/12 flex flex-wrapper items-center justify-between hidden md:flex lg:flex">
           <div className="flex flex-col items-center p-2">
             <span>{questionObj.question.questionUpvoteCount}</span>
             {questionObj.question.questionUpvoteCount === 0 && (
@@ -64,7 +64,7 @@ const ContentCard: React.FC<Props> = ({ question }) => {
               {questionObj.question.answerCount > 1 && <span>answers</span>}
             </li>
           </ul>
-          <h3 className="text-base">
+          <h3 className="text-xl font-semibold">
             <Link
               href="/questions/[slug]"
               as={`/questions/${questionObj.question.slug}`}
