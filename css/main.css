@@ -6,6 +6,10 @@ div#__next > div {
     height: 100%;
 }
 
+::selection {
+    background: #9ae6b4;
+}
+
 /* div#__next > div {
     display: flex;
     flex-direction: column;
