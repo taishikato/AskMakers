@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import MarkdownIt from 'markdown-it';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
+import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -27,7 +28,8 @@ const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
 
-const QuestionsSlug = (props) => {
+const QuestionsSlug = ({ question, answers }) => {
+  const db = useContext(FirestoreContext);
   const router = useRouter();
   const [answerValue, setAnswerValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
@@ -35,13 +37,12 @@ const QuestionsSlug = (props) => {
   );
   const [isPosting, setIsPosting] = React.useState(false);
   const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false);
-  const { question, answers } = props;
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkUpvoted = async () => {
       const questionUpvoteData = await db
         .collection('questionUpvotes')
@@ -293,6 +294,12 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     .where('slug', '==', slug)
     .get();
   const question = questionData.docs[0].data();
+  // Get body
+  const bodyData = await db
+    .collection('questions')
+    .doc(question.id)
+    .collection('body')
+    .get();
   const returnQuestion: IReturnQuestion = {
     created: question.created,
     text: question.text,
@@ -300,8 +307,9 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     slug: question.slug,
     fromUserId: question.fromUserId,
   };
-  if (question.body !== undefined) {
-    returnQuestion.body = question.body;
+  if (bodyData.size > 0) {
+    const body = bodyData.docs[0].data();
+    returnQuestion.body = body.value;
   }
 
   const answerData = await db
