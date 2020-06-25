@@ -8,6 +8,7 @@ interface IQuestion {
   slug: string;
   text: string;
   toUserId: string;
+  body?: string;
 }
 
 export default IQuestion;
