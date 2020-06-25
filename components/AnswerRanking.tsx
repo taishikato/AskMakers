@@ -87,6 +87,14 @@ const AnswerRanking = () => {
                     <a className="ml-2">{answer.user.customName}</a>
                   </Link>
                 </div>
+                <div className="font-light text-sm mt-2 hover:underline">
+                  <Link
+                    href={`/questions/[slug]`}
+                    as={`/questions/${answer.question.slug}`}
+                  >
+                    <a>Question: {answer.question.text}</a>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
