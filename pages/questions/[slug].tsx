@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import MarkdownIt from 'markdown-it';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
+import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
@@ -28,6 +29,7 @@ const db = firebase.firestore();
 const mdParser = new MarkdownIt();
 
 const QuestionsSlug = ({ question, answers }) => {
+  const db = useContext(FirestoreContext);
   const router = useRouter();
   const [answerValue, setAnswerValue] = React.useState('');
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
