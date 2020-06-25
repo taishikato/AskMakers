@@ -3,12 +3,15 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { useSelector } from 'react-redux';
 import { Skeleton } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
 import WelcomeBox from '../components/WelcomeBox';
 import ContentCard from '../components/Common/ContentCard';
 import RecentAnswer from '../components/RecentAnswer';
+import AnswerRanking from '../components/AnswerRanking';
 import asyncForEach from '../plugins/asyncForEach';
 import firebase from '../plugins/firebase';
 import 'firebase/firestore';
@@ -93,6 +96,14 @@ const Home: NextPage<Props> = () => {
       <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
         <div className="w-full flex flex-wrap px-2 md:-mx-4 lg:-mx-4">
           <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:px-4 lg:px-4">
+            <AnswerRanking />
+            <h2 className="font-bold text-xl text-black mt-10 flex items-center">
+              <FontAwesomeIcon
+                icon={faQuestion}
+                className="mr-2 w-4 h-4 text-yellow-500"
+              />
+              Recent Questions
+            </h2>
             {isLoadingQuestions ? (
               <>
                 <Skeleton active paragraph={{ rows: 3 }} />
