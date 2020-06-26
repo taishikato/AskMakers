@@ -1,12 +1,10 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import Comment from '../../components/Comment';
 import asyncForEach from '../../plugins/asyncForEach';
-import upvoteQuestion from '../../plugins/upvoteQuestion';
-import unUpvoteQuestion from '../../plugins/unUpvoteQuestion';
 import postAnswer from '../../plugins/postAnswer';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
@@ -15,16 +13,10 @@ import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
 import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faArrowAltCircleUp,
-  faTrashAlt,
-} from '@fortawesome/free-regular-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import {
-  faArrowAltCircleUp as faArrowAltCircleUped,
-  faEdit,
-} from '@fortawesome/free-solid-svg-icons';
-import { Tooltip, message, Divider } from 'antd';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { message, Divider } from 'antd';
 import QuestionContext from '../../components/Common/QuestionContext';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
@@ -41,28 +33,10 @@ const QuestionsSlug = ({ question, answers }) => {
     'write'
   );
   const [isPosting, setIsPosting] = React.useState(false);
-  const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
-
-  useEffect(() => {
-    const checkUpvoted = async () => {
-      const questionUpvoteData = await db
-        .collection('questionUpvotes')
-        .where('userId', '==', loginUser.uid)
-        .where('questionId', '==', question.id)
-        .get();
-      if (questionUpvoteData.size === 0) {
-        return;
-      }
-      setIsQuestionUpvoted(true);
-    };
-    if (Object.keys(loginUser).length > 0) {
-      checkUpvoted();
-    }
-  }, [loginUser]);
 
   const handlePostAnswer = async () => {
     setIsPosting(true);
@@ -91,18 +65,6 @@ const QuestionsSlug = ({ question, answers }) => {
     router.push('/[username]', `/${loginUser.username}`);
   };
 
-  const handleUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await upvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(true);
-  };
-
-  const handleUnUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await unUpvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(false);
-  };
-
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
   const url = `https://askmakers.co${router.asPath}`;
   const description = 'Check out this question and post your answer!';
@@ -127,34 +89,6 @@ const QuestionsSlug = ({ question, answers }) => {
           <div className="flex flex-wrapper items-center mb-3">
             <QuestionContext question={question}>
               <ul className="flex flex-wrapper items-center mt-5">
-                <li>
-                  {!isQuestionUpvoted ? (
-                    <Tooltip title="Upvote">
-                      <button
-                        onClick={handleUpvoteQuestion}
-                        className="block focus:outline-none"
-                      >
-                        <FontAwesomeIcon
-                          icon={faArrowAltCircleUp}
-                          className="h-5 w-5"
-                        />
-                      </button>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Upvoted">
-                      <button
-                        onClick={handleUnUpvoteQuestion}
-                        className="block focus:outline-none"
-                      >
-                        <FontAwesomeIcon
-                          icon={faArrowAltCircleUped}
-                          size="xs"
-                          className="h-6 w-6"
-                        />
-                      </button>
-                    </Tooltip>
-                  )}
-                </li>
                 <li className="mr-3">
                   <a
                     href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`}
