@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ const AnswersSlugId: NextPage<Props> = (props) => {
     router.push('/questions/[slug]', `/questions/${question.slug}`);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkUpvoted = async () => {
       const questionUpvoteData = await db
         .collection('questionUpvotes')
@@ -146,7 +146,7 @@ const AnswersSlugId: NextPage<Props> = (props) => {
                 </button>
               </Tooltip>
             )}
-            <h1 className="text-2xl ml-2">
+            <h1 className="text-xl ml-2 font-bold">
               <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
                 <a>{question.text}</a>
               </Link>
@@ -181,7 +181,7 @@ const AnswersSlugId: NextPage<Props> = (props) => {
             <Divider />
           </div>
         )}
-        <h2 className="text-xl my-5">Answer</h2>
+        <h2 className="text-xl font-semibold mt-5 mb-4">Answer</h2>
         <AntCommentWrapper
           answerData={{ answer, user }}
           db={db}
@@ -189,9 +189,9 @@ const AnswersSlugId: NextPage<Props> = (props) => {
           questionSlug={question.slug}
           questionTitle={answer.content}
         />
-        <Divider />
-        <h2 className="text-xl mb-5">Your answer</h2>
-        <div className="mb-3">
+        {/* <Divider /> */}
+        {/* <h2 className="text-xl mb-5">Your answer</h2> */}
+        {/* <div className="mb-3">
           <ReactMde
             value={answerValue}
             onChange={setAnswerValue}
@@ -202,8 +202,8 @@ const AnswersSlugId: NextPage<Props> = (props) => {
               Promise.resolve(mdParser.render(markdown))
             }
           />
-        </div>
-        {isPosting && (
+        </div> */}
+        {/* {isPosting && (
           <button
             disabled
             className="text-white p-3 rounded font-medium bg-green-400 hover:bg-green-500 focus:outline-none opacity-50"
@@ -226,7 +226,7 @@ const AnswersSlugId: NextPage<Props> = (props) => {
           >
             Post your answer
           </button>
-        )}
+        )} */}
       </div>
     </Layout>
   );

@@ -1,177 +1,193 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowAltCircleUp, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons'
-import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons'
-import { Comment, Tooltip, Avatar } from 'antd'
-import { NextPage } from 'next'
-import moment from 'moment'
-import ReactMarkdown from 'react-markdown'
-import getUnixTime from '../plugins/getUnixTime'
-import uuid from 'uuid/v4'
-import { useSelector } from 'react-redux'
-import asyncForEach from '../plugins/asyncForEach'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import React, { useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowAltCircleUp,
+  faTrashAlt,
+} from '@fortawesome/free-regular-svg-icons';
+import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
+import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { Tooltip } from 'antd';
+import { NextPage } from 'next';
+import ReactMarkdown from 'react-markdown';
+import ImageAndName from './Common/ImageAndName';
+import getUnixTime from '../plugins/getUnixTime';
+import uuid from 'uuid/v4';
+import { useSelector } from 'react-redux';
+import asyncForEach from '../plugins/asyncForEach';
+import { useRouter } from 'next/router';
 
-const AntCommentWrapper: NextPage<Props> = props => {
-  const { answerData, db, questionSlug, questionTitle } = props
-  const [upvoteAnswerCount, setUpvoteAnswerCount] = React.useState(0)
-  const [isUpvoted, setIsUpvoted] = React.useState(false)
-  const loginUser = useSelector(state => state.loginUser)
-  const isLogin = useSelector(state => state.isLogin)
-  const router = useRouter()
+const AntCommentWrapper: NextPage<Props> = (props) => {
+  const { answerData, db, questionSlug, questionTitle } = props;
+  const [upvoteAnswerCount, setUpvoteAnswerCount] = React.useState(0);
+  const [isUpvoted, setIsUpvoted] = React.useState(false);
+  const loginUser = useSelector((state) => state.loginUser);
+  const isLogin = useSelector((state) => state.isLogin);
+  const router = useRouter();
 
   const handleUpvote = async () => {
     if (!isLogin) {
-      router.push('/login')
-      return
+      router.push('/login');
+      return;
     }
-    const id = uuid().split('-').join('')
-    await db
-      .collection('upvotes')
-      .doc(id)
-      .set({
-        id,
-        answerId: answerData.answer.id,
-        answerUserId: answerData.answer.answerUserId,
-        senderId: loginUser.uid,
-        created: getUnixTime(),
-      })
-    setUpvoteAnswerCount(upvoteAnswerCount + 1)
-    setIsUpvoted(true)
-  }
+    const id = uuid().split('-').join('');
+    await db.collection('upvotes').doc(id).set({
+      id,
+      answerId: answerData.answer.id,
+      answerUserId: answerData.answer.answerUserId,
+      senderId: loginUser.uid,
+      created: getUnixTime(),
+    });
+    setUpvoteAnswerCount(upvoteAnswerCount + 1);
+    setIsUpvoted(true);
+  };
 
   const handleUnUpvote = async () => {
     if (!isLogin) {
-      router.push('/login')
-      return
+      router.push('/login');
+      return;
     }
     const upvoteData = await db
       .collection('upvotes')
       .where('answerId', '==', answerData.answer.id)
       .where('senderId', '==', loginUser.uid)
-      .get()
-    await asyncForEach(upvoteData.docs, async doc => {
-      await db.collection('upvotes').doc(doc.id).delete()
-    })
-    setUpvoteAnswerCount(upvoteAnswerCount - 1)
-    setIsUpvoted(false)
-  }
+      .get();
+    await asyncForEach(upvoteData.docs, async (doc) => {
+      await db.collection('upvotes').doc(doc.id).delete();
+    });
+    setUpvoteAnswerCount(upvoteAnswerCount - 1);
+    setIsUpvoted(false);
+  };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkUpvoteCount = async () => {
       const upvoteData = await db
         .collection('upvotes')
         .where('answerId', '==', answerData.answer.id)
-        .get()
+        .get();
       if (upvoteData.size === 0) {
-        return
+        return;
       }
-      setUpvoteAnswerCount(upvoteData.size)
-    }
-    checkUpvoteCount()
-  }, [])
+      setUpvoteAnswerCount(upvoteData.size);
+    };
+    checkUpvoteCount();
+  }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkUpvoted = async () => {
       const upvoteData = await db
         .collection('upvotes')
         .where('senderId', '==', loginUser.uid)
         .where('answerId', '==', answerData.answer.id)
-        .get()
+        .get();
       if (upvoteData.size === 0) {
-        return
+        return;
       }
-      setIsUpvoted(true)
-    }
+      setIsUpvoted(true);
+    };
     if (Object.keys(loginUser).length > 0) {
-      checkUpvoted()
+      checkUpvoted();
     }
-  }, [loginUser])
+  }, [loginUser]);
 
-  const shareUrl = `https://askmakers.co/answers/${questionSlug}/${answerData.answer.id}`
-
-  const actions = [
-    <span key="comment-basic-like" className="flex flex-wrapper items-center">
-      {!isUpvoted ?
-        <Tooltip title="Upvote">
-          <button onClick={handleUpvote} className="focus:outline-none">
-            <FontAwesomeIcon icon={faArrowAltCircleUp} size="xs" className="h-4 w-4" />
-          </button>
-        </Tooltip> :
-        <Tooltip title="Upvoted">
-          <button onClick={handleUnUpvote} className="focus:outline-none">
-            <FontAwesomeIcon icon={faArrowAltCircleUped} size="xs" className="h-4 w-4" />
-          </button>
-        </Tooltip>
-      }
-      <span style={{ paddingLeft: 8, cursor: 'auto' }}>{upvoteAnswerCount}</span>
-    </span>,
-    <span className="flex flex-wrapper items-center">
-      <a href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=The answer to ${questionTitle} by @${answerData.user.username}`} target="_blank" className="twitter-share">
-        <FontAwesomeIcon icon={faTwitter} size="xs" className="h-4 w-4" />
-      </a>
-    </span>,
-    <span className="flex flex-wrapper items-center">
-      <a href={`https://www.facebook.com/share.php?u=${shareUrl}`} target="_blank" className="facebook-share">
-        <FontAwesomeIcon icon={faFacebook} size="xs" className="h-4 w-4" />
-      </a>
-    </span>,
-    <span>
-      {loginUser.uid === answerData.answer.answerUserId &&
-        <Tooltip title="Delete">
-          <button onClick={() => props.handleDeleteAnswer(answerData.answer.id)} className="focus:outline-none">
-            <FontAwesomeIcon icon={faTrashAlt} size="xs" className="h-4 w-4" />
-          </button>
-        </Tooltip>
-      }
-    </span>
-  ]
+  const shareUrl = `https://askmakers.co/answers/${questionSlug}/${answerData.answer.id}`;
 
   return (
     <>
-    <Comment
-      actions={actions}
-      author={<a>{answerData.user.customName}</a>}
-      avatar={
-        <Link href="/[username]" as={`/${answerData.user.username}`}>
-          <a>
-            <Avatar
-              src={answerData.user.picture}
-              alt={answerData.user.customName}
-              className="w-4 h-4"
-            />
-          </a>
-        </Link>
-      }
-      content={
+      <div className="container text-xl font-light p-3 border-2 rounded">
         <ReactMarkdown source={answerData.answer.content} />
-      }
-      datetime={
-        <Tooltip title={moment.unix(answerData.answer.created).format('YYYY-MM-DD HH:mm:ss')}>
-          <span>{moment.unix(answerData.answer.created).fromNow()}</span>
-        </Tooltip>
-      }
-    />
-    <style jsx>{`
-    .twitter-share {
-      color: #1DA1F2;
-    }
-    .facebook-share {
-      color: #4267B2;
-    }
-    `}</style>
+        <div className="mt-2">
+          <ImageAndName user={answerData.user} />
+        </div>
+        <div className="flex items-center mt-3">
+          <span key="comment-basic-like" className="flex items-center mr-2">
+            {!isUpvoted ? (
+              <Tooltip title="Upvote">
+                <button onClick={handleUpvote} className="focus:outline-none">
+                  <FontAwesomeIcon
+                    icon={faArrowAltCircleUp}
+                    size="xs"
+                    className="h-5 w-5"
+                  />
+                </button>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Upvoted">
+                <button onClick={handleUnUpvote} className="focus:outline-none">
+                  <FontAwesomeIcon
+                    icon={faArrowAltCircleUped}
+                    className="h-5 w-5"
+                  />
+                </button>
+              </Tooltip>
+            )}
+            <span
+              className="text-base"
+              style={{ paddingLeft: 8, cursor: 'auto' }}
+            >
+              {upvoteAnswerCount}
+            </span>
+          </span>
+          <span className="mr-2">
+            <a
+              href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=The answer to ${questionTitle} by @${answerData.user.username}`}
+              target="_blank"
+              className="twitter-share"
+            >
+              <FontAwesomeIcon icon={faTwitter} className="h-5 w-5" />
+            </a>
+          </span>
+          <span>
+            <a
+              href={`https://www.facebook.com/share.php?u=${shareUrl}`}
+              target="_blank"
+              className="facebook-share"
+            >
+              <FontAwesomeIcon
+                icon={faFacebook}
+                size="xs"
+                className="h-5 w-5"
+              />
+            </a>
+          </span>
+          <span>
+            {loginUser.uid === answerData.answer.answerUserId && (
+              <Tooltip title="Delete">
+                <button
+                  onClick={() => props.handleDeleteAnswer(answerData.answer.id)}
+                  className="focus:outline-none"
+                >
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    size="xs"
+                    className="h-5 w-5"
+                  />
+                </button>
+              </Tooltip>
+            )}
+          </span>
+        </div>
+      </div>
+      <style jsx>{`
+        .container {
+          border-color: #dddddd;
+        }
+        .twitter-share {
+          color: #1da1f2;
+        }
+        .facebook-share {
+          color: #4267b2;
+        }
+      `}</style>
     </>
-  )
-}
+  );
+};
 
 interface Props {
-  answerData: any,
-  db: any
-  handleDeleteAnswer: any,
-  questionSlug: string,
-  questionTitle: string
+  answerData: any;
+  db: any;
+  handleDeleteAnswer: any;
+  questionSlug: string;
+  questionTitle: string;
 }
 
-export default AntCommentWrapper
+export default AntCommentWrapper;
