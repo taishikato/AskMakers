@@ -95,10 +95,10 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
     <>
       <div className="container text-xl font-light p-3 border-2 rounded">
         <ReactMarkdown source={answerData.answer.content} />
-        <div className="mt-2">
+        <div className="mt-3">
           <ImageAndName user={answerData.user} />
         </div>
-        <div className="flex items-center mt-3">
+        <div className="flex items-center mt-4">
           <span key="comment-basic-like" className="flex items-center mr-2">
             {!isUpvoted ? (
               <Tooltip title="Upvote">
@@ -136,33 +136,27 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
               <FontAwesomeIcon icon={faTwitter} className="h-5 w-5" />
             </a>
           </span>
-          <span>
+          <span className="mr-2">
             <a
               href={`https://www.facebook.com/share.php?u=${shareUrl}`}
               target="_blank"
               className="facebook-share"
             >
-              <FontAwesomeIcon
-                icon={faFacebook}
-                size="xs"
-                className="h-5 w-5"
-              />
+              <FontAwesomeIcon icon={faFacebook} className="h-5 w-5" />
             </a>
           </span>
           <span>
             {loginUser.uid === answerData.answer.answerUserId && (
-              <Tooltip title="Delete">
-                <button
-                  onClick={() => props.handleDeleteAnswer(answerData.answer.id)}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    size="xs"
-                    className="h-5 w-5"
-                  />
-                </button>
-              </Tooltip>
+              <button
+                onClick={() => props.handleDeleteAnswer(answerData.answer.id)}
+                className="block focus:outline-none"
+              >
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  size="xs"
+                  className="h-5 w-5"
+                />
+              </button>
             )}
           </span>
         </div>

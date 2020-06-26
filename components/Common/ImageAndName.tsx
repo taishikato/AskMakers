@@ -16,7 +16,9 @@ const ImageAndName: React.FC<Iprops> = ({ user }) => {
         </a>
       </Link>
       <Link href="/[username]" as={`/${user.username}`}>
-        <a className="ml-2 font-medium">{user.customName}</a>
+        <a className="ml-2 font-medium text-gray-800 text-lg">
+          {user.customName}
+        </a>
       </Link>
     </div>
   );

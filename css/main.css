@@ -51,3 +51,7 @@ div#__next > div {
     background-color: #000000;
     padding: 8px;
 }
+
+a {
+    color: #4299e1;
+}
