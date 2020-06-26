@@ -1,41 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import AntCommentWrapper from '../../../components/AntCommentWrapper';
-import upvoteQuestion from '../../../plugins/upvoteQuestion';
-import unUpvoteQuestion from '../../../plugins/unUpvoteQuestion';
-import postAnswer from '../../../plugins/postAnswer';
-import { useSelector } from 'react-redux';
-import uuid from 'uuid/v4';
-import ReactMde from 'react-mde';
+import AnswerWrapper from '../../../components/AnswersSlugId/AnswerWrapper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import MarkdownIt from 'markdown-it';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
-import firebase from '../../../plugins/firebase';
-import { Tooltip, Divider, message } from 'antd';
+import { Divider, message } from 'antd';
 import ReactMarkdown from 'react-markdown';
+import { FirestoreContext } from '../../../contexts/FirestoreContextProvider';
+import firebase from '../../../plugins/firebase';
 import 'firebase/firestore';
 
 const db = firebase.firestore();
 
-const mdParser = new MarkdownIt();
-
-const AnswersSlugId: NextPage<Props> = (props) => {
-  const { question, answer, user } = props;
+const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
   const router = useRouter();
-  const [answerValue, setAnswerValue] = React.useState('');
-  const [isPosting, setIsPosting] = React.useState(false);
-  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
-    'write'
-  );
-  const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false);
-  const loginUser = useSelector((state) => state.loginUser);
-  const isLogin = useSelector((state) => state.isLogin);
+  const db = useContext(FirestoreContext);
 
   const handleDeleteAnswer = async (answerId) => {
     if (!window.confirm('Are you sure to delete this answer?')) {
@@ -44,57 +25,6 @@ const AnswersSlugId: NextPage<Props> = (props) => {
     await db.collection('answers').doc(answerId).delete();
     message.success('Deleted successfully');
     router.push('/questions/[slug]', `/questions/${question.slug}`);
-  };
-
-  React.useEffect(() => {
-    const checkUpvoted = async () => {
-      const questionUpvoteData = await db
-        .collection('questionUpvotes')
-        .where('userId', '==', loginUser.uid)
-        .where('questionId', '==', question.id)
-        .get();
-      if (questionUpvoteData.size === 0) {
-        return;
-      }
-      setIsQuestionUpvoted(true);
-    };
-    if (Object.keys(loginUser).length > 0) {
-      checkUpvoted();
-    }
-  }, [loginUser]);
-
-  const handleUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await upvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(true);
-  };
-
-  const handleUnUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await unUpvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(false);
-  };
-
-  const handleDeleteQuestion = async (e) => {
-    e.preventDefault();
-    if (!window.confirm('Are you sure to delete this question?')) {
-      return;
-    }
-    await db.collection('questions').doc(question.id).delete();
-    router.push('/');
-  };
-
-  const handlePostAnswer = async () => {
-    if (!isLogin) {
-      router.push('/login');
-      return;
-    }
-    setIsPosting(true);
-    const id = uuid().split('-').join('');
-    await postAnswer(db, loginUser, question, id, answerValue);
-    setIsPosting(false);
-    setAnswerValue('');
-    message.success('Submitted successfully');
   };
 
   const title = `The answer to ${question.text} by @${user.username} | AskMakers - Ask experienced makers questions`;
@@ -119,61 +49,12 @@ const AnswersSlugId: NextPage<Props> = (props) => {
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
         <div>
           <div className="flex flex-wrapper items-center mb-3">
-            {!isQuestionUpvoted ? (
-              <Tooltip title="Upvote">
-                <button
-                  onClick={handleUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUp}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            ) : (
-              <Tooltip title="Upvoted">
-                <button
-                  onClick={handleUnUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUped}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            )}
-            <h1 className="text-2xl ml-2">
+            <h1 className="text-xl font-bold">
               <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
-                <a>{question.text}</a>
+                <a className="text-gray-900">{question.text}</a>
               </Link>
             </h1>
           </div>
-          <ul className="flex flex-wrapper items-center">
-            {question.fromUserId === loginUser.uid && (
-              <>
-                <li className="text-gray-600 text-xs ml-3">
-                  <Link
-                    href="/edit-question/[slug]"
-                    as={`/edit-question/${question.slug}`}
-                  >
-                    <a className="cursor-pointer hover:underline">Edit</a>
-                  </Link>
-                </li>
-                <li className="text-gray-600 text-xs ml-3">
-                  <button
-                    onClick={handleDeleteQuestion}
-                    className="cursor-pointer hover:underline focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
         </div>
         {question.body !== undefined && (
           <div className="mt-5">
@@ -181,52 +62,12 @@ const AnswersSlugId: NextPage<Props> = (props) => {
             <Divider />
           </div>
         )}
-        <h2 className="text-xl my-5">Answer</h2>
-        <AntCommentWrapper
+        <AnswerWrapper
           answerData={{ answer, user }}
-          db={db}
           handleDeleteAnswer={handleDeleteAnswer}
           questionSlug={question.slug}
           questionTitle={answer.content}
         />
-        <Divider />
-        <h2 className="text-xl mb-5">Your answer</h2>
-        <div className="mb-3">
-          <ReactMde
-            value={answerValue}
-            onChange={setAnswerValue}
-            classes={{ textArea: 'focus:outline-none' }}
-            selectedTab={selectedTab}
-            onTabChange={setSelectedTab}
-            generateMarkdownPreview={(markdown) =>
-              Promise.resolve(mdParser.render(markdown))
-            }
-          />
-        </div>
-        {isPosting && (
-          <button
-            disabled
-            className="text-white p-3 rounded font-medium bg-green-400 hover:bg-green-500 focus:outline-none opacity-50"
-          >
-            Posting…
-          </button>
-        )}
-        {answerValue === '' && !isPosting && (
-          <button
-            disabled
-            className="text-white p-3 rounded font-medium bg-green-400 focus:outline-none opacity-50"
-          >
-            Post your answer
-          </button>
-        )}
-        {answerValue !== '' && !isPosting && (
-          <button
-            onClick={handlePostAnswer}
-            className="text-white p-3 rounded font-medium bg-green-400 hover:bg-green-500 focus:outline-none"
-          >
-            Post your answer
-          </button>
-        )}
       </div>
     </Layout>
   );

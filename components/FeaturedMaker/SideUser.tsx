@@ -19,10 +19,8 @@ const SideUser: React.FC<Props> = ({
         </Link>
         <div className="ml-3">
           <Link href="/[username]" as={`/${username}`}>
-            <a>
-              <span className="hover:underline font-semibold hover:no-underline">
-                {name}
-              </span>
+            <a className="text-gray-800 hover:underline font-semibold hover:no-underline">
+              {name}
             </a>
           </Link>
           <div className="text-sm text-gray-700">{intro}</div>

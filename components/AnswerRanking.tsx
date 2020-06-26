@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FirestoreContext } from '../contexts/FirestoreContextProvider';
 import asyncForEach from '../plugins/asyncForEach';
-import Image from './Common/Image';
 import IAsnwer from '../interfaces/IAnswer';
 import IPublicUser from '../interfaces/IPublicUser';
 import IQuestion from '../interfaces/IQuestion';
+import ImageAndName from './Common/ImageAndName';
 
 const AnswerRanking = () => {
   const [answerRanking, setAnswerRanking] = useState([]);
@@ -35,8 +35,6 @@ const AnswerRanking = () => {
         ]);
         const user = userData.data() as IPublicUser;
         const question = questionData.data() as IQuestion;
-
-        console.log({ question });
 
         answerRankingArray.push({ answer, question, user });
       });
@@ -70,29 +68,21 @@ const AnswerRanking = () => {
                   href="/answers/[slug]/[id]"
                   as={`/answers/${answer.question.slug}/${answer.answer.id}`}
                 >
-                  <a className="text-gray-800">
+                  <a className="text-gray-900">
                     {answer.answer.content.substr(0, 120)}…
                   </a>
                 </Link>
-                <div className="flex items-center font-light mt-1">
-                  <Link href="/[username]" as={`/${answer.user.username}`}>
-                    <a>
-                      <Image
-                        image={answer.user.picture}
-                        alt={answer.user.customname}
-                      />
-                    </a>
-                  </Link>
-                  <Link href="/[username]" as={`/${answer.user.username}`}>
-                    <a className="ml-2">{answer.user.customName}</a>
-                  </Link>
+                <div className="mt-1">
+                  <ImageAndName user={answer.user} />
                 </div>
                 <div className="font-light text-sm mt-2 hover:underline">
                   <Link
                     href={`/questions/[slug]`}
                     as={`/questions/${answer.question.slug}`}
                   >
-                    <a>Question: {answer.question.text}</a>
+                    <a className="text-gray-800">
+                      Question: {answer.question.text}
+                    </a>
                   </Link>
                 </div>
               </div>
