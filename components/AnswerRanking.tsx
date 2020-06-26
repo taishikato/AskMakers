@@ -36,8 +36,6 @@ const AnswerRanking = () => {
         const user = userData.data() as IPublicUser;
         const question = questionData.data() as IQuestion;
 
-        console.log({ question });
-
         answerRankingArray.push({ answer, question, user });
       });
       setAnswerRanking(answerRankingArray);
