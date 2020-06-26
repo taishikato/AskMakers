@@ -31,31 +31,31 @@ exports.scheduledSetMostUpvotedAnswersCrontab = functions.pubsub
     // Fetch all of the upvote data
     const upvotesSnapShot = await db.collection('upvotes').get();
 
-    const questionUpvotecount = {};
+    const answerUpvotecount = {};
     await asyncForEach(upvotesSnapShot.docs, async (doc) => {
       const data = doc.data();
-      if (questionUpvotecount[data.answerId] === undefined) {
-        questionUpvotecount[data.answerId] = 1;
+      if (answerUpvotecount[data.answerId] === undefined) {
+        answerUpvotecount[data.answerId] = 1;
         return;
       }
-      questionUpvotecount[data.answerId]++;
+      answerUpvotecount[data.answerId]++;
     });
-    const questionUpvotecountReversed = {};
-    Object.keys(questionUpvotecount).forEach((key) => {
-      if (questionUpvotecountReversed[questionUpvotecount[key]] === undefined)
-        questionUpvotecountReversed[questionUpvotecount[key]] = [];
-      questionUpvotecountReversed[questionUpvotecount[key]].push(key);
+    const answerUpvotecountReversed = {};
+    Object.keys(answerUpvotecount).forEach((key) => {
+      if (answerUpvotecountReversed[answerUpvotecount[key]] === undefined) {
+        answerUpvotecountReversed[answerUpvotecount[key]] = [];
+      }
+      answerUpvotecountReversed[answerUpvotecount[key]].push(key);
     });
     const returnObj = [];
-    Object.keys(questionUpvotecountReversed)
-      .sort((a, b) => a - b)
-      .some((key) => {
-        for (let i = 0; i < questionUpvotecountReversed[key].length; i++) {
+    Object.keys(answerUpvotecountReversed)
+      .sort((a, b) => b - a)
+      .some((count) => {
+        for (let i = 0; i < answerUpvotecountReversed[count].length; i++) {
           if (returnObj.length === LIMIT) return true;
-          returnObj.push(questionUpvotecountReversed[key][i]);
+          returnObj.push(answerUpvotecountReversed[count][i]);
         }
       });
-    Object.values(questionUpvotecount).sort((a, b) => b - a);
     await db.collection('upvoteAnswerRanking').add({
       ranking: returnObj,
       created: getUnixTime(),
