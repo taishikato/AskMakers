@@ -105,8 +105,7 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
                 <button onClick={handleUpvote} className="focus:outline-none">
                   <FontAwesomeIcon
                     icon={faArrowAltCircleUp}
-                    size="xs"
-                    className="h-5 w-5"
+                    className="h-5 w-5 text-green-500"
                   />
                 </button>
               </Tooltip>
@@ -115,14 +114,14 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
                 <button onClick={handleUnUpvote} className="focus:outline-none">
                   <FontAwesomeIcon
                     icon={faArrowAltCircleUped}
-                    className="h-5 w-5"
+                    className="h-5 w-5 text-green-500"
                   />
                 </button>
               </Tooltip>
             )}
             <span
-              className="text-base"
-              style={{ paddingLeft: 8, cursor: 'auto' }}
+              className="text-base text-green-500 font-normal pl-1"
+              style={{ cursor: 'auto' }}
             >
               {upvoteAnswerCount}
             </span>

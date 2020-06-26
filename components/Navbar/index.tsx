@@ -183,13 +183,13 @@ const Navbar = () => {
             ) : (
               <>
                 <a
-                  className="font-semibold cursor-pointer mr-4"
+                  className="text-white font-semibold cursor-pointer mr-4"
                   onClick={() => setIsSignupModalOpen(true)}
                 >
                   Log in
                 </a>
                 <a
-                  className="bg-green-400 p-2 rounded font-semibold cursor-pointer"
+                  className="text-white bg-green-400 p-2 rounded font-semibold cursor-pointer"
                   onClick={() => setIsSignupModalOpen(true)}
                 >
                   Sign up

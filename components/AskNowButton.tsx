@@ -9,7 +9,7 @@ const AskNowButton = () => {
     <>
       <a
         onClick={() => setIsSignupModalOpen(true)}
-        className="px-6 py-3 bg-green-500 rounded font-semibold"
+        className="text-white px-6 py-3 bg-green-500 rounded font-semibold"
       >
         Ask Now
       </a>

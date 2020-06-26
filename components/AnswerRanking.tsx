@@ -68,7 +68,7 @@ const AnswerRanking = () => {
                   href="/answers/[slug]/[id]"
                   as={`/answers/${answer.question.slug}/${answer.answer.id}`}
                 >
-                  <a className="text-gray-800">
+                  <a className="text-gray-900">
                     {answer.answer.content.substr(0, 120)}…
                   </a>
                 </Link>
@@ -80,7 +80,9 @@ const AnswerRanking = () => {
                     href={`/questions/[slug]`}
                     as={`/questions/${answer.question.slug}`}
                   >
-                    <a>Question: {answer.question.text}</a>
+                    <a className="text-gray-800">
+                      Question: {answer.question.text}
+                    </a>
                   </Link>
                 </div>
               </div>

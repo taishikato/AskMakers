@@ -22,7 +22,7 @@ const RenderRecentAnswers: React.FC<IProps> = ({ answerData }) => {
           </Link>
           <div className="w-9/12">
             <Link href="/[username]" as={`/${answerObj.user.username}`}>
-              <a>
+              <a className="text-gray-800">
                 <span className="hover:underline font-semibold hover:no-underline">
                   {answerObj.user.customName}
                 </span>
@@ -32,7 +32,7 @@ const RenderRecentAnswers: React.FC<IProps> = ({ answerData }) => {
               href="/answers/[slug]/[id]"
               as={`/answers/${answerObj.question.slug}/${answerObj.answer.id}`}
             >
-              <a>
+              <a className="text-gray-800">
                 {answerObj.answer.content.length <= 90 ? (
                   <p className="text-sm">{answerObj.answer.content.length}</p>
                 ) : (
