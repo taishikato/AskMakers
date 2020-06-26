@@ -15,11 +15,17 @@ import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
 import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
+import {
+  faArrowAltCircleUp,
+  faTrashAlt,
+} from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowAltCircleUp as faArrowAltCircleUped,
+  faEdit,
+} from '@fortawesome/free-solid-svg-icons';
 import { Tooltip, message, Divider } from 'antd';
-import ReactMarkdown from 'react-markdown';
+import QuestionContext from '../../components/Common/QuestionContext';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
@@ -119,90 +125,94 @@ const QuestionsSlug = ({ question, answers }) => {
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
         <div>
           <div className="flex flex-wrapper items-center mb-3">
-            {!isQuestionUpvoted ? (
-              <Tooltip title="Upvote">
-                <button
-                  onClick={handleUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUp}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            ) : (
-              <Tooltip title="Upvoted">
-                <button
-                  onClick={handleUnUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUped}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            )}
-            <h1 className="text-2xl ml-2">{question.text}</h1>
+            <QuestionContext question={question}>
+              <ul className="flex flex-wrapper items-center mt-5">
+                <li>
+                  {!isQuestionUpvoted ? (
+                    <Tooltip title="Upvote">
+                      <button
+                        onClick={handleUpvoteQuestion}
+                        className="block focus:outline-none"
+                      >
+                        <FontAwesomeIcon
+                          icon={faArrowAltCircleUp}
+                          className="h-5 w-5"
+                        />
+                      </button>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Upvoted">
+                      <button
+                        onClick={handleUnUpvoteQuestion}
+                        className="block focus:outline-none"
+                      >
+                        <FontAwesomeIcon
+                          icon={faArrowAltCircleUped}
+                          size="xs"
+                          className="h-6 w-6"
+                        />
+                      </button>
+                    </Tooltip>
+                  )}
+                </li>
+                <li className="mr-3">
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`}
+                    target="_blank"
+                    className="twitter-share"
+                  >
+                    <FontAwesomeIcon
+                      icon={faTwitter}
+                      size="xs"
+                      className="h-5 w-5"
+                    />
+                  </a>
+                </li>
+                <li className="mr-3">
+                  <a
+                    href={`https://www.facebook.com/share.php?u=${shareUrl}`}
+                    target="_blank"
+                    className="facebook-share"
+                  >
+                    <FontAwesomeIcon
+                      icon={faFacebook}
+                      size="xs"
+                      className="h-5 w-5"
+                    />
+                  </a>
+                </li>
+                {question.fromUserId === loginUser.uid && (
+                  <>
+                    <li className="text-xs mr-3">
+                      <Link
+                        href="/edit-question/[slug]"
+                        as={`/edit-question/${question.slug}`}
+                      >
+                        <a className="cursor-pointer hover:underline">
+                          <FontAwesomeIcon
+                            icon={faEdit}
+                            className="h-5 w-5 text-gray-800"
+                          />
+                        </a>
+                      </Link>
+                    </li>
+                    <li className="text-xs">
+                      <button
+                        onClick={handleDeleteQuestion}
+                        className="block cursor-pointer hover:underline focus:outline-none"
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrashAlt}
+                          className="h-5 w-5 text-gray-800"
+                        />
+                      </button>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </QuestionContext>
           </div>
-          <ul className="flex flex-wrapper items-center">
-            <li className="ml-3">
-              <a
-                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`}
-                target="_blank"
-                className="twitter-share"
-              >
-                <FontAwesomeIcon
-                  icon={faTwitter}
-                  size="xs"
-                  className="h-4 w-4"
-                />
-              </a>
-            </li>
-            <li className="ml-2">
-              <a
-                href={`https://www.facebook.com/share.php?u=${shareUrl}`}
-                target="_blank"
-                className="facebook-share"
-              >
-                <FontAwesomeIcon
-                  icon={faFacebook}
-                  size="xs"
-                  className="h-4 w-4"
-                />
-              </a>
-            </li>
-            {question.fromUserId === loginUser.uid && (
-              <>
-                <li className="text-gray-600 text-xs ml-3">
-                  <Link
-                    href="/edit-question/[slug]"
-                    as={`/edit-question/${question.slug}`}
-                  >
-                    <a className="cursor-pointer hover:underline">Edit</a>
-                  </Link>
-                </li>
-                <li className="text-gray-600 text-xs ml-3">
-                  <button
-                    onClick={handleDeleteQuestion}
-                    className="cursor-pointer hover:underline focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
         </div>
-        {question.body !== undefined && (
-          <div className="mt-5">
-            <ReactMarkdown source={question.body} />
-            <Divider />
-          </div>
-        )}
         {answers.length > 0 && (
           <>
             <h2 className="text-xl my-5">Answer</h2>
@@ -293,12 +303,6 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     .where('slug', '==', slug)
     .get();
   const question = questionData.docs[0].data();
-  // Get body
-  const bodyData = await db
-    .collection('questions')
-    .doc(question.id)
-    .collection('body')
-    .get();
   const returnQuestion: IReturnQuestion = {
     created: question.created,
     text: question.text,
@@ -306,10 +310,7 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     slug: question.slug,
     fromUserId: question.fromUserId,
   };
-  if (bodyData.size > 0) {
-    const body = bodyData.docs[0].data();
-    returnQuestion.body = body.value;
-  }
+  if (question.body !== undefined) returnQuestion.body = question.body;
 
   const answerData = await db
     .collection('answers')
