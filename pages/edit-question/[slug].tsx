@@ -18,13 +18,13 @@ const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
 
-const EditQuestionSlug: NextPage<Props> = ({ question, body, e }) => {
+const EditQuestionSlug: NextPage<Props> = ({ question, e }) => {
   if (e === 'not allowed') {
     return <Error statusCode={404} />;
   }
 
   const [title, setTitle] = useState(question.text);
-  const [bodyState, setBodyState] = useState(body);
+  const [body, setBody] = useState(question.body);
   const [topic, setTopic] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
@@ -44,22 +44,23 @@ const EditQuestionSlug: NextPage<Props> = ({ question, body, e }) => {
       await ref.update({
         updated: getUnixTime(),
         text: title,
+        body,
         topics: topic,
       });
-      const bodySnapShot = await ref.collection('body').get();
-      if (bodyState === '') {
-        if (!bodySnapShot.empty) {
-          const bodyId = bodySnapShot.docs[0].id;
-          await ref.collection('body').doc(bodyId).delete();
-        }
-      } else {
-        if (bodySnapShot.empty) {
-          await ref.collection('body').add({ value: body });
-        } else {
-          const bodyId = bodySnapShot.docs[0].id;
-          await ref.collection('body').doc(bodyId).update({ value: body });
-        }
-      }
+      // const bodySnapShot = await ref.collection('body').get();
+      // if (bodyState === '') {
+      //   if (!bodySnapShot.empty) {
+      //     const bodyId = bodySnapShot.docs[0].id;
+      //     await ref.collection('body').doc(bodyId).delete();
+      //   }
+      // } else {
+      //   if (bodySnapShot.empty) {
+      //     await ref.collection('body').add({ value: body });
+      //   } else {
+      //     const bodyId = bodySnapShot.docs[0].id;
+      //     await ref.collection('body').doc(bodyId).update({ value: body });
+      //   }
+      // }
       message.success('Submitted successfully');
     } catch (err) {
       message.error('An error occured. Please try again.');
@@ -91,7 +92,7 @@ const EditQuestionSlug: NextPage<Props> = ({ question, body, e }) => {
         />
       </Head>
       <div className="w-full p-2 md:p-0 lg:p-0 md:w-8/12 lg:w-8/12 m-auto my-10">
-        <h1 className="text-3xl font-medium mb-5">Ask a question</h1>
+        <h1 className="text-3xl font-medium mb-5">Edit a question</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <Input
@@ -107,8 +108,8 @@ const EditQuestionSlug: NextPage<Props> = ({ question, body, e }) => {
           <div className="mb-3">
             <label className="font-semibold mb-2 block">Body</label>
             <ReactMde
-              value={bodyState}
-              onChange={setBodyState}
+              value={body}
+              onChange={setBody}
               classes={{ textArea: 'focus:outline-none' }}
               selectedTab={selectedTab}
               onTabChange={setSelectedTab}
@@ -169,25 +170,21 @@ EditQuestionSlug.getInitialProps = async (ctx: any) => {
     .get();
   const question = questionData.docs[0].data();
 
-  let body = '';
-  const bodyData = await db
-    .collection('questions')
-    .doc(question.id)
-    .collection('body')
-    .get();
-
-  if (!bodyData.empty) body = bodyData.docs[0].data().value;
+  // const bodyData = await db
+  //   .collection('questions')
+  //   .doc(question.id)
+  //   .collection('body')
+  //   .get();
 
   const loginUser = ctx.store.getState().loginUser;
   if (loginUser.uid !== question.fromUserId)
-    return { question: {}, body, e: 'not allowed' };
+    return { question: {}, e: 'not allowed' };
 
-  return { question, body };
+  return { question };
 };
 
 interface Props {
   question: any;
-  body: string;
   e?: string;
 }
 

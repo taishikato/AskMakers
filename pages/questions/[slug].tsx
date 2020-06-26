@@ -19,7 +19,6 @@ import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
 import { Tooltip, message, Divider } from 'antd';
-import 'antd/lib/avatar/style/index.css';
 import ReactMarkdown from 'react-markdown';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
