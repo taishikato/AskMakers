@@ -10,12 +10,15 @@ import unUpvoteQuestion from '../../../plugins/unUpvoteQuestion';
 import postAnswer from '../../../plugins/postAnswer';
 import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
-import ReactMde from 'react-mde';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import MarkdownIt from 'markdown-it';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowAltCircleUp as faArrowAltCircleUped,
+  faEdit,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import firebase from '../../../plugins/firebase';
 import { Tooltip, Divider, message } from 'antd';
 import ReactMarkdown from 'react-markdown';
@@ -155,20 +158,22 @@ const AnswersSlugId: NextPage<Props> = (props) => {
           <ul className="flex flex-wrapper items-center">
             {question.fromUserId === loginUser.uid && (
               <>
-                <li className="text-gray-600 text-xs ml-3">
+                <li className="text-gray-700">
                   <Link
                     href="/edit-question/[slug]"
                     as={`/edit-question/${question.slug}`}
                   >
-                    <a className="cursor-pointer hover:underline">Edit</a>
+                    <a className="block cursor-pointer hover:underline">
+                      <FontAwesomeIcon icon={faEdit} className="h-4 w-4" />
+                    </a>
                   </Link>
                 </li>
-                <li className="text-gray-600 text-xs ml-3">
+                <li className="text-gray-700 ml-3">
                   <button
                     onClick={handleDeleteQuestion}
-                    className="cursor-pointer hover:underline focus:outline-none"
+                    className="block cursor-pointer hover:underline focus:outline-none"
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrashAlt} className="h-4 w-4" />
                   </button>
                 </li>
               </>
