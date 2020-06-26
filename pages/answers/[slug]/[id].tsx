@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
-import AntCommentWrapper from '../../../components/AntCommentWrapper';
+import AnswerWrapper from '../../../components/AnswersSlugId/AnswerWrapper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import firebase from '../../../plugins/firebase';
 import { Divider, message } from 'antd';
 import ReactMarkdown from 'react-markdown';
+import { FirestoreContext } from '../../../contexts/FirestoreContextProvider';
+import firebase from '../../../plugins/firebase';
 import 'firebase/firestore';
 
 const db = firebase.firestore();
 
 const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
   const router = useRouter();
+  const db = useContext(FirestoreContext);
 
   const handleDeleteAnswer = async (answerId) => {
     if (!window.confirm('Are you sure to delete this answer?')) {
@@ -60,9 +62,8 @@ const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
             <Divider />
           </div>
         )}
-        <AntCommentWrapper
+        <AnswerWrapper
           answerData={{ answer, user }}
-          db={db}
           handleDeleteAnswer={handleDeleteAnswer}
           questionSlug={question.slug}
           questionTitle={answer.content}

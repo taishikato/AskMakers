@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowAltCircleUp,
@@ -7,18 +7,23 @@ import {
 import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { Tooltip } from 'antd';
-import { NextPage } from 'next';
 import ReactMarkdown from 'react-markdown';
-import ImageAndName from './Common/ImageAndName';
-import getUnixTime from '../plugins/getUnixTime';
+import ImageAndName from '../Common/ImageAndName';
+import getUnixTime from '../../plugins/getUnixTime';
 import uuid from 'uuid/v4';
 import { useSelector } from 'react-redux';
-import asyncForEach from '../plugins/asyncForEach';
+import asyncForEach from '../../plugins/asyncForEach';
 import { useRouter } from 'next/router';
+import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 
-const AntCommentWrapper: NextPage<Props> = (props) => {
-  const { answerData, db, questionSlug, questionTitle } = props;
-  const [upvoteAnswerCount, setUpvoteAnswerCount] = React.useState(0);
+const AnswerWrapper: React.FC<Props> = ({
+  answerData,
+  questionSlug,
+  questionTitle,
+  handleDeleteAnswer,
+}) => {
+  const db = useContext(FirestoreContext);
+  const [upvoteAnswerCount, setUpvoteAnswerCount] = useState(0);
   const [isUpvoted, setIsUpvoted] = React.useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
@@ -99,7 +104,7 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
           <ImageAndName user={answerData.user} />
         </div>
         <div className="flex items-center mt-4">
-          <span key="comment-basic-like" className="flex items-center mr-2">
+          <span key="comment-basic-like" className="flex items-center mr-3">
             {!isUpvoted ? (
               <Tooltip title="Upvote">
                 <button onClick={handleUpvote} className="focus:outline-none">
@@ -126,7 +131,7 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
               {upvoteAnswerCount}
             </span>
           </span>
-          <span className="mr-2">
+          <span className="mr-3">
             <a
               href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=The answer to ${questionTitle} by @${answerData.user.username}`}
               target="_blank"
@@ -135,7 +140,7 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
               <FontAwesomeIcon icon={faTwitter} className="h-5 w-5" />
             </a>
           </span>
-          <span className="mr-2">
+          <span className="mr-3">
             <a
               href={`https://www.facebook.com/share.php?u=${shareUrl}`}
               target="_blank"
@@ -147,7 +152,7 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
           <span>
             {loginUser.uid === answerData.answer.answerUserId && (
               <button
-                onClick={() => props.handleDeleteAnswer(answerData.answer.id)}
+                onClick={() => handleDeleteAnswer(answerData.answer.id)}
                 className="block focus:outline-none"
               >
                 <FontAwesomeIcon
@@ -177,10 +182,9 @@ const AntCommentWrapper: NextPage<Props> = (props) => {
 
 interface Props {
   answerData: any;
-  db: any;
   handleDeleteAnswer: any;
   questionSlug: string;
   questionTitle: string;
 }
 
-export default AntCommentWrapper;
+export default AnswerWrapper;
