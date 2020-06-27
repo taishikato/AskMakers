@@ -1,11 +1,17 @@
-import { createStore, combineReducers } from 'redux'
-import { LOGIN, LOGOUT, DONE_CHECKING } from './action'
-
+import { createStore, combineReducers } from 'redux';
+import { LOGIN, LOGOUT, DONE_CHECKING } from './action';
+import { MakeStore, createWrapper, Context } from 'next-redux-wrapper';
 
 export const initialState = {
   loginUser: {},
   isLogin: false,
-  isCheckingLogin: true
+  isCheckingLogin: true,
+};
+
+export interface IInitialState {
+  loginUser: any;
+  isLogin: boolean;
+  isCheckingLogin: boolean;
 }
 
 const loginUser = (state = {}, action: any) => {
@@ -18,44 +24,45 @@ const loginUser = (state = {}, action: any) => {
         username: action.username,
         tagline: action.tagline,
         social: action.social,
-        website: action.website
-      }
-      case LOGOUT:
-        return {}
+        website: action.website,
+      };
+    case LOGOUT:
+      return {};
     default:
-      return state
+      return state;
   }
-}
+};
 
 const isLogin = (state = false, action: any) => {
   switch (action.type) {
     case LOGIN:
-      return true
+      return true;
     case LOGOUT:
-      return false
+      return false;
     default:
-      return state
+      return state;
   }
-}
+};
 
 const isCheckingLogin = (state = true, action: any) => {
   switch (action.type) {
     case DONE_CHECKING:
-      return false
+      return false;
     default:
-      return state
+      return state;
   }
-}
+};
 
 const reducer = combineReducers({
   loginUser,
   isLogin,
-  isCheckingLogin
-})
+  isCheckingLogin,
+});
 
-export const initializeStore = (preloadedState = initialState) => {
-  return createStore(
-    reducer,
-    preloadedState
-  )
-}
+export const initializeStore: MakeStore<IInitialState> = (
+  preloadedState: Context
+) => createStore(reducer);
+
+export const wrapper = createWrapper<IInitialState>(initializeStore, {
+  debug: false,
+});

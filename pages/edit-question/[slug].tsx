@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import Link from 'next/link';
 import Error from 'next/error';
 import Layout from '../../components/Layout';
@@ -15,6 +15,7 @@ import topicOptions from '../../consts/topicOptions';
 import IQuestion from '../../interfaces/IQuestion';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
+import { wrapper, IInitialState } from '../../store/store';
 
 const db = firebase.firestore();
 
@@ -172,4 +173,10 @@ const EditQuestionSlug: NextPage = () => {
   );
 };
 
-export default EditQuestionSlug;
+// EditQuestionSlug.getInitialProps = ({ store }: NextPageContext) => {
+//   console.log({ store });
+//   // console.log(store.getState().loginUser);
+//   return {};
+// };
+
+export default connect((state: IInitialState) => state)(EditQuestionSlug);
