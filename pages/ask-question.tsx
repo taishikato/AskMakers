@@ -11,9 +11,7 @@ import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
 import { Checkbox, message } from 'antd';
 import { FirestoreContext } from '../contexts/FirestoreContextProvider';
-// import firebase from '../plugins/firebase';
-// import 'firebase/firestore';
-// const db = firebase.firestore();
+import topicOptions from '../consts/topicOptions';
 
 const mdParser = new MarkdownIt();
 
@@ -31,15 +29,6 @@ const AskQuestion = () => {
   const handleTitleChange = (e) => setTitle(e.target.value);
 
   const onChange = (checkedValues) => setTopic(checkedValues);
-  const topicOptions = [
-    { label: 'Idea', value: 'idea' },
-    { label: 'Build', value: 'build' },
-    { label: 'Launch', value: 'launch' },
-    { label: 'Grow', value: 'grow' },
-    { label: 'Monetize', value: 'monetize' },
-    { label: 'Automate', value: 'automate' },
-    { label: 'Exit', value: 'exit' },
-  ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,18 +40,12 @@ const AskQuestion = () => {
         id,
         created: getUnixTime(),
         text: title,
+        body,
         fromUserId: loginUser.uid,
         slug,
         topics: topic,
         isGeneral: true,
       });
-      if (body !== '') {
-        await db
-          .collection('questions')
-          .doc(id)
-          .collection('body')
-          .add({ value: body });
-      }
       message.success('Submitted successfully');
       router.push('/questions/[slug]', `/questions/${slug}`);
     } catch (err) {
@@ -93,10 +76,7 @@ const AskQuestion = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="font-semibold mb-2 block">
-              <span className="text-red-400">*</span>
-              Body
-            </label>
+            <label className="font-semibold mb-2 block">Body</label>
             <ReactMde
               value={body}
               onChange={setBody}

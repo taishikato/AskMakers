@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 import AnswerWrapper from '../../../components/AnswersSlugId/AnswerWrapper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import { Divider, message } from 'antd';
-import ReactMarkdown from 'react-markdown';
+import { message } from 'antd';
+import QuestionContext from '../../../components/Common/QuestionContext';
 import { FirestoreContext } from '../../../contexts/FirestoreContextProvider';
 import firebase from '../../../plugins/firebase';
 import 'firebase/firestore';
@@ -47,21 +46,7 @@ const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
         />
       </Head>
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
-        <div>
-          <div className="flex flex-wrapper items-center mb-3">
-            <h1 className="text-xl font-bold">
-              <Link href="/questions/[slug]" as={`/questions/${question.slug}`}>
-                <a className="text-gray-900">{question.text}</a>
-              </Link>
-            </h1>
-          </div>
-        </div>
-        {question.body !== undefined && (
-          <div className="mt-5">
-            <ReactMarkdown source={question.body} />
-            <Divider />
-          </div>
-        )}
+        <QuestionContext question={question} />
         <AnswerWrapper
           answerData={{ answer, user }}
           handleDeleteAnswer={handleDeleteAnswer}

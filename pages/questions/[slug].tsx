@@ -1,13 +1,11 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import Comment from '../../components/Comment';
 import asyncForEach from '../../plugins/asyncForEach';
-import upvoteQuestion from '../../plugins/upvoteQuestion';
-import unUpvoteQuestion from '../../plugins/unUpvoteQuestion';
 import postAnswer from '../../plugins/postAnswer';
+import AnswerWrapper from '../../components/AnswersSlugId/AnswerWrapper';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -15,12 +13,11 @@ import { useSelector } from 'react-redux';
 import uuid from 'uuid/v4';
 import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowAltCircleUp } from '@fortawesome/free-regular-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
-import { Tooltip, message, Divider } from 'antd';
-import 'antd/lib/avatar/style/index.css';
-import ReactMarkdown from 'react-markdown';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { message } from 'antd';
+import QuestionContext from '../../components/Common/QuestionContext';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
@@ -36,28 +33,10 @@ const QuestionsSlug = ({ question, answers }) => {
     'write'
   );
   const [isPosting, setIsPosting] = React.useState(false);
-  const [isQuestionUpvoted, setIsQuestionUpvoted] = React.useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
-
-  useEffect(() => {
-    const checkUpvoted = async () => {
-      const questionUpvoteData = await db
-        .collection('questionUpvotes')
-        .where('userId', '==', loginUser.uid)
-        .where('questionId', '==', question.id)
-        .get();
-      if (questionUpvoteData.size === 0) {
-        return;
-      }
-      setIsQuestionUpvoted(true);
-    };
-    if (Object.keys(loginUser).length > 0) {
-      checkUpvoted();
-    }
-  }, [loginUser]);
 
   const handlePostAnswer = async () => {
     setIsPosting(true);
@@ -86,18 +65,6 @@ const QuestionsSlug = ({ question, answers }) => {
     router.push('/[username]', `/${loginUser.username}`);
   };
 
-  const handleUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await upvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(true);
-  };
-
-  const handleUnUpvoteQuestion = async (e) => {
-    e.preventDefault();
-    await unUpvoteQuestion(db, loginUser, question);
-    setIsQuestionUpvoted(false);
-  };
-
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
   const url = `https://askmakers.co${router.asPath}`;
   const description = 'Check out this question and post your answer!';
@@ -120,115 +87,83 @@ const QuestionsSlug = ({ question, answers }) => {
       <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
         <div>
           <div className="flex flex-wrapper items-center mb-3">
-            {!isQuestionUpvoted ? (
-              <Tooltip title="Upvote">
-                <button
-                  onClick={handleUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUp}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            ) : (
-              <Tooltip title="Upvoted">
-                <button
-                  onClick={handleUnUpvoteQuestion}
-                  className="focus:outline-none"
-                >
-                  <FontAwesomeIcon
-                    icon={faArrowAltCircleUped}
-                    size="xs"
-                    className="h-6 w-6"
-                  />
-                </button>
-              </Tooltip>
-            )}
-            <h1 className="text-2xl ml-2">{question.text}</h1>
+            <QuestionContext question={question}>
+              <ul className="flex flex-wrapper items-center mt-5">
+                <li className="mr-3">
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`}
+                    target="_blank"
+                    className="twitter-share"
+                  >
+                    <FontAwesomeIcon
+                      icon={faTwitter}
+                      size="xs"
+                      className="h-5 w-5"
+                    />
+                  </a>
+                </li>
+                <li className="mr-3">
+                  <a
+                    href={`https://www.facebook.com/share.php?u=${shareUrl}`}
+                    target="_blank"
+                    className="facebook-share"
+                  >
+                    <FontAwesomeIcon
+                      icon={faFacebook}
+                      size="xs"
+                      className="h-5 w-5"
+                    />
+                  </a>
+                </li>
+                {question.fromUserId === loginUser.uid && (
+                  <>
+                    <li className="text-xs mr-3">
+                      <Link
+                        href="/edit-question/[slug]"
+                        as={`/edit-question/${question.slug}`}
+                      >
+                        <a className="cursor-pointer hover:underline">
+                          <FontAwesomeIcon
+                            icon={faEdit}
+                            className="h-5 w-5 text-gray-800"
+                          />
+                        </a>
+                      </Link>
+                    </li>
+                    <li className="text-xs">
+                      <button
+                        onClick={handleDeleteQuestion}
+                        className="block cursor-pointer hover:underline focus:outline-none"
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrashAlt}
+                          className="h-5 w-5 text-gray-800"
+                        />
+                      </button>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </QuestionContext>
           </div>
-          <ul className="flex flex-wrapper items-center">
-            <li className="ml-3">
-              <a
-                href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${question.text}`}
-                target="_blank"
-                className="twitter-share"
-              >
-                <FontAwesomeIcon
-                  icon={faTwitter}
-                  size="xs"
-                  className="h-4 w-4"
-                />
-              </a>
-            </li>
-            <li className="ml-2">
-              <a
-                href={`https://www.facebook.com/share.php?u=${shareUrl}`}
-                target="_blank"
-                className="facebook-share"
-              >
-                <FontAwesomeIcon
-                  icon={faFacebook}
-                  size="xs"
-                  className="h-4 w-4"
-                />
-              </a>
-            </li>
-            {question.fromUserId === loginUser.uid && (
-              <>
-                <li className="text-gray-600 text-xs ml-3">
-                  <Link
-                    href="/edit-question/[slug]"
-                    as={`/edit-question/${question.slug}`}
-                  >
-                    <a className="cursor-pointer hover:underline">Edit</a>
-                  </Link>
-                </li>
-                <li className="text-gray-600 text-xs ml-3">
-                  <button
-                    onClick={handleDeleteQuestion}
-                    className="cursor-pointer hover:underline focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
         </div>
-        {question.body !== undefined && (
-          <div className="mt-5">
-            <ReactMarkdown source={question.body} />
-            <Divider />
-          </div>
-        )}
         {answers.length > 0 && (
           <>
-            <h2 className="text-xl my-5">Answer</h2>
-            {answers.map((answer, index) => (
-              <div key={index}>
-                <Comment
+            {answers.map((answer) => (
+              <div key={answer.answer.id} className="mt-4">
+                <AnswerWrapper
+                  answerData={{ answer: answer.answer, user: answer.user }}
                   handleDeleteAnswer={handleDeleteAnswer}
-                  name={answer.user.customName}
-                  userId={answer.answer.answerUserId}
-                  username={answer.user.username}
-                  picture={answer.user.picture}
-                  datetime={answer.answer.created}
-                  answer={answer.answer.content}
-                  answerId={answer.answer.id}
                   questionSlug={question.slug}
-                  questionTitle={question.text}
-                  db={db}
+                  questionTitle={answer.content}
                 />
-                {/* <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={question.text} /> */}
-                <Divider />
               </div>
             ))}
           </>
         )}
-        <h2 className="text-xl mb-5">Your answer</h2>
+        <div className="text-xl my-5 font-semibold text-gray-800">
+          Your answer
+        </div>
         {!isLogin && (
           <Link href="/login">
             <a className="font-semibold text-blue-500 pb-16">
@@ -294,12 +229,6 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     .where('slug', '==', slug)
     .get();
   const question = questionData.docs[0].data();
-  // Get body
-  const bodyData = await db
-    .collection('questions')
-    .doc(question.id)
-    .collection('body')
-    .get();
   const returnQuestion: IReturnQuestion = {
     created: question.created,
     text: question.text,
@@ -307,10 +236,7 @@ QuestionsSlug.getInitialProps = async ({ query }) => {
     slug: question.slug,
     fromUserId: question.fromUserId,
   };
-  if (bodyData.size > 0) {
-    const body = bodyData.docs[0].data();
-    returnQuestion.body = body.value;
-  }
+  if (question.body !== undefined) returnQuestion.body = question.body;
 
   const answerData = await db
     .collection('answers')

@@ -98,7 +98,7 @@ const AnswerWrapper: React.FC<Props> = ({
 
   return (
     <>
-      <div className="container text-xl font-light p-3 border-2 rounded">
+      <div className="container text-xl font-light p-4 border-2 rounded">
         <ReactMarkdown source={answerData.answer.content} />
         <div className="mt-3">
           <ImageAndName user={answerData.user} />
@@ -155,11 +155,7 @@ const AnswerWrapper: React.FC<Props> = ({
                 onClick={() => handleDeleteAnswer(answerData.answer.id)}
                 className="block focus:outline-none"
               >
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  size="xs"
-                  className="h-5 w-5"
-                />
+                <FontAwesomeIcon icon={faTrashAlt} className="h-5 w-5" />
               </button>
             )}
           </span>
