@@ -150,7 +150,7 @@ const QuestionsSlug = ({ question, answers }) => {
         {answers.length > 0 && (
           <>
             {answers.map((answer) => (
-              <div key={answer.answer.id} className="mt-2">
+              <div key={answer.answer.id} className="mt-4">
                 <AnswerWrapper
                   answerData={{ answer: answer.answer, user: answer.user }}
                   handleDeleteAnswer={handleDeleteAnswer}
