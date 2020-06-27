@@ -60,27 +60,27 @@ const Username: NextPage<Props> = (props) => {
                   </a>
                 </div>
               )}
-              <div className="flex flex-wrap mt-4 justify-between md:justify-start lg:justify-start">
+              <div className="flex flex-wrap mt-4 justify-center md:justify-start lg:justify-start">
                 {user.social.twitter !== undefined &&
                   user.social.twitter !== '' && (
-                    <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <div>
                       <TwitterIcon name={user.social.twitter} />
                     </div>
                   )}
                 {user.social.productHunt !== undefined &&
                   user.social.productHunt !== '' && (
-                    <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <div>
                       <ProducthuntIcon name={user.social.productHunt} />
                     </div>
                   )}
                 {user.social.gitHub !== undefined && user.social.gitHub !== '' && (
-                  <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                  <div>
                     <GitHubIcon name={user.social.gitHub} />
                   </div>
                 )}
                 {user.social.patreon !== undefined &&
                   user.social.patreon !== '' && (
-                    <div className="w-3/12 flex justify-center md:justify-start lg:justify-start">
+                    <div>
                       <PatreonIcon name={user.social.patreon} />
                     </div>
                   )}
@@ -90,8 +90,8 @@ const Username: NextPage<Props> = (props) => {
         </div>
       </div>
       <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
-        <div className="flex flex-wrap -mx-4">
-          <div className="w-full md:w-8/12 lg:w-8/12 px-4 mb-5 md:mb-0 lg:mb-0">
+        <div className="flex flex-wrap md:-mx-4 lg:-mx-4">
+          <div className="w-full md:w-8/12 lg:w-8/12 px-1 md:px-4 lg:px-4 mb-5 md:mb-0 lg:mb-0">
             <Tabs defaultActiveKey="1">
               <TabPane tab={<span>Questions</span>} key="1">
                 {questionsData.length === 0 && (
