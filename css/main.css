@@ -33,23 +33,19 @@ div#__next > div {
 }
 
 .patreon-icon-sns {
-    background-color: #f96854;
-    padding: 8px;
+    color: #f96854;
 }
 
 .twitter-icon-sns {
-    background-color: #1DA1F2;
-    padding: 8px;
+    color: #1DA1F2;
 }
 
 .producthunt-icon-sns {
-    background-color: #DA552F;
-    padding: 8px;
+    color: #DA552F;
 }
 
 .github-icon-sns {
-    background-color: #000000;
-    padding: 8px;
+    color: #000000;
 }
 
 a {

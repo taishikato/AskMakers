@@ -9,6 +9,7 @@ interface IQuestion {
   text: string;
   toUserId: string;
   body?: string;
+  topics?: any;
 }
 
 export default IQuestion;

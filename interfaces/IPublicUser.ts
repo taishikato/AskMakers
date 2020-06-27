@@ -1,15 +1,16 @@
 import ISocial from './ISocial';
 
 interface IPublicUser {
-  created: number;
+  created?: number;
   customName: string;
-  isEmailNewQuestionNotification: boolean;
-  isEnabletoShareOnTwitter: boolean;
+  isEmailNewQuestionNotification?: boolean;
+  isEnabletoShareOnTwitter?: boolean;
   picture: string;
   social?: ISocial;
   tagline?: string;
-  uid: string;
-  username: string;
+  uid?: string;
+  username?: string;
+  website?: string;
 }
 
 export default IPublicUser;
