@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import Comment from '../../components/Comment';
 import asyncForEach from '../../plugins/asyncForEach';
 import postAnswer from '../../plugins/postAnswer';
+import AnswerWrapper from '../../components/AnswersSlugId/AnswerWrapper';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { message, Divider } from 'antd';
+import { message } from 'antd';
 import QuestionContext from '../../components/Common/QuestionContext';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
@@ -149,29 +149,21 @@ const QuestionsSlug = ({ question, answers }) => {
         </div>
         {answers.length > 0 && (
           <>
-            <h2 className="text-xl my-5">Answer</h2>
-            {answers.map((answer, index) => (
-              <div key={index}>
-                <Comment
+            {answers.map((answer) => (
+              <div key={answer.answer.id} className="mt-2">
+                <AnswerWrapper
+                  answerData={{ answer: answer.answer, user: answer.user }}
                   handleDeleteAnswer={handleDeleteAnswer}
-                  name={answer.user.customName}
-                  userId={answer.answer.answerUserId}
-                  username={answer.user.username}
-                  picture={answer.user.picture}
-                  datetime={answer.answer.created}
-                  answer={answer.answer.content}
-                  answerId={answer.answer.id}
                   questionSlug={question.slug}
-                  questionTitle={question.text}
-                  db={db}
+                  questionTitle={answer.content}
                 />
-                {/* <AntCommentWrapper answerData={answer} db={db} handleDeleteAnswer={handleDeleteAnswer} questionSlug={question.slug} questionTitle={question.text} /> */}
-                <Divider />
               </div>
             ))}
           </>
         )}
-        <h2 className="text-xl mb-5">Your answer</h2>
+        <div className="text-xl my-5 font-semibold text-gray-800">
+          Your answer
+        </div>
         {!isLogin && (
           <Link href="/login">
             <a className="font-semibold text-blue-500 pb-16">
