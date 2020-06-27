@@ -8,8 +8,6 @@ import NextNprogress from 'nextjs-progressbar';
 import Auth from '../components/Auth';
 import withGA from 'next-ga';
 import { initializeStore } from '../store/store';
-import 'antd/lib/tabs/style/index.css';
-import 'antd/lib/empty/style/index.css';
 import 'antd/lib/upload/style/index.css';
 import 'antd/lib/message/style/index.css';
 import 'antd/lib/checkbox/style/index.css';

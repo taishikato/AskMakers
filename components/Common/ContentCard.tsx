@@ -11,8 +11,8 @@ const ContentCard: React.FC<Props> = ({ question }) => {
   return (
     <>
       <div className="question-wrapper flex flex-wrapper items-center py-2 pr-2 mb-3 border-b">
-        <div className="w-2/12 flex flex-wrapper items-center justify-between hidden md:flex lg:flex">
-          <div className="flex flex-col items-center p-2">
+        <div className="w-1/12 flex flex-wrapper items-center justify-between hidden md:flex lg:flex">
+          {/* <div className="flex flex-col items-center p-2">
             <span>{questionObj.question.questionUpvoteCount}</span>
             {questionObj.question.questionUpvoteCount === 0 && (
               <span className="text-xs">upvote</span>
@@ -23,7 +23,7 @@ const ContentCard: React.FC<Props> = ({ question }) => {
             {questionObj.question.questionUpvoteCount > 1 && (
               <span className="text-xs">upvotes</span>
             )}
-          </div>
+          </div> */}
           <div className="flex flex-col items-center p-2">
             <span>{questionObj.question.answerCount}</span>
             {questionObj.question.answerCount === 0 && (
@@ -36,15 +36,13 @@ const ContentCard: React.FC<Props> = ({ question }) => {
               <span className="text-xs">answers</span>
             )}
           </div>
-          {/* <div className="flex flex-col items-center p-2">
-          <span>3</span>
-          <span className="text-xs">view</span>
-        </div> */}
         </div>
-        <div className="w-10/12 pl-5">
+        <div className="w-11/12 pl-5">
           <ul className="flex flex-wrap items-center text-gray-600 text-xs block md:hidden lg:hidden">
-            <li className="flex flex-wrap items-center">
-              <span className="font-medium pr-1">1</span>
+            {/* <li className="flex flex-wrap items-center">
+              <span className="font-medium pr-1">
+                {questionObj.question.questionUpvoteCount}
+              </span>
               {questionObj.question.questionUpvoteCount === 0 && (
                 <span className="text-xs">upvote</span>
               )}
@@ -54,8 +52,8 @@ const ContentCard: React.FC<Props> = ({ question }) => {
               {questionObj.question.questionUpvoteCount > 1 && (
                 <span className="text-xs">votes</span>
               )}
-            </li>
-            <li className="flex flex-wrap items-center ml-3">
+            </li> */}
+            <li className="flex flex-wrap items-center">
               <span className="font-medium pr-1">
                 {questionObj.question.answerCount}
               </span>
