@@ -39,23 +39,27 @@ const Username: NextPage<Props> = (props) => {
         <meta key="og:url" property="og:url" content={url} />
         <link key="canonical" rel="canonical" href={url} />
       </Head>
-      <div className="bg-gray-100">
-        <div className="py-8 m-auto w-9/12">
+      <div className="bg-green-300">
+        <div className="py-8 m-auto w-9/12 text-white">
           <div className="flex flex-wrap text-center md:text-left lg:text-left">
             <div className="w-full md:w-auto lg:w-auto">
               <img
                 src={user.picture}
-                width="160px"
+                width="100px"
                 className="rounded-full m-auto md:m-0 lg:m-0"
                 alt={user.customName}
               />
             </div>
             <div className="w-full md:w-7/12 lg:w-7/12 ml-0 md:ml-5 lg:ml-5">
-              <h1 className="font-bold text-4xl">{user.customName}</h1>
-              <div>{user.tagline}</div>
+              <h1 className="font-bold text-2xl">{user.customName}</h1>
+              <div className="text-lg">{user.tagline}</div>
               {user.website !== undefined && user.website !== '' && (
                 <div>
-                  <a href={user.website} target="_blank">
+                  <a
+                    href={user.website}
+                    target="_blank"
+                    className="text-white font-light hover:underline"
+                  >
                     {user.website}
                   </a>
                 </div>
