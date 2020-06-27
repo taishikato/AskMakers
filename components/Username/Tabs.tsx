@@ -13,30 +13,26 @@ const Tabs: React.FC<IProps> = ({ user }) => {
 
   return (
     <div className="border-b">
-      <ul className="flex m-auto w-full md:w-10/12 lg:w-10/12">
-        <li className="mr-2 p-1">
+      <ul className="text-lg flex m-auto w-full md:w-10/12 lg:w-10/12">
+        <li
+          className={`mr-2 ${
+            isAnswer ? '' : 'mr-2 border-b-2 border-green-500'
+          }`}
+        >
           <Link href="/[username]" as={`/${user.username}`}>
             <a
-              className={`block
-                ${
-                  isAnswer
-                    ? ' text-gray-700 p-2'
-                    : ' text-green-400 font-medium p-2'
-                }`}
+              className={`block p-4
+                ${isAnswer ? ' text-gray-700' : ' text-green-500 font-medium'}`}
             >
               Questions
             </a>
           </Link>
         </li>
-        <li className="p-1">
+        <li className={isAnswer ? 'mr-2 border-b-2 border-green-500' : ''}>
           <Link href="/[username]/answers" as={`/${user.username}/answers`}>
             <a
-              className={`block
-                ${
-                  isAnswer
-                    ? ' text-green-400 font-medium p-2 block'
-                    : ' text-gray-700 p-2 block'
-                }`}
+              className={`block p-4
+                ${isAnswer ? ' text-green-500 font-medium' : ' text-gray-700'}`}
             >
               Answers
             </a>
