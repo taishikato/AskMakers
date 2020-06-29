@@ -8,7 +8,11 @@ interface Iprops {
 const Image: React.FC<Iprops> = ({ image, alt = '' }) => {
   return (
     <>
-      <img src={image} alt={alt} className="border w-8 h-8 rounded-full" />
+      <img
+        src={image}
+        alt={alt}
+        className="border w-8 h-8 rounded-full inline"
+      />
       <style jsx>{`
         img {
           border-color: #dddddd;

@@ -8,8 +8,8 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
-import WelcomeBox from '../components/WelcomeBox';
 import ContentCard from '../components/Common/ContentCard';
+import ABoutMe from '../components/Top/AboutMe';
 import RecentAnswer from '../components/RecentAnswer';
 import AnswerRanking from '../components/AnswerRanking';
 import asyncForEach from '../plugins/asyncForEach';
@@ -137,9 +137,9 @@ const Home: NextPage<Props> = () => {
             className="w-full md:w-4/12 lg:w-4/12 md:px-4 lg:px-4
           "
           >
-            {!isLogin && <WelcomeBox />}
             <FeaturedMaker />
             <RecentAnswer />
+            <ABoutMe />
             <div className="text-xs text-gray-600">
               <div className="mb-3">
                 <Link href="/">
