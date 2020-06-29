@@ -93,7 +93,7 @@ const Home: NextPage<Props> = () => {
   return (
     <Layout>
       {!isLogin && <Hero />}
-      <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
+      <div className="w-full md:w-11/12 lg:w-11/12 mt-5 mb-10 m-auto">
         <div className="w-full flex flex-wrap px-2 md:-mx-4 lg:-mx-4">
           <div className="w-full mb-5 md:w-8/12 lg:w-8/12 md:px-4 lg:px-4">
             <AnswerRanking />
