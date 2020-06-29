@@ -7,6 +7,7 @@ import ContentCard from '../../components/Common/ContentCard';
 import FeaturedMaker from '../../components/FeaturedMaker';
 import Hero from '../../components/Username/Hero';
 import Tabs from '../../components/Username/Tabs';
+import Share from '../../components/Username/Share';
 import asyncForEach from '../../plugins/asyncForEach';
 import IPublicUser from '../../interfaces/IPublicUser';
 import IQuestion from '../../interfaces/IQuestion';
@@ -24,6 +25,8 @@ const UsernameIndex: NextPage<Props> = ({ user, questionsData }) => {
   const router = useRouter();
   const title = `${user.customName} | AskMakers - Ask experienced makers questions`;
   const url = `https://askmakers.co${router.asPath}`;
+
+  const textForShare = `${user.customName} on @askmakers_app`;
 
   return (
     <Layout>
@@ -62,6 +65,7 @@ const UsernameIndex: NextPage<Props> = ({ user, questionsData }) => {
           </div>
           <div className="w-full md:w-4/12 lg:w-4/12 px-4 mb-10 md:mb-0 lg:mb-0">
             <div className="mt-5">
+              <Share url={url} text={textForShare} />
               <FeaturedMaker />
             </div>
           </div>

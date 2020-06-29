@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import Layout from '../../components/Layout';
 import AnswerWrapper from '../../components/AnswerWrapper';
 import FeaturedMaker from '../../components/FeaturedMaker';
+import Share from '../../components/Username/Share';
 import asyncForEach from '../../plugins/asyncForEach';
 import Hero from '../../components/Username/Hero';
 import Tabs from '../../components/Username/Tabs';
@@ -24,6 +25,7 @@ const UsernameAnswers: NextPage<Props> = ({ user, answerData }) => {
   const router = useRouter();
   const title = `${user.customName} | AskMakers - Ask experienced makers questions`;
   const url = `https://askmakers.co${router.asPath}`;
+  const textForShare = `${user.customName} on @askmakers_app`;
 
   return (
     <Layout>
@@ -60,6 +62,7 @@ const UsernameAnswers: NextPage<Props> = ({ user, answerData }) => {
           </div>
           <div className="w-full md:w-4/12 lg:w-4/12 px-4 mb-10 md:mb-0 lg:mb-0">
             <div className="mt-5">
+              <Share url={url} text={textForShare} />
               <FeaturedMaker />
             </div>
           </div>
