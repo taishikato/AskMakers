@@ -1,6 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import { LOGIN, LOGOUT, DONE_CHECKING } from './action';
 import { MakeStore, createWrapper, Context } from 'next-redux-wrapper';
+import IPublicUser from '../interfaces/IPublicUser';
 
 export const initialState = {
   loginUser: {},
@@ -9,7 +10,7 @@ export const initialState = {
 };
 
 export interface IInitialState {
-  loginUser: any;
+  loginUser: IPublicUser;
   isLogin: boolean;
   isCheckingLogin: boolean;
 }
