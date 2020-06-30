@@ -1,205 +1,325 @@
-import React from 'react'
-import Head from 'next/head'
-import { useSelector, useDispatch } from 'react-redux'
-import { loginUser as loginUserAction } from '../store/action'
-import Layout from '../components/Layout'
-import Input from '../components/Input'
-import Upload from '../components/Upload'
-import getBase64 from '../plugins/getBase64'
-import uploadToStorage from '../plugins/uploadToStorage'
-import { message } from 'antd'
-// import uuid from 'uuid/v4'
-import firebase from '../plugins/firebase'
-import 'firebase/firestore'
-import 'firebase/storage'
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import { useSelector, useDispatch } from 'react-redux';
+import openNotificationWithIcon from '../plugins/openNotificationWithIcon';
+import { loginUser as loginUserAction } from '../store/action';
+import Layout from '../components/Layout';
+import Input from '../components/Input';
+import Upload from '../components/Upload';
+import getBase64 from '../plugins/getBase64';
+import uploadToStorage from '../plugins/uploadToStorage';
+import firebase from '../plugins/firebase';
+import 'firebase/firestore';
+import 'firebase/storage';
 
-const db = firebase.firestore()
+const db = firebase.firestore();
+
+const notificationDocName = 'notifications';
 
 const Settings = () => {
-  const loginUser = useSelector(state => state.loginUser)
-  const dispatch = useDispatch()
+  const loginUser = useSelector((state) => state.loginUser);
+  const dispatch = useDispatch();
 
-  const [tagline, setTagline] = React.useState('')
-  const [twitter, setTwitter] = React.useState('')
-  const [producthunt, setProducthunt] = React.useState('')
-  const [github, setGithub] = React.useState('')
-  const [patreon, setPatreon] = React.useState('')
-  const [imageUrl, setImageUrl] = React.useState('')
-  const [isSaving, setIsSaving] = React.useState(false)
-  const [name, setName] = React.useState('')
-  const [website, setWebsite] = React.useState('')
-  const [isLoadingImage, setIsLoadingImage] = React.useState(false)
+  const [tagline, setTagline] = React.useState('');
+  const [twitter, setTwitter] = React.useState('');
+  const [producthunt, setProducthunt] = React.useState('');
+  const [github, setGithub] = React.useState('');
+  const [patreon, setPatreon] = React.useState('');
+  const [imageUrl, setImageUrl] = React.useState('');
+  const [
+    getNewQuestionNotification,
+    setGetNewQuestionNotification,
+  ] = React.useState(true);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [name, setName] = React.useState('');
+  const [website, setWebsite] = React.useState('');
+  const [isLoadingImage, setIsLoadingImage] = React.useState(false);
+  const [hasSettingsDoc, setHasSettingsDoc] = useState(true);
 
-  React.useEffect(() => {
-    setName(loginUser.customName)
+  const toggleGetNewQuestionNotification = () =>
+    setGetNewQuestionNotification(!getNewQuestionNotification);
+
+  useEffect(() => {
+    setName(loginUser.customName);
     if (loginUser.tagline !== undefined) {
-      setTagline(loginUser.tagline)
+      setTagline(loginUser.tagline);
     }
     if (loginUser.website !== undefined) {
-      setWebsite(loginUser.website)
+      setWebsite(loginUser.website);
     }
-    if (loginUser.social !== undefined && loginUser.social.twitter !== undefined) {
-      setTwitter(loginUser.social.twitter)
+    if (
+      loginUser.social !== undefined &&
+      loginUser.social.twitter !== undefined
+    ) {
+      setTwitter(loginUser.social.twitter);
     }
-    if (loginUser.social !== undefined && loginUser.social.productHunt !== undefined) {
-      setProducthunt(loginUser.social.productHunt)
+    if (
+      loginUser.social !== undefined &&
+      loginUser.social.productHunt !== undefined
+    ) {
+      setProducthunt(loginUser.social.productHunt);
     }
-    if (loginUser.social !== undefined && loginUser.social.gitHub !== undefined) {
-      setGithub(loginUser.social.gitHub)
+    if (
+      loginUser.social !== undefined &&
+      loginUser.social.gitHub !== undefined
+    ) {
+      setGithub(loginUser.social.gitHub);
     }
-    if (loginUser.social !== undefined && loginUser.social.patreon !== undefined) {
-      setPatreon(loginUser.social.patreon)
+    if (
+      loginUser.social !== undefined &&
+      loginUser.social.patreon !== undefined
+    ) {
+      setPatreon(loginUser.social.patreon);
     }
-  }, [loginUser])
+  }, [loginUser]);
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSaving(true)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const settingsSnapShot = await db
+        .collection('publicUsers')
+        .doc(loginUser.uid)
+        .collection('settings')
+        .doc(notificationDocName)
+        .get();
+      if (!settingsSnapShot.exists) {
+        setHasSettingsDoc(false);
+        return;
+      }
+      const settings = settingsSnapShot.data();
+      if (settings.getNewQuestionNotification === undefined) return;
+      setGetNewQuestionNotification(settings.getNewQuestionNotification);
+    };
+    if (loginUser.uid !== undefined) fetchSettings();
+  }, [loginUser]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
     try {
-      const updateData: IUpdateData = {}
+      const updateData: IUpdateData = {};
 
       if (name === '') {
-        message.error('Please put your name')
-        return
+        // message.error('Please put your name');
+        openNotificationWithIcon('error', 'Please put your name');
+        return;
       }
 
-      updateData.customName = name
+      updateData.customName = name;
 
       // Pictureのみここで設定
       if (loginUser.picture !== undefined) {
-        updateData.picture = loginUser.picture
+        updateData.picture = loginUser.picture;
       }
 
-      let pictureImage = ''
+      let pictureImage = '';
       if (imageUrl !== '') {
-        // const id = uuid().split('-').join('')
-        pictureImage = await uploadToStorage(loginUser.uid, imageUrl, firebase)
-        updateData.picture = pictureImage
+        pictureImage = await uploadToStorage(loginUser.uid, imageUrl, firebase);
+        updateData.picture = pictureImage;
       }
-      updateData.tagline = tagline
-      updateData.website = website
-      updateData.social = {}
-      updateData.social.twitter = twitter
-      updateData.social.productHunt = producthunt
-      updateData.social.gitHub = github
-      updateData.social.patreon = patreon
-      updateData.username = loginUser.username
-      updateData.uid = loginUser.uid
-      await db
-        .collection('publicUsers')
-        .doc(loginUser.uid)
-        .update(updateData)
-      message.success('Updated successfully')
-      dispatch(loginUserAction(updateData))
+      updateData.tagline = tagline;
+      updateData.website = website;
+      updateData.social = {};
+      updateData.social.twitter = twitter;
+      updateData.social.productHunt = producthunt;
+      updateData.social.gitHub = github;
+      updateData.social.patreon = patreon;
+      updateData.username = loginUser.username;
+      updateData.uid = loginUser.uid;
+      await db.collection('publicUsers').doc(loginUser.uid).update(updateData);
+      if (hasSettingsDoc) {
+        await db
+          .collection('publicUsers')
+          .doc(loginUser.uid)
+          .collection('settings')
+          .doc(notificationDocName)
+          .update({ getNewQuestionNotification });
+      } else {
+        await db
+          .collection('publicUsers')
+          .doc(loginUser.uid)
+          .collection('settings')
+          .doc(notificationDocName)
+          .set({ getNewQuestionNotification });
+      }
+      setHasSettingsDoc(true);
+      openNotificationWithIcon('success', 'Updated successfully');
+      dispatch(loginUserAction(updateData));
     } catch (err) {
-      console.log('err!!!')
-      console.error(err)
-      message.error('An error occured. Please try again.')
+      openNotificationWithIcon('error', 'An error occured. Please try again.');
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
-  const handleChangeImage = info => {
+  const handleChangeImage = (info) => {
     if (info.file.status === 'uploading') {
-      setIsLoadingImage(true)
-      return
+      setIsLoadingImage(true);
+      return;
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setImageUrl(imageUrl)
-        setIsLoadingImage(false)
-      })
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+        setIsLoadingImage(false);
+      });
     }
-  }
-  const title = 'Settings | AskMakers - Ask experienced makers questions'
+  };
+  const title = 'Settings | AskMakers - Ask experienced makers questions';
 
   return (
     <>
-    <Head>
-      <meta key="robots" name="robots" content="noindex" />
-      <title key="title">{title}</title>
-      <meta
-        key="og:title"
-        property="og:title"
-        content={title}
-      />
-      <meta key="og:site_name" property="og:site_name" content={title} />
-    </Head>
-    <Layout>
-      <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
-        <h1 className="text-4xl font-bold mb-8">
-          Settings
-        </h1>
-        <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap justify-between -mx-3">
-            <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-              <div className="mb-3">
-                <Input label="Name" id="name" type="text" value={name} handleChange={e => setName(e.target.value)} />
+      <Head>
+        <meta key="robots" name="robots" content="noindex" />
+        <title key="title">{title}</title>
+        <meta key="og:title" property="og:title" content={title} />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+      </Head>
+      <Layout>
+        <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
+          <h1 className="text-4xl font-bold mb-8">Settings</h1>
+          <h2 className="text-2xl font-bold mt-6 mb-2">Basic</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-wrap justify-between -mx-3">
+              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                <div className="mb-3">
+                  <Input
+                    label="Name"
+                    id="name"
+                    type="text"
+                    value={name}
+                    handleChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <Input
+                    label="Tagline"
+                    id="tagline"
+                    type="text"
+                    value={tagline}
+                    handleChange={(e) => setTagline(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <Input
+                    label="Website"
+                    placeholder="https://askmakers.co"
+                    id="website"
+                    type="url"
+                    value={website}
+                    handleChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3 md:mb-0 lg:mb-0">
+                  <Upload
+                    label="Profile Picture"
+                    imageUrl={imageUrl}
+                    handleChange={handleChangeImage}
+                    isLoading={isLoadingImage}
+                  />
+                </div>
               </div>
-              <div className="mb-3">
-                <Input label="Tagline" id="tagline" type="text" value={tagline} handleChange={e => setTagline(e.target.value)}/>
-              </div>
-              <div className="mb-3">
-                <Input label="Website" placeholder="https://askmakers.co" id="website" type="url" value={website} handleChange={e => setWebsite(e.target.value)}/>
-              </div>
-              <div className="mb-3 md:mb-0 lg:mb-0">
-                <Upload label="Profile Picture" imageUrl={imageUrl} handleChange={handleChangeImage} isLoading={isLoadingImage} />
+              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                <div className="mb-3">
+                  <Input
+                    label="Twitter Handle"
+                    placeholder="jack"
+                    id="twitter"
+                    type="text"
+                    value={twitter}
+                    handleChange={(e) => setTwitter(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <Input
+                    label="Product Hunt Handle"
+                    placeholder="rrhoover"
+                    id="producthunt"
+                    type="text"
+                    value={producthunt}
+                    handleChange={(e) => setProducthunt(e.target.value)}
+                  />
+                </div>
+                <div className="mb-3">
+                  <Input
+                    label="GitHub Handle"
+                    placeholder="defunkt"
+                    id="github"
+                    type="text"
+                    value={github}
+                    handleChange={(e) => setGithub(e.target.value)}
+                  />
+                </div>
+                <Input
+                  label="Patreon Handle"
+                  placeholder="jackconte"
+                  id="patreon"
+                  type="text"
+                  value={patreon}
+                  handleChange={(e) => setPatreon(e.target.value)}
+                />
               </div>
             </div>
-            <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-              <div className="mb-3">
-                <Input label="Twitter Handle" placeholder="jack" id="twitter" type="text" value={twitter} handleChange={e => setTwitter(e.target.value)} />
+            <h2 className="text-2xl font-bold mt-6 mb-2">
+              Email Notifications
+            </h2>
+            <div className="flex flex-wrap justify-between -mx-3">
+              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                <div className="mb-3">
+                  <label
+                    className="font-semibold mb-2 block"
+                    htmlFor="new-question-notification"
+                  >
+                    New Question Notification
+                  </label>
+                  <input
+                    id="new-question-notification"
+                    checked={getNewQuestionNotification}
+                    type="checkbox"
+                    onChange={toggleGetNewQuestionNotification}
+                    className="form-checkbox text-green-500 h-5 w-5"
+                  />
+                </div>
               </div>
-              <div className="mb-3">
-                <Input label="Product Hunt Handle" placeholder="rrhoover" id="producthunt" type="text" value={producthunt} handleChange={e => setProducthunt(e.target.value)} />
-              </div>
-              <div className="mb-3">
-                <Input label="GitHub Handle" placeholder="defunkt" id="github" type="text" value={github} handleChange={e => setGithub(e.target.value)} />
-              </div>
-              <Input label="Patreon Handle" placeholder="jackconte" id="patreon" type="text" value={patreon} handleChange={e => setPatreon(e.target.value)} />
             </div>
-          </div>
-          <div className="px-2 md:px-0 lg:px-0">
-            {isSaving ?
-              <button
-                disabled
-                className="rounded px-6 py-3 bg-gray-500 text-white font-semibold mt-4 cursor-not-allowed focus:outline-none"
-              >
-                Submitting…
-              </button>
-              :
-              <button
-                type="submit"
-                className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
-              >
-                Update
-              </button>
-            }
-          </div>
-        </form>
-      </div>
-    </Layout>
+            <div className="px-2 md:px-0 lg:px-0">
+              {isSaving ? (
+                <button
+                  disabled
+                  className="rounded px-6 py-3 bg-gray-500 text-white font-semibold mt-4 cursor-not-allowed focus:outline-none"
+                >
+                  Submitting…
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
+                >
+                  Update
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      </Layout>
     </>
-  )
-}
+  );
+};
 
 interface IUpdateData {
-  customName?: string
-  picture?: string
-  tagline?: string
-  website?: string
-  username?: string
-  uid?: string
-  social?: ISocial
+  customName?: string;
+  picture?: string;
+  tagline?: string;
+  website?: string;
+  username?: string;
+  uid?: string;
+  social?: ISocial;
 }
 
 interface ISocial {
-  twitter?: string,
-  productHunt?: string,
-  gitHub?: string,
-  patreon?: string
+  twitter?: string;
+  productHunt?: string;
+  gitHub?: string;
+  patreon?: string;
 }
 
-export default Settings
+export default Settings;
