@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Head from 'next/head';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { message, Skeleton } from 'antd';
@@ -22,6 +24,7 @@ const NoBookmark = () => (
 );
 
 const Bookmarks = () => {
+  const router = useRouter();
   const [answersData, setAnswerData] = useState([]);
   const [loading, setLoading] = useState(true);
   const db = useContext(FirestoreContext);
@@ -78,8 +81,18 @@ const Bookmarks = () => {
     if (Object.keys(loginUser).length > 0) fetchBookmarks();
   }, [loginUser]);
 
+  const title = `Bookmarks | AskMakers - Ask experienced makers questions`;
+  const url = `https://askmakers.co${router.asPath}`;
+
   return (
     <Layout>
+      <Head>
+        <title key="title">{title}</title>
+        <meta key="og:title" property="og:title" content={title} />
+        <meta key="og:site_name" property="og:site_name" content={title} />
+        <meta key="og:url" property="og:url" content={url} />
+        <link key="canonical" rel="canonical" href={url} />
+      </Head>
       <div className="w-10/12 m-auto mt-8">
         <h2 className="font-bold text-xl text-black flex items-center mb-4">
           <FontAwesomeIcon
@@ -90,6 +103,7 @@ const Bookmarks = () => {
         </h2>
         {loading && (
           <>
+            <Skeleton active paragraph={{ rows: 3 }} />
             <Skeleton active paragraph={{ rows: 3 }} />
             <Skeleton active paragraph={{ rows: 3 }} />
           </>
