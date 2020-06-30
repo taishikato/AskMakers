@@ -8,6 +8,7 @@ import {
   faUserCircle,
   faCog,
   faSignOutAlt,
+  faBookmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -125,7 +126,7 @@ const Navbar = () => {
             onClick={handleAskButtonClick}
             className="font-semibold focus:outline-none flex flex-wrap items-center mr-5 pt-3 md:pt-0 lg:pt-0"
           >
-            <FontAwesomeIcon icon={faPlus} size="xs" className="h-3 w-3" />
+            <FontAwesomeIcon icon={faPlus} className="h-3 w-3" />
             <span className="ml-1">Ask Question</span>
           </button>
           <div className="mt-4 lg:mt-0">
@@ -151,10 +152,18 @@ const Navbar = () => {
                     <a className="flex items-center px-4 py-2 text-gray-800 cursor-pointer hover:bg-green-300 hover:text-white">
                       <FontAwesomeIcon
                         icon={faUserCircle}
-                        size="xs"
                         className="mr-2 w-5 h-5"
                       />{' '}
                       Profile
+                    </a>
+                  </Link>
+                  <Link href="/bookmarks">
+                    <a className="flex items-center px-4 py-2 text-gray-800 cursor-pointer hover:bg-green-300 hover:text-white">
+                      <FontAwesomeIcon
+                        icon={faBookmark}
+                        className="mr-2 w-5 h-5"
+                      />{' '}
+                      Bookmarks
                     </a>
                   </Link>
                   <Link href="/settings">

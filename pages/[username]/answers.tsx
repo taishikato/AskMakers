@@ -21,6 +21,15 @@ interface Props {
 
 const db = firebase.firestore();
 
+const NoContent = () => (
+  <div className="flex justify-center">
+    <div>
+      <img src="/no-question.svg" width="200px" alt="No Question yet…" />
+      <p className="text-center font-light">No Answer yet…</p>
+    </div>
+  </div>
+);
+
 const UsernameAnswers: NextPage<Props> = ({ user, answerData }) => {
   const router = useRouter();
   const title = `${user.customName} | AskMakers - Ask experienced makers questions`;
@@ -41,18 +50,7 @@ const UsernameAnswers: NextPage<Props> = ({ user, answerData }) => {
       <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
         <div className="flex flex-wrap md:-mx-4 lg:-mx-4">
           <div className="w-full md:w-8/12 lg:w-8/12 px-1 md:px-4 lg:px-4 mb-5 md:mb-0 lg:mb-0">
-            {answerData.length === 0 && (
-              <div className="flex justify-center">
-                <div>
-                  <img
-                    src="/no-answer.png"
-                    width="200px"
-                    alt="No Answer yet…"
-                  />
-                  <p className="text-center mt-3 font-light">No Answer yet…</p>
-                </div>
-              </div>
-            )}
+            {answerData.length === 0 && <NoContent />}
             {answerData.length > 0 &&
               answerData.map((answerRelatedData, index) => (
                 <div key={index}>

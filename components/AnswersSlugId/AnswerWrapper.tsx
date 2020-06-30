@@ -3,8 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowAltCircleUp,
   faTrashAlt,
+  faBookmark,
 } from '@fortawesome/free-regular-svg-icons';
-import { faArrowAltCircleUp as faArrowAltCircleUped } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowAltCircleUp as faArrowAltCircleUped,
+  faBookmark as faBookmarked,
+} from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { Tooltip } from 'antd';
 import ReactMarkdown from 'react-markdown';
@@ -25,6 +29,7 @@ const AnswerWrapper: React.FC<Props> = ({
   const db = useContext(FirestoreContext);
   const [upvoteAnswerCount, setUpvoteAnswerCount] = useState(0);
   const [isUpvoted, setIsUpvoted] = React.useState(false);
+  const [isBookmarked, setIsBookmarked] = React.useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
   const router = useRouter();
@@ -63,6 +68,41 @@ const AnswerWrapper: React.FC<Props> = ({
     setIsUpvoted(false);
   };
 
+  const handleBookmark = async () => {
+    if (!isLogin) {
+      router.push('/login');
+      return;
+    }
+    await db
+      .collection('publicUsers')
+      .doc(loginUser.uid)
+      .collection('bookmarks')
+      .add({
+        answerId: answerData.answer.id,
+        created: getUnixTime(),
+      });
+    setIsBookmarked(true);
+  };
+  const handleUnBookmark = async () => {
+    if (!isLogin) {
+      router.push('/login');
+      return;
+    }
+    const bookmarkData = await db
+      .collection('publicUsers')
+      .doc(loginUser.uid)
+      .collection('bookmarks')
+      .where('answerId', '==', answerData.answer.id)
+      .get();
+    await db
+      .collection('publicUsers')
+      .doc(loginUser.uid)
+      .collection('bookmarks')
+      .doc(bookmarkData.docs[0].id)
+      .delete();
+    setIsBookmarked(false);
+  };
+
   useEffect(() => {
     const checkUpvoteCount = async () => {
       const upvoteData = await db
@@ -84,13 +124,22 @@ const AnswerWrapper: React.FC<Props> = ({
         .where('senderId', '==', loginUser.uid)
         .where('answerId', '==', answerData.answer.id)
         .get();
-      if (upvoteData.size === 0) {
-        return;
-      }
+      if (upvoteData.empty) return;
       setIsUpvoted(true);
+    };
+    const checkBookmarked = async () => {
+      const bookmarkData = await db
+        .collection('publicUsers')
+        .doc(loginUser.uid)
+        .collection('bookmarks')
+        .where('answerId', '==', answerData.answer.id)
+        .get();
+      if (bookmarkData.empty) return;
+      setIsBookmarked(true);
     };
     if (Object.keys(loginUser).length > 0) {
       checkUpvoted();
+      checkBookmarked();
     }
   }, [loginUser]);
 
@@ -130,6 +179,30 @@ const AnswerWrapper: React.FC<Props> = ({
             >
               {upvoteAnswerCount}
             </span>
+          </span>
+          <span className="flex items-center mr-3">
+            {!isBookmarked ? (
+              <Tooltip title="Bookmark">
+                <button onClick={handleBookmark} className="focus:outline-none">
+                  <FontAwesomeIcon
+                    icon={faBookmark}
+                    className="h-5 w-5 text-green-500"
+                  />
+                </button>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Bookmarked">
+                <button
+                  onClick={handleUnBookmark}
+                  className="focus:outline-none"
+                >
+                  <FontAwesomeIcon
+                    icon={faBookmarked}
+                    className="h-5 w-5 text-green-500"
+                  />
+                </button>
+              </Tooltip>
+            )}
           </span>
           <span className="mr-3">
             <a
