@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import openNotificationWithIcon from '../plugins/openNotificationWithIcon';
@@ -6,38 +6,33 @@ import { loginUser as loginUserAction } from '../store/action';
 import Layout from '../components/Layout';
 import Input from '../components/Input';
 import Upload from '../components/Upload';
+import { FirestoreContext } from '../contexts/FirestoreContextProvider';
 import getBase64 from '../plugins/getBase64';
 import uploadToStorage from '../plugins/uploadToStorage';
 import firebase from '../plugins/firebase';
-import 'firebase/firestore';
-import 'firebase/storage';
-
-const db = firebase.firestore();
 
 const notificationDocName = 'notifications';
 
 const Settings = () => {
+  const db = useContext(FirestoreContext);
   const loginUser = useSelector((state) => state.loginUser);
   const dispatch = useDispatch();
 
-  const [tagline, setTagline] = React.useState('');
-  const [twitter, setTwitter] = React.useState('');
-  const [producthunt, setProducthunt] = React.useState('');
-  const [github, setGithub] = React.useState('');
-  const [patreon, setPatreon] = React.useState('');
-  const [imageUrl, setImageUrl] = React.useState('');
+  const [tagline, setTagline] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [producthunt, setProducthunt] = useState('');
+  const [github, setGithub] = useState('');
+  const [patreon, setPatreon] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [
     getNewQuestionNotification,
     setGetNewQuestionNotification,
   ] = React.useState(true);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [name, setName] = React.useState('');
-  const [website, setWebsite] = React.useState('');
-  const [isLoadingImage, setIsLoadingImage] = React.useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [name, setName] = useState('');
+  const [website, setWebsite] = useState('');
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [hasSettingsDoc, setHasSettingsDoc] = useState(true);
-
-  const toggleGetNewQuestionNotification = () =>
-    setGetNewQuestionNotification(!getNewQuestionNotification);
 
   useEffect(() => {
     setName(loginUser.customName);
@@ -275,7 +270,9 @@ const Settings = () => {
                     id="new-question-notification"
                     checked={getNewQuestionNotification}
                     type="checkbox"
-                    onChange={toggleGetNewQuestionNotification}
+                    onChange={() =>
+                      setGetNewQuestionNotification(!getNewQuestionNotification)
+                    }
                     className="form-checkbox text-green-500 h-5 w-5"
                   />
                 </div>
