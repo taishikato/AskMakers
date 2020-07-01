@@ -9,6 +9,7 @@ import Upload from '../components/Upload';
 import { FirestoreContext } from '../contexts/FirestoreContextProvider';
 import getBase64 from '../plugins/getBase64';
 import uploadToStorage from '../plugins/uploadToStorage';
+import SignUpModal from '../components/Navbar/SignUpModal';
 import firebase from '../plugins/firebase';
 
 const notificationDocName = 'notifications';
@@ -16,6 +17,7 @@ const notificationDocName = 'notifications';
 const Settings = () => {
   const db = useContext(FirestoreContext);
   const loginUser = useSelector((state) => state.loginUser);
+  const isLogin = useSelector((state) => state.isLogin);
   const dispatch = useDispatch();
 
   const [tagline, setTagline] = useState('');
@@ -146,6 +148,12 @@ const Settings = () => {
     }
   };
 
+  const NoLogin = () => (
+    <div className="border-2 rounded w-8/12 m-auto">
+      <SignUpModal />
+    </div>
+  );
+
   const handleChangeImage = (info) => {
     if (info.file.status === 'uploading') {
       setIsLoadingImage(true);
@@ -171,131 +179,139 @@ const Settings = () => {
       </Head>
       <Layout>
         <div className="w-full md:w-9/12 lg:w-9/12 my-10 m-auto p-2">
-          <h1 className="text-4xl font-bold mb-8">Settings</h1>
-          <h2 className="text-2xl font-bold mt-6 mb-2">Basic</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-wrap justify-between -mx-3">
-              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-                <div className="mb-3">
-                  <Input
-                    label="Name"
-                    id="name"
-                    type="text"
-                    value={name}
-                    handleChange={(e) => setName(e.target.value)}
-                  />
+          {isLogin ? (
+            <>
+              <h1 className="text-4xl font-bold mb-8">Settings</h1>
+              <h2 className="text-2xl font-bold mt-6 mb-2">Basic</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-wrap justify-between -mx-3">
+                  <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                    <div className="mb-3">
+                      <Input
+                        label="Name"
+                        id="name"
+                        type="text"
+                        value={name}
+                        handleChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input
+                        label="Tagline"
+                        id="tagline"
+                        type="text"
+                        value={tagline}
+                        handleChange={(e) => setTagline(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input
+                        label="Website"
+                        placeholder="https://askmakers.co"
+                        id="website"
+                        type="url"
+                        value={website}
+                        handleChange={(e) => setWebsite(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3 md:mb-0 lg:mb-0">
+                      <Upload
+                        label="Profile Picture"
+                        imageUrl={imageUrl}
+                        handleChange={handleChangeImage}
+                        isLoading={isLoadingImage}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                    <div className="mb-3">
+                      <Input
+                        label="Twitter Handle"
+                        placeholder="jack"
+                        id="twitter"
+                        type="text"
+                        value={twitter}
+                        handleChange={(e) => setTwitter(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input
+                        label="Product Hunt Handle"
+                        placeholder="rrhoover"
+                        id="producthunt"
+                        type="text"
+                        value={producthunt}
+                        handleChange={(e) => setProducthunt(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input
+                        label="GitHub Handle"
+                        placeholder="defunkt"
+                        id="github"
+                        type="text"
+                        value={github}
+                        handleChange={(e) => setGithub(e.target.value)}
+                      />
+                    </div>
+                    <Input
+                      label="Patreon Handle"
+                      placeholder="jackconte"
+                      id="patreon"
+                      type="text"
+                      value={patreon}
+                      handleChange={(e) => setPatreon(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <Input
-                    label="Tagline"
-                    id="tagline"
-                    type="text"
-                    value={tagline}
-                    handleChange={(e) => setTagline(e.target.value)}
-                  />
+                <h2 className="text-2xl font-bold mt-6 mb-2">
+                  Email Notifications
+                </h2>
+                <div className="flex flex-wrap justify-between -mx-3">
+                  <div className="w-full md:w-6/12 lg:w-6/12 px-3">
+                    <div className="mb-3">
+                      <label
+                        className="font-semibold mb-2 block"
+                        htmlFor="new-question-notification"
+                      >
+                        New Question Notification
+                      </label>
+                      <input
+                        id="new-question-notification"
+                        checked={getNewQuestionNotification}
+                        type="checkbox"
+                        onChange={() =>
+                          setGetNewQuestionNotification(
+                            !getNewQuestionNotification
+                          )
+                        }
+                        className="form-checkbox text-green-500 h-5 w-5"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <Input
-                    label="Website"
-                    placeholder="https://askmakers.co"
-                    id="website"
-                    type="url"
-                    value={website}
-                    handleChange={(e) => setWebsite(e.target.value)}
-                  />
+                <div className="px-2 md:px-0 lg:px-0">
+                  {isSaving ? (
+                    <button
+                      disabled
+                      className="rounded px-6 py-3 bg-gray-500 text-white font-semibold mt-4 cursor-not-allowed focus:outline-none"
+                    >
+                      Submitting…
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
+                    >
+                      Update
+                    </button>
+                  )}
                 </div>
-                <div className="mb-3 md:mb-0 lg:mb-0">
-                  <Upload
-                    label="Profile Picture"
-                    imageUrl={imageUrl}
-                    handleChange={handleChangeImage}
-                    isLoading={isLoadingImage}
-                  />
-                </div>
-              </div>
-              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-                <div className="mb-3">
-                  <Input
-                    label="Twitter Handle"
-                    placeholder="jack"
-                    id="twitter"
-                    type="text"
-                    value={twitter}
-                    handleChange={(e) => setTwitter(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <Input
-                    label="Product Hunt Handle"
-                    placeholder="rrhoover"
-                    id="producthunt"
-                    type="text"
-                    value={producthunt}
-                    handleChange={(e) => setProducthunt(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <Input
-                    label="GitHub Handle"
-                    placeholder="defunkt"
-                    id="github"
-                    type="text"
-                    value={github}
-                    handleChange={(e) => setGithub(e.target.value)}
-                  />
-                </div>
-                <Input
-                  label="Patreon Handle"
-                  placeholder="jackconte"
-                  id="patreon"
-                  type="text"
-                  value={patreon}
-                  handleChange={(e) => setPatreon(e.target.value)}
-                />
-              </div>
-            </div>
-            <h2 className="text-2xl font-bold mt-6 mb-2">
-              Email Notifications
-            </h2>
-            <div className="flex flex-wrap justify-between -mx-3">
-              <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-                <div className="mb-3">
-                  <label
-                    className="font-semibold mb-2 block"
-                    htmlFor="new-question-notification"
-                  >
-                    New Question Notification
-                  </label>
-                  <input
-                    id="new-question-notification"
-                    checked={getNewQuestionNotification}
-                    type="checkbox"
-                    onChange={() =>
-                      setGetNewQuestionNotification(!getNewQuestionNotification)
-                    }
-                    className="form-checkbox text-green-500 h-5 w-5"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="px-2 md:px-0 lg:px-0">
-              {isSaving ? (
-                <button
-                  disabled
-                  className="rounded px-6 py-3 bg-gray-500 text-white font-semibold mt-4 cursor-not-allowed focus:outline-none"
-                >
-                  Submitting…
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="rounded px-6 py-3 bg-gray-900 text-white font-semibold mt-4 focus:outline-none"
-                >
-                  Update
-                </button>
-              )}
-            </div>
-          </form>
+              </form>
+            </>
+          ) : (
+            <NoLogin />
+          )}
         </div>
       </Layout>
     </>
