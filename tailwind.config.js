@@ -8,24 +8,25 @@ module.exports = {
   theme: {},
   variants: {},
   plugins: [
+    require('@tailwindcss/custom-forms'),
     function ({ addComponents }) {
       addComponents({
         '.container': {
           maxWidth: '100%',
           '@screen sm': {
-            maxWidth: '576px'
+            maxWidth: '576px',
           },
           '@screen md': {
-            maxWidth: '768px'
+            maxWidth: '768px',
           },
           '@screen lg': {
-            maxWidth: '1200px'
+            maxWidth: '1200px',
           },
           '@screen xl': {
-            maxWidth: '1200px'
-          }
-        }
-      })
-    }
-  ]
-}
+            maxWidth: '1200px',
+          },
+        },
+      });
+    },
+  ],
+};
