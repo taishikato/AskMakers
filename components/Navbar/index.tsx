@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Spin } from 'antd';
 import { logoutUser } from '../../store/action';
 import firebase from '../../plugins/firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,6 +31,7 @@ const Navbar = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const isLogin = useSelector((state) => state.isLogin);
   const loginUser = useSelector((state) => state.loginUser);
+  const isCheckingLogin = useSelector((state) => state.isCheckingLogin);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -95,19 +97,22 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="block lg:hidden">
-          <button
-            onClick={handleHumburger}
-            className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white focus:outline-none"
-          >
-            <svg
-              className="fill-current h-3 w-3"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
+          <Spin spinning={isCheckingLogin}></Spin>
+          {!isCheckingLogin && (
+            <button
+              onClick={handleHumburger}
+              className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:border-white focus:outline-none"
             >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-            </svg>
-          </button>
+              <svg
+                className="fill-current h-3 w-3"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Menu</title>
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              </svg>
+            </button>
+          )}
         </div>
         <div
           className={`mt-4 md:p-0 md:mt-0 lg:mt-0 lg:p-0 lg:flex-grow lg:flex lg:items-center w-full lg:w-auto rounded z-50 ${
@@ -191,18 +196,23 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <a
-                  className="text-white font-semibold cursor-pointer mr-4"
-                  onClick={() => setIsSignupModalOpen(true)}
-                >
-                  Log in
-                </a>
-                <a
-                  className="text-white bg-green-400 p-2 rounded font-semibold cursor-pointer"
-                  onClick={() => setIsSignupModalOpen(true)}
-                >
-                  Sign up
-                </a>
+                <Spin spinning={isCheckingLogin} size="large"></Spin>
+                {!isCheckingLogin && (
+                  <>
+                    <a
+                      className="text-white font-semibold cursor-pointer mr-4"
+                      onClick={() => setIsSignupModalOpen(true)}
+                    >
+                      Log in
+                    </a>
+                    <a
+                      className="text-white bg-green-400 p-2 rounded font-semibold cursor-pointer"
+                      onClick={() => setIsSignupModalOpen(true)}
+                    >
+                      Sign up
+                    </a>
+                  </>
+                )}
               </>
             )}
           </div>
