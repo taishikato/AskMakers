@@ -6,7 +6,7 @@ import asyncForEach from './asyncForEach';
 
 // Mailgun
 import * as mailgun from 'mailgun-js';
-const mailgunApiKey = '219024a0364649fd1f6e1369ca1fe5c6-19f318b0-8ec2ab52';
+const mailgunApiKey = 'key-3cecd972cb3c2374f90ec8fb8e591eb1';
 const mailgunDomain = 'mail.askmakers.co';
 const mg = mailgun({ apiKey: mailgunApiKey, domain: mailgunDomain });
 
