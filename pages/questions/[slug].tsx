@@ -62,6 +62,7 @@ const QuestionsSlug = ({ question, answers }) => {
       return;
     }
     await db.collection('questions').doc(question.id).delete();
+    await db.collection('questionsTopic').doc(question.id).delete();
     router.push('/[username]', `/${loginUser.username}`);
   };
 
