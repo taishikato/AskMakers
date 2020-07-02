@@ -36,6 +36,7 @@ const authUserFunc = async (router: NextRouter, dispatch) => {
         username: generateUuid(),
         picture: userData.photoURL.replace('_normal', ''),
         created,
+        social: {},
       };
 
       if (result.additionalUserInfo.providerId === 'twitter.com') {
