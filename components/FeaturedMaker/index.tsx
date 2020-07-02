@@ -9,7 +9,7 @@ const FeaturedMaker: React.FC<Props> = () => {
         classes="py-2"
         name="Justin Jackson"
         username="mijustin"
-        picture="https://pbs.twimg.com/profile_images/932726689485828097/n86GsuLG.jpg"
+        picture="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/users%2FNOmUokm7wWgWi9Pdfz9hvry4j3k2.jpg?alt=media&token=6692a94c-d6c3-4ed6-ad89-4ba816b3dae7"
         intro={
           <div>
             Maker of{' '}
