@@ -37,6 +37,29 @@ const UsernameIndex: NextPage<Props> = ({ user, questionsData }) => {
 
   const textForShare = `${user.customName} on @askmakers_app`;
 
+  // React.useEffect(() => {
+  //   const fecth = async () => {
+  //     const usersSnap = await db.collection('publicUsers').get();
+  //     await Promise.all(
+  //       usersSnap.docs.map(async (doc) => {
+  //         const user = doc.data();
+  //         if (user.uid === undefined) return;
+  //         const stg = await db
+  //           .collection('publicUsers')
+  //           .doc(user.uid)
+  //           .collection('settings')
+  //           .doc('notifications')
+  //           .get();
+  //         if (stg.exists) {
+  //           console.log(user.customName);
+  //           console.log(stg.data());
+  //         }
+  //       })
+  //     );
+  //   };
+  //   fecth();
+  // }, []);
+
   return (
     <Layout>
       <Head>
