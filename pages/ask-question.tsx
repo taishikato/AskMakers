@@ -43,9 +43,17 @@ const AskQuestion = () => {
         body,
         fromUserId: loginUser.uid,
         slug,
-        topics: topic,
         isGeneral: true,
       });
+
+      if (topic.length > 0) {
+        const topicMap: { [key: string]: boolean } = {};
+        for (const t of topic) {
+          topicMap[t] = true;
+        }
+        if (Object.keys(topicMap).length > 0)
+          await db.collection('questionsTopic').doc(id).set(topicMap);
+      }
       message.success('Submitted successfully');
       router.push('/questions/[slug]', `/questions/${slug}`);
     } catch (err) {
