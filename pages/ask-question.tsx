@@ -36,9 +36,10 @@ const AskQuestion = () => {
     try {
       const id = uuid().split('-').join('');
       const slug = await generateSlug(title);
+      const created = getUnixTime();
       await db.collection('questions').doc(id).set({
         id,
-        created: getUnixTime(),
+        created,
         text: title,
         body,
         fromUserId: loginUser.uid,
@@ -47,12 +48,13 @@ const AskQuestion = () => {
       });
 
       if (topic.length > 0) {
-        const topicMap: { [key: string]: boolean } = {};
         for (const t of topic) {
-          topicMap[t] = true;
+          await db.collection('questionsTopic').add({
+            topic: t,
+            questionId: id,
+            questionCreated: created,
+          });
         }
-        if (Object.keys(topicMap).length > 0)
-          await db.collection('questionsTopic').doc(id).set(topicMap);
       }
       message.success('Submitted successfully');
       router.push('/questions/[slug]', `/questions/${slug}`);
