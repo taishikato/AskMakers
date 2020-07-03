@@ -18,7 +18,23 @@ service cloud.firestore {
       allow read: if true;
       allow write: if onlyIdentityUser(userId);
     }
+    match /publicUsers/{userId}/bookmarks/{bookmarkId} {
+      allow read: if true;
+      allow write: if onlyIdentityUser(userId);
+    }
+    match /publicUsers/{userId}/settings/{settingId} {
+      allow read: if true;
+      allow write: if onlyIdentityUser(userId);
+    }
     match /questions/{questionId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
+    match /questions/{questionId}/body/{bodyId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
+    match /questionsTopic/{questionsTopicId} {
       allow read: if true;
       allow write: if isLogin();
     }
@@ -35,6 +51,14 @@ service cloud.firestore {
       allow write: if isLogin();
     }
     match /upvotes/{upvoteId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
+    match /questionUpvotes/{upvoteId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
+    match /upvoteAnswerRanking/{rankingId} {
       allow read: if true;
       allow write: if isLogin();
     }
