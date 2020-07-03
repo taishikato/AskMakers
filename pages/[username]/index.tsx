@@ -9,14 +9,15 @@ import Hero from '../../components/Username/Hero';
 import Tabs from '../../components/Username/Tabs';
 import Share from '../../components/Username/Share';
 import asyncForEach from '../../plugins/asyncForEach';
+import NotFound from '../../components/Common/NotFound';
 import IPublicUser from '../../interfaces/IPublicUser';
 import IQuestion from '../../interfaces/IQuestion';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
 interface Props {
-  user: IPublicUser;
-  questionsData: IQuestion[];
+  user: any;
+  questionsData: any;
 }
 
 const db = firebase.firestore();
@@ -69,38 +70,51 @@ const UsernameIndex: NextPage<Props> = ({ user, questionsData }) => {
         <meta key="og:url" property="og:url" content={url} />
         <link key="canonical" rel="canonical" href={url} />
       </Head>
-      <Hero user={user} />
-      <Tabs user={user} />
-      <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
-        <div className="flex flex-wrap md:-mx-4 lg:-mx-4">
-          <div className="w-full md:w-8/12 lg:w-8/12 px-1 md:px-4 lg:px-4 mb-5 md:mb-0 lg:mb-0">
-            {questionsData.length === 0 && <NoContent />}
-            {questionsData.length > 0 &&
-              questionsData.map((question, index) => (
-                <div key={index}>
-                  <ContentCard question={{ question }} />
+      {user.username === undefined ? (
+        <NotFound />
+      ) : (
+        <>
+          <Hero user={user} />
+          <Tabs user={user} />
+          <div className="w-full md:w-10/12 lg:w-10/12 mt-5 mb-10 m-auto">
+            <div className="flex flex-wrap md:-mx-4 lg:-mx-4">
+              <div className="w-full md:w-8/12 lg:w-8/12 px-1 md:px-4 lg:px-4 mb-5 md:mb-0 lg:mb-0">
+                {questionsData.length === 0 && <NoContent />}
+                {questionsData.length > 0 &&
+                  questionsData.map((question, index) => (
+                    <div key={index}>
+                      <ContentCard question={{ question }} />
+                    </div>
+                  ))}
+              </div>
+              <div className="w-full md:w-4/12 lg:w-4/12 px-4 mb-10 md:mb-0 lg:mb-0">
+                <div className="mt-5">
+                  <Share url={url} text={textForShare} />
+                  <FeaturedMaker />
                 </div>
-              ))}
-          </div>
-          <div className="w-full md:w-4/12 lg:w-4/12 px-4 mb-10 md:mb-0 lg:mb-0">
-            <div className="mt-5">
-              <Share url={url} text={textForShare} />
-              <FeaturedMaker />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </Layout>
   );
 };
 
-UsernameIndex.getInitialProps = async ({ query }) => {
+UsernameIndex.getInitialProps = async ({ query, res }) => {
   // User
   const username = query.username;
   const userData = await db
     .collection('publicUsers')
     .where('username', '==', username)
     .get();
+  if (userData.empty) {
+    res.statusCode = 404;
+    return {
+      user: {},
+      questionsData: [],
+    };
+  }
   const user = userData.docs[0].data();
   const returnUser = {
     username: user.username,
@@ -127,6 +141,7 @@ UsernameIndex.getInitialProps = async ({ query }) => {
         db.collection('upvotes').where('questionId', '==', question.id).get(),
       ]);
       returnQuestion.push({
+        id: question.id,
         text: question.text,
         slug: question.slug,
         created: question.created,
