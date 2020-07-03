@@ -36,16 +36,26 @@ const AskQuestion = () => {
     try {
       const id = uuid().split('-').join('');
       const slug = await generateSlug(title);
+      const created = getUnixTime();
       await db.collection('questions').doc(id).set({
         id,
-        created: getUnixTime(),
+        created,
         text: title,
         body,
         fromUserId: loginUser.uid,
         slug,
-        topics: topic,
         isGeneral: true,
       });
+
+      if (topic.length > 0) {
+        for (const t of topic) {
+          await db.collection('questionsTopic').add({
+            topic: t,
+            questionId: id,
+            questionCreated: created,
+          });
+        }
+      }
       message.success('Submitted successfully');
       router.push('/questions/[slug]', `/questions/${slug}`);
     } catch (err) {

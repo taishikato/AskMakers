@@ -25,6 +25,17 @@ const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
 
+const deleteTopic = async (questionId: string): Promise<void> => {
+  const snapShot = await db
+    .collection('questionsTopic')
+    .where('questionId', '==', questionId)
+    .get();
+  if (snapShot.empty) return;
+  for (const doc of snapShot.docs) {
+    await db.collection('questionsTopic').doc(doc.id).delete();
+  }
+};
+
 const QuestionsSlug = ({ question, answers }) => {
   const db = useContext(FirestoreContext);
   const router = useRouter();
@@ -62,6 +73,7 @@ const QuestionsSlug = ({ question, answers }) => {
       return;
     }
     await db.collection('questions').doc(question.id).delete();
+    await deleteTopic(question.id);
     router.push('/[username]', `/${loginUser.username}`);
   };
 

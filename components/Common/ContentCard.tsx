@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { Tag } from 'antd';
+import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 
 interface Props {
   question: any;
 }
 
-const ContentCard: React.FC<Props> = ({ question }) => {
+const ContentCard: FC<Props> = ({ question }) => {
   const questionObj = question;
+  const db = useContext(FirestoreContext);
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      const snapShot = await db
+        .collection('questionsTopic')
+        .where('questionId', '==', questionObj.question.id)
+        .get();
+      if (snapShot.empty) return;
+      const topicsForState = [];
+      for (const doc of snapShot.docs) {
+        const topicDocument = doc.data();
+        topicsForState.push(topicDocument.topic);
+      }
+      setTopics(topicsForState);
+    };
+    fetchTopics();
+  }, []);
+
   return (
     <>
       <div className="question-wrapper flex flex-wrapper items-center py-2 pr-2 mb-3 border-b">
@@ -72,40 +93,39 @@ const ContentCard: React.FC<Props> = ({ question }) => {
           </h3>
           <div className="flex justify-between items-end mt-1">
             <div>
-              {questionObj.question.topics !== undefined &&
-                questionObj.question.topics.map((topic, index) => {
-                  let color = '';
-                  switch (topic) {
-                    case 'idea':
-                      color = 'lime';
-                      break;
-                    case 'build':
-                      color = 'geekblue';
-                      break;
-                    case 'launch':
-                      color = 'volcano';
-                      break;
-                    case 'grow':
-                      color = 'green';
-                      break;
-                    case 'monetize':
-                      color = 'gold';
-                      break;
-                    case 'automate':
-                      color = 'orange';
-                      break;
-                    case 'exit':
-                      color = 'purple';
-                      break;
-                    default:
-                      break;
-                  }
-                  return (
-                    <Tag color={color} key={index}>
-                      {topic}
-                    </Tag>
-                  );
-                })}
+              {topics.map((topic, index) => {
+                let color = '';
+                switch (topic) {
+                  case 'idea':
+                    color = 'lime';
+                    break;
+                  case 'build':
+                    color = 'geekblue';
+                    break;
+                  case 'launch':
+                    color = 'volcano';
+                    break;
+                  case 'grow':
+                    color = 'green';
+                    break;
+                  case 'monetize':
+                    color = 'gold';
+                    break;
+                  case 'automate':
+                    color = 'orange';
+                    break;
+                  case 'exit':
+                    color = 'purple';
+                    break;
+                  default:
+                    break;
+                }
+                return (
+                  <Tag color={color} key={index}>
+                    {topic}
+                  </Tag>
+                );
+              })}
             </div>
           </div>
         </div>
