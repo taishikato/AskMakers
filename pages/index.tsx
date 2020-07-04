@@ -10,6 +10,7 @@ import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
 import ContentCard from '../components/Common/ContentCard';
 import ABoutMe from '../components/Top/AboutMe';
+import WhoIsMaking from '../components/Top/WhoIsMaking';
 import RecentAnswer from '../components/RecentAnswer';
 import AnswerRanking from '../components/AnswerRanking';
 import asyncForEach from '../plugins/asyncForEach';
@@ -159,6 +160,7 @@ const Home: NextPage<Props> = () => {
           </aside>
         </div>
       </div>
+      {!isLogin && <WhoIsMaking />}
     </Layout>
   );
 };
