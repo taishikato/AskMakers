@@ -10,8 +10,6 @@ import Tabs from '../../components/Username/Tabs';
 import Share from '../../components/Username/Share';
 import asyncForEach from '../../plugins/asyncForEach';
 import NotFound from '../../components/Common/NotFound';
-import IPublicUser from '../../interfaces/IPublicUser';
-import IQuestion from '../../interfaces/IQuestion';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
