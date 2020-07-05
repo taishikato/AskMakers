@@ -4,13 +4,14 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useSelector, connect } from 'react-redux';
 import Link from 'next/link';
-import Error from 'next/error';
+import NotFound from '../../components/Common/NotFound';
 import Layout from '../../components/Layout';
 import Input from '../../components/Input';
 import getUnixTime from '../../plugins/getUnixTime';
+import openNotificationWithIcon from '../../plugins/openNotificationWithIcon';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
-import { Checkbox, message } from 'antd';
+import { Checkbox } from 'antd';
 import topicOptions from '../../consts/topicOptions';
 import IQuestion from '../../interfaces/IQuestion';
 import firebase from '../../plugins/firebase';
@@ -20,6 +21,29 @@ import { wrapper, IInitialState } from '../../store/store';
 const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
+
+const resetTopic = async (
+  db: firebase.firestore.Firestore,
+  question,
+  topic: string[]
+) => {
+  const topicsSnapShot = await db
+    .collection('questionsTopic')
+    .where('questionId', '==', question.id)
+    .get();
+  if (!topicsSnapShot.empty) {
+    for (const doc of topicsSnapShot.docs) {
+      await db.collection('questionsTopic').doc(doc.id).delete();
+    }
+  }
+  for (const t of topic) {
+    await db.collection('questionsTopic').add({
+      topic: t,
+      questionId: question.id,
+      questionCreated: question.created,
+    });
+  }
+};
 
 const EditQuestionSlug: NextPage = () => {
   const router = useRouter();
@@ -43,10 +67,26 @@ const EditQuestionSlug: NextPage = () => {
       const question = questionData.docs[0].data();
       setQuestion(question as IQuestion);
     };
-    getQuestion();
-  }, []);
+    if (Object.keys(router.query).length > 0) getQuestion();
+  }, [router.query]);
 
   useEffect(() => {
+    const getTopics = async () => {
+      const topicData = await db
+        .collection('questionsTopic')
+        .where('questionId', '==', question.id)
+        .get();
+      if (topicData.empty) return;
+
+      const topicArray = [];
+      for (const doc of topicData.docs) {
+        const topic = doc.data();
+        topicArray.push(topic.topic);
+      }
+      setTopic(topicArray);
+    };
+    if (question.id !== undefined) getTopics();
+
     if (question.id === undefined) return;
     if (loginUser.uid !== question.fromUserId) {
       setNoAuth(true);
@@ -54,9 +94,6 @@ const EditQuestionSlug: NextPage = () => {
     }
     setTitle(question.text);
     setBody(question.body);
-    if (question.topics.length > 0) {
-      setTopic(question.topics);
-    }
   }, [question]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,11 +105,12 @@ const EditQuestionSlug: NextPage = () => {
         updated: getUnixTime(),
         text: title,
         body,
-        topics: topic,
       });
-      message.success('Submitted successfully');
+      // Topic
+      await resetTopic(db, question, topic);
+      openNotificationWithIcon('success', 'Updated successfully');
     } catch (err) {
-      message.error('An error occured. Please try again.');
+      openNotificationWithIcon('error', 'An error occured. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -99,7 +137,7 @@ const EditQuestionSlug: NextPage = () => {
         />
       </Head>
       {noAuth ? (
-        <Error statusCode={404} />
+        <NotFound />
       ) : (
         <div className="w-full p-2 md:p-0 lg:p-0 md:w-8/12 lg:w-8/12 m-auto my-10">
           <h1 className="text-3xl font-medium mb-5">Edit a question</h1>
