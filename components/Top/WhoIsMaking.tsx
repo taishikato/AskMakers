@@ -5,7 +5,7 @@ import NewsLetter from './NewsLetter';
 const WhoIsMaking = () => {
   return (
     <section id="who-is-making" className="bg-gray-100 py-16">
-      <div className="w-7/12 m-auto">
+      <div className="w-11/12 md:w-7/12 lg:w-7/12 m-auto">
         <h2 className="font-bold text-3xl text-center mb-2 text-green-400">
           Who is making AskMakers?
         </h2>
