@@ -118,17 +118,17 @@ const Home: NextPage<Props> = () => {
                 ))}
                 {isLoadingMoreQuestions ? (
                   <button
-                    className="block m-auto rounded bg-green-200 py-2 px-4 text-white"
+                    className="block m-auto rounded-full bg-green-200 py-3 px-6 text-white font-semibold text-lg"
                     disabled
                   >
                     Loading…
                   </button>
                 ) : (
                   <button
-                    className="block m-auto rounded bg-green-400 py-2 px-4 text-white"
+                    className="block m-auto rounded-full bg-green-500 py-3 px-6 text-white font-semibold text-lg focus:outline-none"
                     onClick={loadMoreQuestions}
                   >
-                    Load more
+                    Load more questions
                   </button>
                 )}
               </>
