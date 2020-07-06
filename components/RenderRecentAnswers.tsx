@@ -34,7 +34,7 @@ const RenderRecentAnswers: React.FC<IProps> = ({ answerData }) => {
             >
               <a className="text-gray-800">
                 {answerObj.answer.content.length <= 90 ? (
-                  <p className="text-sm">{answerObj.answer.content.length}</p>
+                  <p className="text-sm">{answerObj.answer.content}</p>
                 ) : (
                   <p className="text-sm">{`${answerObj.answer.content.substr(
                     0,

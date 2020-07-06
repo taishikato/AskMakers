@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RenderRecentAnswers from '../components/RenderRecentAnswers';
 import asyncForEach from '../plugins/asyncForEach';
 import Card from './Common/Card';
@@ -9,13 +9,13 @@ const db = firebase.firestore();
 
 const RecentAnswer = () => {
   const [answerData, setAnswerData] = React.useState<any>([]);
-  React.useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
       const answerDataSet = [];
       const recentAnswers = await db
         .collection('answers')
         .orderBy('created', 'desc')
-        .limit(3)
+        .limit(5)
         .get();
       await asyncForEach(recentAnswers.docs, async (doc) => {
         const answer = doc.data();
