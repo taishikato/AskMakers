@@ -51,7 +51,7 @@ const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
           answerData={{ answer, user }}
           handleDeleteAnswer={handleDeleteAnswer}
           questionSlug={question.slug}
-          questionTitle={answer.content}
+          questionTitle={question.text}
         />
       </div>
     </Layout>

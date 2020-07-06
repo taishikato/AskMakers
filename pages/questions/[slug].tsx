@@ -172,7 +172,7 @@ const QuestionsSlug = ({ question, answers }) => {
                       answerData={{ answer: answer.answer, user: answer.user }}
                       handleDeleteAnswer={handleDeleteAnswer}
                       questionSlug={question.slug}
-                      questionTitle={answer.content}
+                      questionTitle={question.text}
                     />
                   </div>
                 ))}
