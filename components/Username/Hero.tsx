@@ -3,6 +3,7 @@ import TwitterIcon from '../../components/TwitterIcon';
 import ProducthuntIcon from '../../components/ProducthuntIcon';
 import GitHubIcon from '../../components/GitHubIcon';
 import PatreonIcon from '../../components/PatreonIcon';
+import FeaturedMark from '../Common/FeaturedMark';
 import IPublicUser from '../../interfaces/IPublicUser';
 
 interface IProps {
@@ -23,7 +24,14 @@ const Hero: React.FC<IProps> = ({ user }) => {
             />
           </div>
           <div className="w-full md:w-7/12 lg:w-7/12 ml-0 md:ml-5 lg:ml-5">
-            <h1 className="font-bold text-2xl">{user.customName}</h1>
+            <div className="flex items-center justify-center md:justify-start	lg:justify-start">
+              <h1 className="font-bold text-2xl">{user.customName}</h1>
+              {user.isFeatured && (
+                <div className="ml-2">
+                  <FeaturedMark />
+                </div>
+              )}
+            </div>
             <div className="text-lg">{user.tagline}</div>
             {user.website !== undefined && user.website !== '' && (
               <div>

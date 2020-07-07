@@ -77,6 +77,7 @@ AnswersSlugId.getInitialProps = async ({ query }) => {
       customName: user.customName,
       username: user.username,
       picture: user.picture,
+      isFeatured: user.isFeatured,
     },
   };
 };

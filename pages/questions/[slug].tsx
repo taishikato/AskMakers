@@ -278,6 +278,7 @@ QuestionsSlug.getInitialProps = async ({ query, res }) => {
         username: user.username,
         customName: user.customName,
         picture: user.picture,
+        isFeatured: user.isFeatured,
       };
       answers.push({
         answer,

@@ -121,7 +121,10 @@ UsernameIndex.getInitialProps = async ({ query, res }) => {
     picture: user.picture,
     social: user.social,
     website: user.website,
+    isFeatured: false,
   };
+
+  if (user.isFeatured) returnUser.isFeatured = user.isFeatured;
 
   let returnQuestion: any = [];
   const questionData = await db

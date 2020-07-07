@@ -147,7 +147,7 @@ const AnswerWrapper: React.FC<Props> = ({
 
   return (
     <>
-      <div className="container text-xl font-light p-4 border-2 rounded">
+      <div className="container text-lg font-light p-4 border-2 rounded">
         <ReactMarkdown source={answerData.answer.content} />
         <div className="mt-3">
           <ImageAndName user={answerData.user} />

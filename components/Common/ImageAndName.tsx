@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from './Image';
+import FeaturedMark from './FeaturedMark';
 import IPublicUser from '../../interfaces/IPublicUser';
 
 interface Iprops {
@@ -20,6 +21,11 @@ const ImageAndName: React.FC<Iprops> = ({ user }) => {
           {user.customName}
         </a>
       </Link>
+      {user.isFeatured && (
+        <div className="ml-2">
+          <FeaturedMark />
+        </div>
+      )}
     </div>
   );
 };

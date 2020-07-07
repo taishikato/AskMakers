@@ -11,6 +11,7 @@ interface IPublicUser {
   uid?: string;
   username?: string;
   website?: string;
+  isFeatured?: boolean;
 }
 
 export default IPublicUser;
