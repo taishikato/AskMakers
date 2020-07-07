@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Skeleton } from 'antd';
 import Image from './Common/Image';
+import FeaturedMark from './Common/FeaturedMark';
 
 interface IProps {
   answerData: any;
@@ -21,13 +22,20 @@ const RenderRecentAnswers: React.FC<IProps> = ({ answerData }) => {
             </a>
           </Link>
           <div className="w-9/12">
-            <Link href="/[username]" as={`/${answerObj.user.username}`}>
-              <a className="text-gray-800">
-                <span className="hover:underline font-semibold hover:no-underline">
-                  {answerObj.user.customName}
-                </span>
-              </a>
-            </Link>
+            <div className="flex items-center">
+              <Link href="/[username]" as={`/${answerObj.user.username}`}>
+                <a className="text-gray-800">
+                  <span className="hover:underline font-semibold hover:no-underline">
+                    {answerObj.user.customName}
+                  </span>
+                </a>
+              </Link>
+              {answerObj.user.isFeatured && (
+                <div className="ml-2">
+                  <FeaturedMark />
+                </div>
+              )}
+            </div>
             <Link
               href="/answers/[slug]/[id]"
               as={`/answers/${answerObj.question.slug}/${answerObj.answer.id}`}
