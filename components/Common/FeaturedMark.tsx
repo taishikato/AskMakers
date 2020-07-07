@@ -6,7 +6,7 @@ import { Tooltip } from 'antd';
 const FeaturedMark = () => {
   return (
     <Tooltip title="Featured Maker">
-      <div className="bg-blue-400 text-white h-5 w-5 rounded-full flex items-center justify-center">
+      <div className="bg-blue-500 text-white h-5 w-5 rounded-full flex items-center justify-center">
         <FontAwesomeIcon icon={faStar} className="h-3 w-3" />
       </div>
     </Tooltip>
