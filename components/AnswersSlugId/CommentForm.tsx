@@ -2,10 +2,12 @@ import React, { FC, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
+import Modal from 'react-modal';
 import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import generateUuid from '../../plugins/generateUuid';
 import getUnixTime from '../../plugins/getUnixTime';
 import openNotificationWithIcon from '../../plugins/openNotificationWithIcon';
+import SignUpModal from '../Navbar/SignUpModal';
 import IComment from '../../interfaces/IComment';
 
 const mdParser = new MarkdownIt();
@@ -18,6 +20,7 @@ const CommentForm: FC<IProps> = ({ answerId }) => {
   const [comment, setComment] = useState('');
   const [hasError, setHasError] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
@@ -82,11 +85,41 @@ const CommentForm: FC<IProps> = ({ answerId }) => {
           </div>
         </div>
       ) : (
-        <div>
-          <button className="w-full p-2 border rounded text-gray-600 text-left focus:outline-none">
-            Add a comment…
-          </button>
-        </div>
+        <>
+          <div>
+            <button
+              className="w-full p-2 border rounded text-gray-600 text-left focus:outline-none"
+              onClick={() => setIsSignupModalOpen(true)}
+            >
+              Add a comment…
+            </button>
+          </div>
+          <Modal
+            isOpen={isSignupModalOpen}
+            onRequestClose={() => setIsSignupModalOpen(false)}
+            ariaHideApp={false}
+            style={{
+              overlay: {
+                zIndex: 100000,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              },
+              content: {
+                padding: '1.25rem',
+                width: '600px',
+                maxWidth: '100%',
+                position: 'absolute',
+                top: '40%',
+                left: '50%',
+                bottom: 'none',
+                transform: 'translateY(-50%)translateX(-50%)',
+                border: 'none',
+                backgroundColor: '#f9f9f9',
+              },
+            }}
+          >
+            <SignUpModal />
+          </Modal>
+        </>
       )}
     </>
   );
