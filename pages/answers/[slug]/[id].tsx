@@ -7,6 +7,9 @@ import AnswerWrapper from '../../../components/AnswersSlugId/AnswerWrapper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { message } from 'antd';
 import QuestionContext from '../../../components/Common/QuestionContext';
+import Devider from '../../../components/Common/Devider';
+import CommentForm from '../../../components/AnswersSlugId/CommentForm';
+import Comments from '../../../components/AnswersSlugId/Comments';
 import { FirestoreContext } from '../../../contexts/FirestoreContextProvider';
 import firebase from '../../../plugins/firebase';
 import 'firebase/firestore';
@@ -53,6 +56,9 @@ const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
           questionSlug={question.slug}
           questionTitle={question.text}
         />
+        <Devider />
+        <CommentForm answerId={answer.id} />
+        <Comments answerId={answer.id} />
       </div>
     </Layout>
   );
