@@ -125,6 +125,7 @@ const ContentCard: FC<Props> = ({ question }) => {
                     <img
                       src={user.picture}
                       alt={user.customName}
+                      title={user.customName}
                       className="border w-6 h-6 rounded-full inline mr-1"
                     />
                   </a>
