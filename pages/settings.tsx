@@ -11,6 +11,7 @@ import getBase64 from '../plugins/getBase64';
 import uploadToStorage from '../plugins/uploadToStorage';
 import SignUpModal from '../components/Navbar/SignUpModal';
 import firebase from '../plugins/firebase';
+import 'firebase/storage';
 
 const notificationDocName = 'notifications';
 
@@ -145,6 +146,7 @@ const Settings = () => {
       openNotificationWithIcon('success', 'Updated successfully');
       dispatch(loginUserAction(updateData));
     } catch (err) {
+      console.error(err);
       openNotificationWithIcon('error', 'An error occured. Please try again.');
     } finally {
       setIsSaving(false);
