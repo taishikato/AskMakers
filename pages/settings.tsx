@@ -26,10 +26,12 @@ const Settings = () => {
   const [github, setGithub] = useState('');
   const [patreon, setPatreon] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [
-    getNewQuestionNotification,
-    setGetNewQuestionNotification,
-  ] = React.useState(true);
+  const [getNewQuestionNotification, setGetNewQuestionNotification] = useState(
+    true
+  );
+  const [getNewCommentNotification, setGetNewCommentNotification] = useState(
+    true
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
@@ -85,6 +87,8 @@ const Settings = () => {
       const settings = settingsSnapShot.data();
       if (settings.getNewQuestionNotification === undefined) return;
       setGetNewQuestionNotification(settings.getNewQuestionNotification);
+      if (settings.getNewCommentNotification === undefined) return;
+      setGetNewCommentNotification(settings.getNewCommentNotification);
     };
     if (loginUser.uid !== undefined) fetchSettings();
   }, [loginUser]);
@@ -129,7 +133,7 @@ const Settings = () => {
           .doc(loginUser.uid)
           .collection('settings')
           .doc(notificationDocName)
-          .update({ getNewQuestionNotification });
+          .update({ getNewQuestionNotification, getNewCommentNotification });
       } else {
         await db
           .collection('publicUsers')
@@ -283,6 +287,25 @@ const Settings = () => {
                         onChange={() =>
                           setGetNewQuestionNotification(
                             !getNewQuestionNotification
+                          )
+                        }
+                        className="form-checkbox text-green-500 h-5 w-5"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label
+                        className="font-semibold mb-2 block"
+                        htmlFor="new-comment-notification"
+                      >
+                        New Comment Notification
+                      </label>
+                      <input
+                        id="new-comment-notification"
+                        checked={getNewCommentNotification}
+                        type="checkbox"
+                        onChange={() =>
+                          setGetNewCommentNotification(
+                            !getNewCommentNotification
                           )
                         }
                         className="form-checkbox text-green-500 h-5 w-5"

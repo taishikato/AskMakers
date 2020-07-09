@@ -76,6 +76,22 @@ exports.scheduledSetMostUpvotedAnswersCrontab = functions.pubsub
  * Algoliaに追加
  * メール通知送信
  */
+const checkIfGetNewCommentEmailNotification = async (
+  uid: string,
+  database: FirebaseFirestore.Firestore
+) => {
+  const settingSnapShot = await database
+    .collection('publicUsers')
+    .doc(uid)
+    .collection('settings')
+    .doc('notifications')
+    .get();
+  if (!settingSnapShot.exists) return true;
+  const settings = settingSnapShot.data();
+  if (settings!.getNewCommentNotification === undefined) return true;
+  if (settings!.getNewCommentNotification === true) return true;
+  return false;
+};
 exports.onCommentCreated = functions.firestore
   .document('comments/{commentId}')
   .onCreate(async (snap, context) => {
@@ -99,10 +115,16 @@ exports.onCommentCreated = functions.firestore
     const publicUser = publicSnap.data();
     const secret = secretSnap.data();
 
+    const mailList = ['taishi.k0903@gmail.com'];
+
+    const ifGetNotification = await checkIfGetNewCommentEmailNotification(
+      publicUser!.uid,
+      db
+    );
+    if (ifGetNotification) mailList.push(secret!.email);
+
     const url = `https://askmakers.co/answers/${question!.slug}/${answer!.id}`;
     const commentUserUrl = `https://askmakers.co/${commentUser!.username}`;
-
-    const mailList = [secret!.email, 'taishi.k0903@gmail.com'];
 
     for (const mail of mailList) {
       const data = {
