@@ -24,7 +24,6 @@ const CommentForm: FC<IProps> = ({ answerId }) => {
   const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
-
   const db = useContext(FirestoreContext);
 
   const PostComment = async () => {
