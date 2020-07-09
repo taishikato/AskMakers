@@ -3,6 +3,7 @@ import moment from 'moment';
 import Modal from 'react-modal';
 import ImageAndName from '../Common/ImageAndName';
 import { useSelector } from 'react-redux';
+import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -52,7 +53,9 @@ const Comment: FC<IProps> = ({ comment }) => {
             {moment.unix(comment.created).format('LL')}
           </span>
         </div>
-        <div className="mt-3">{comment.content}</div>
+        <div className="mt-3">
+          <ReactMarkdown source={comment.content} />
+        </div>
         {loginUser.uid === comment.userId && (
           <div className="flex items-center justify-end">
             <button
