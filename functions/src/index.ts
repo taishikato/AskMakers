@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import algoliasearch from 'algoliasearch';
 import addGeneralQuestion from './addGeneralQuestion';
+import sendEmailNotification from './onAnswerCreated/sendEmailNotification';
 import asyncForEach from './asyncForEach';
 
 // Mailgun
@@ -166,6 +167,16 @@ exports.onCommentCreated = functions.firestore
         }
       });
     }
+  });
+
+/**
+ * 回答新規追加
+ * メール通知送信
+ */
+exports.onAnswerCreated = functions.firestore
+  .document('answers/{answerId}')
+  .onCreate(async (snap, context) => {
+    await sendEmailNotification(db, mg, snap);
   });
 
 /**

@@ -18,7 +18,7 @@ const addGeneralQuestion = async (
       mailAdressArray.push(user.email);
     }
   });
-  mailAdressArray.push('taishi@hey.com');
+  mailAdressArray.push('taishi.k0903@gmail.com');
   // メール送信
   const question = snap.data();
   mailAdressArray.forEach(async (email) => {
