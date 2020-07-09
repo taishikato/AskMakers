@@ -25,8 +25,7 @@ const AboutMe = () => {
             className="text-blue-500"
           >
             @askmakers_app
-          </a>{' '}
-          or taishi@hey.com
+          </a>
         </p>
       </div>
     </Card>

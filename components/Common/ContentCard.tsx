@@ -11,6 +11,7 @@ const ContentCard: FC<Props> = ({ question }) => {
   const questionObj = question;
   const db = useContext(FirestoreContext);
   const [topics, setTopics] = useState([]);
+  const [answerUsers, setAnswerUsers] = useState([]);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -27,6 +28,26 @@ const ContentCard: FC<Props> = ({ question }) => {
       setTopics(topicsForState);
     };
     fetchTopics();
+
+    const fetchAnswerUsers = async () => {
+      const answersSnap = await db
+        .collection('answers')
+        .where('questionId', '==', questionObj.question.id)
+        .get();
+      if (answersSnap.empty) return;
+
+      const usersList = [];
+      for (const doc of answersSnap.docs) {
+        const answer = doc.data();
+        const userSnap = await db
+          .collection('publicUsers')
+          .doc(answer.answerUserId)
+          .get();
+        usersList.push(userSnap.data());
+      }
+      setAnswerUsers(usersList);
+    };
+    fetchAnswerUsers();
   }, []);
 
   return (
@@ -83,7 +104,7 @@ const ContentCard: FC<Props> = ({ question }) => {
               {questionObj.question.answerCount > 1 && <span>answers</span>}
             </li>
           </ul>
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-lg font-semibold">
             <Link
               href="/questions/[slug]"
               as={`/questions/${questionObj.question.slug}`}
@@ -91,6 +112,27 @@ const ContentCard: FC<Props> = ({ question }) => {
               <a className="text-gray-800">{questionObj.question.text}</a>
             </Link>
           </h3>
+          {questionObj.question.body !== undefined && (
+            <p className="text-gray-700 text-sm font-light">
+              {questionObj.question.body.substr(0, 90)}
+            </p>
+          )}
+          {answerUsers.length > 0 && (
+            <div className="mt-1">
+              {answerUsers.map((user, index) => (
+                <Link href="/[username]" as={`/${user.username}`} key={index}>
+                  <a>
+                    <img
+                      src={user.picture}
+                      alt={user.customName}
+                      title={user.customName}
+                      className="border w-6 h-6 rounded-full inline mr-1"
+                    />
+                  </a>
+                </Link>
+              ))}
+            </div>
+          )}
           <div className="flex justify-between items-end mt-1">
             <div>
               {topics.map((topic, index) => {
