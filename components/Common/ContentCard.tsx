@@ -112,10 +112,15 @@ const ContentCard: FC<Props> = ({ question }) => {
               <a className="text-gray-800">{questionObj.question.text}</a>
             </Link>
           </h3>
+          {questionObj.question.body !== undefined && (
+            <p className="text-gray-700 text-sm font-light">
+              {questionObj.question.body.substr(0, 90)}
+            </p>
+          )}
           {answerUsers.length > 0 && (
             <div className="mt-1">
-              {answerUsers.map((user) => (
-                <Link href="/[username]" as={`/${user.username}`}>
+              {answerUsers.map((user, index) => (
+                <Link href="/[username]" as={`/${user.username}`} key={index}>
                   <a>
                     <img
                       src={user.picture}
