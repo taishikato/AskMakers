@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowAltCircleUp,
@@ -6,6 +7,7 @@ import {
   faBookmark,
 } from '@fortawesome/free-regular-svg-icons';
 import {
+  faComments,
   faArrowAltCircleUp as faArrowAltCircleUped,
   faBookmark as faBookmarked,
 } from '@fortawesome/free-solid-svg-icons';
@@ -203,6 +205,21 @@ const AnswerWrapper: React.FC<Props> = ({
                 </button>
               </Tooltip>
             )}
+          </span>
+          <span className="mr-4">
+            <Link
+              href="/answers/[slug]/[id]"
+              as={`/answers/${questionSlug}/${answerData.answer.id}`}
+            >
+              <a className="block">
+                <Tooltip title="Add a comment">
+                  <FontAwesomeIcon
+                    icon={faComments}
+                    className="h-5 w-5 text-green-500"
+                  />
+                </Tooltip>
+              </a>
+            </Link>
           </span>
           <span className="mr-3">
             <a
