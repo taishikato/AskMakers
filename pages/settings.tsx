@@ -100,7 +100,6 @@ const Settings = () => {
       const updateData: IUpdateData = {};
 
       if (name === '') {
-        // message.error('Please put your name');
         openNotificationWithIcon('error', 'Please put your name');
         return;
       }
@@ -294,11 +293,15 @@ const Settings = () => {
                     </div>
                     <div className="mb-3">
                       <label
-                        className="font-semibold mb-2 block"
+                        className="font-semibold block"
                         htmlFor="new-comment-notification"
                       >
                         New Comment Notification
                       </label>
+                      <p className="text-sm mb-2">
+                        You get this notification when someone comments on your
+                        answer.
+                      </p>
                       <input
                         id="new-comment-notification"
                         checked={getNewCommentNotification}
