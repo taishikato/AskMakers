@@ -72,6 +72,81 @@ exports.scheduledSetMostUpvotedAnswersCrontab = functions.pubsub
   });
 
 /**
+ * 質問コメント追加
+ * Algoliaに追加
+ * メール通知送信
+ */
+exports.onCommentCreated = functions.firestore
+  .document('comments/{commentId}')
+  .onCreate(async (snap, context) => {
+    const comment = snap.data();
+    const answerSnapShot = await db
+      .collection('answers')
+      .doc(comment.answerId)
+      .get();
+    const answer = answerSnapShot.data();
+    const questionSnapShot = await db
+      .collection('questions')
+      .doc(answer!.questionId)
+      .get();
+    const question = questionSnapShot.data();
+    const [commentUserSnap, publicSnap, secretSnap] = await Promise.all([
+      db.collection('publicUsers').doc(comment.userId).get(),
+      db.collection('publicUsers').doc(answer!.answerUserId).get(),
+      db.collection('secretUsers').doc(answer!.answerUserId).get(),
+    ]);
+    const commentUser = commentUserSnap.data();
+    const publicUser = publicSnap.data();
+    const secret = secretSnap.data();
+
+    const url = `https://askmakers.co/answers/${question!.slug}/${answer!.id}`;
+    const commentUserUrl = `https://askmakers.co/${commentUser!.username}`;
+
+    const mailList = [secret!.email, 'taishi.k0903@gmail.com'];
+
+    for (const mail of mailList) {
+      const data = {
+        from: 'AskMakers <community@mail.askmakers.co>',
+        to: [mail],
+        subject: `${
+          commentUser!.customName
+        } commented on your answer 💬 | AskMakers`,
+        text: `${
+          commentUser!.customName
+        } commented on your answer! Please check it out! ${url}`,
+        html: `<div style="max-width:600px; margin: 0 auto;">
+        <p style="text-align: center;"><img src="https://askmakers.co/askmakers-300.png" width="80px" style="border-radius: 9999px"/></p>
+        <p style="font-size: 18px;font-weight: bold;line-height: 22.5px; text-align: center;">Hi, ${
+          publicUser!.customName
+        }! You have a new comment on AskMakers.</p>
+        <div style="padding-top: 10px;">
+          <div style="background-color: #c6f6d5; border-left: 3px solid #48bb78; line-height: 1.4em; margin: 0 0 12px; max-width: 640px; padding: 12px 16px;">${
+            comment.content
+          }</div>
+          <div>
+            This comment was posted by <a href="${commentUserUrl}">${
+          commentUser!.customName
+        }</a> in <a href="${url}">your answer</a>.
+          </div>
+        </div>
+        <div style="padding:38px 0">
+          <div style="border-top: 1px solid hsl(0,0%,88%);"></div>
+        </div>
+        <footer style="color: hsl(0,0%,50%);font-size: 13px; line-height: 18.75px; text-align: center;">
+          You can turn off the notification <a href="https://askmakers.co/settings">here</a>.
+        </footer>
+        </div>`,
+      };
+      await mg.messages().send(data, (err: any, body: any) => {
+        console.log(body);
+        if (err) {
+          console.error(err);
+        }
+      });
+    }
+  });
+
+/**
  * 質問新規追加
  * Algoliaに追加
  * メール通知送信
