@@ -33,6 +33,9 @@ const Settings = () => {
   const [getNewCommentNotification, setGetNewCommentNotification] = useState(
     true
   );
+  const [getNewanswerNotification, setGetNewanswerNotification] = useState(
+    true
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
@@ -90,6 +93,8 @@ const Settings = () => {
       setGetNewQuestionNotification(settings.getNewQuestionNotification);
       if (settings.getNewCommentNotification === undefined) return;
       setGetNewCommentNotification(settings.getNewCommentNotification);
+      if (settings.getNewanswerNotification === undefined) return;
+      setGetNewanswerNotification(settings.getNewanswerNotification);
     };
     if (loginUser.uid !== undefined) fetchSettings();
   }, [loginUser]);
@@ -133,14 +138,22 @@ const Settings = () => {
           .doc(loginUser.uid)
           .collection('settings')
           .doc(notificationDocName)
-          .update({ getNewQuestionNotification, getNewCommentNotification });
+          .update({
+            getNewQuestionNotification,
+            getNewCommentNotification,
+            getNewanswerNotification,
+          });
       } else {
         await db
           .collection('publicUsers')
           .doc(loginUser.uid)
           .collection('settings')
           .doc(notificationDocName)
-          .set({ getNewQuestionNotification });
+          .set({
+            getNewQuestionNotification,
+            getNewCommentNotification,
+            getNewanswerNotification,
+          });
       }
       setHasSettingsDoc(true);
       openNotificationWithIcon('success', 'Updated successfully');
@@ -274,9 +287,9 @@ const Settings = () => {
                 </h2>
                 <div className="flex flex-wrap justify-between -mx-3">
                   <div className="w-full md:w-6/12 lg:w-6/12 px-3">
-                    <div className="mb-3">
+                    <div className="mb-4">
                       <label
-                        className="font-semibold mb-2 block"
+                        className="font-semibold mb-1 block"
                         htmlFor="new-question-notification"
                       >
                         New Question Notification
@@ -293,14 +306,14 @@ const Settings = () => {
                         className="form-checkbox text-green-500 h-5 w-5"
                       />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-4">
                       <label
                         className="font-semibold block"
                         htmlFor="new-comment-notification"
                       >
                         New Comment Notification
                       </label>
-                      <p className="text-sm mb-2">
+                      <p className="text-sm mb-1">
                         You get this notification when someone comments on your
                         answer.
                       </p>
@@ -312,6 +325,27 @@ const Settings = () => {
                           setGetNewCommentNotification(
                             !getNewCommentNotification
                           )
+                        }
+                        className="form-checkbox text-green-500 h-5 w-5"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        className="font-semibold block"
+                        htmlFor="new-answer-notification"
+                      >
+                        New Answer Notification
+                      </label>
+                      <p className="text-sm mb-1">
+                        You get this notification when someone answers your
+                        question.
+                      </p>
+                      <input
+                        id="new-answer-notification"
+                        checked={getNewanswerNotification}
+                        type="checkbox"
+                        onChange={() =>
+                          setGetNewanswerNotification(!getNewanswerNotification)
                         }
                         className="form-checkbox text-green-500 h-5 w-5"
                       />
