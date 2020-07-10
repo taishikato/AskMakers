@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import asyncForEach from '../../plugins/asyncForEach';
 import postAnswer from '../../plugins/postAnswer';
+import openNotificationWithIcon from '../../plugins/openNotificationWithIcon';
 import AnswerWrapper from '../../components/AnswersSlugId/AnswerWrapper';
 import ReactMde from 'react-mde';
 import MarkdownIt from 'markdown-it';
@@ -16,7 +17,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
-import { message } from 'antd';
 import QuestionContext from '../../components/Common/QuestionContext';
 import NotFound from '../../components/Common/NotFound';
 import firebase from '../../plugins/firebase';
@@ -56,7 +56,7 @@ const QuestionsSlug = ({ question, answers }) => {
     await postAnswer(db, loginUser, question, id, answerValue);
     setIsPosting(false);
     setAnswerValue('');
-    message.success('Submitted successfully');
+    openNotificationWithIcon('success', 'Posted your answer successfully');
   };
 
   const handleDeleteAnswer = async (answerId) => {
@@ -64,7 +64,7 @@ const QuestionsSlug = ({ question, answers }) => {
       return;
     }
     await db.collection('answers').doc(answerId).delete();
-    message.success('Deleted successfully');
+    openNotificationWithIcon('success', 'Deleted successfully');
     router.push('/questions/[slug]', `/questions/${question.slug}`);
   };
 

@@ -9,6 +9,7 @@ import { message } from 'antd';
 import QuestionContext from '../../../components/Common/QuestionContext';
 import Devider from '../../../components/Common/Devider';
 import CommentForm from '../../../components/AnswersSlugId/CommentForm';
+import NotFound from '../../../components/Common/NotFound';
 import Comments from '../../../components/AnswersSlugId/Comments';
 import { FirestoreContext } from '../../../contexts/FirestoreContextProvider';
 import firebase from '../../../plugins/firebase';
@@ -48,27 +49,40 @@ const AnswersSlugId: NextPage<Props> = ({ question, answer, user }) => {
           content={description}
         />
       </Head>
-      <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
-        <QuestionContext question={question} />
-        <AnswerWrapper
-          answerData={{ answer, user }}
-          handleDeleteAnswer={handleDeleteAnswer}
-          questionSlug={question.slug}
-          questionTitle={question.text}
-        />
-        <Devider />
-        <CommentForm answerId={answer.id} />
-        <Comments answerId={answer.id} />
-      </div>
+      {answer.id === undefined ? (
+        <NotFound />
+      ) : (
+        <div className="w-full md:w-7/12 lg:w-7/12 mt-8 m-auto p-3">
+          <QuestionContext question={question} />
+          <AnswerWrapper
+            answerData={{ answer, user }}
+            handleDeleteAnswer={handleDeleteAnswer}
+            questionSlug={question.slug}
+            questionTitle={question.text}
+          />
+          <Devider />
+          <CommentForm answerId={answer.id} />
+          <Comments answerId={answer.id} />
+        </div>
+      )}
     </Layout>
   );
 };
 
-AnswersSlugId.getInitialProps = async ({ query }) => {
+AnswersSlugId.getInitialProps = async ({ query, res }) => {
   const [questionData, answerData] = await Promise.all([
     db.collection('questions').where('slug', '==', query.slug).get(),
     db.collection('answers').where('id', '==', query.id).get(),
   ]);
+
+  if (questionData.empty || answerData.empty) {
+    res.statusCode = 404;
+    return {
+      user: {},
+      question: {},
+      answer: {},
+    };
+  }
   const question = questionData.docs[0].data();
   const answer = answerData.docs[0].data();
   const userData = await db
