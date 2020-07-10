@@ -26,7 +26,11 @@ export default async (
   const questionUserP = questionUserPSnapshot.data();
   const questionUserS = questionUserSSnapshot.data();
 
-  mailList.push(questionUserS!.email);
+  const ifGetNotification = await checkIfGetEmailNotification(
+    questionUserP!.uid,
+    db
+  );
+  if (ifGetNotification) mailList.push(questionUserS!.email);
 
   const url = `https://askmakers.co/answers/${question!.slug}/${answer.id}`;
   const answerUserUrl = `https://askmakers.co/${answerUser!.username}`;
@@ -72,4 +76,20 @@ export default async (
       }
     });
   }
+};
+
+const checkIfGetEmailNotification = async (
+  uid: string,
+  db: FirebaseFirestore.Firestore
+) => {
+  const settingSnapShot = await db
+    .collection('publicUsers')
+    .doc(uid)
+    .collection('settings')
+    .doc('notifications')
+    .get();
+  if (!settingSnapShot.exists) return true;
+  const settings = settingSnapShot.data();
+  if (settings!.getNewAnswerNotification === undefined) return true;
+  return settings!.getNewAnswerNotification === true;
 };

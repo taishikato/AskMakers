@@ -33,7 +33,7 @@ const Settings = () => {
   const [getNewCommentNotification, setGetNewCommentNotification] = useState(
     true
   );
-  const [getNewanswerNotification, setGetNewanswerNotification] = useState(
+  const [getNewAnswerNotification, setGetNewAnswerNotification] = useState(
     true
   );
   const [isSaving, setIsSaving] = useState(false);
@@ -93,8 +93,8 @@ const Settings = () => {
       setGetNewQuestionNotification(settings.getNewQuestionNotification);
       if (settings.getNewCommentNotification === undefined) return;
       setGetNewCommentNotification(settings.getNewCommentNotification);
-      if (settings.getNewanswerNotification === undefined) return;
-      setGetNewanswerNotification(settings.getNewanswerNotification);
+      if (settings.getNewAnswerNotification === undefined) return;
+      setGetNewAnswerNotification(settings.getNewAnswerNotification);
     };
     if (loginUser.uid !== undefined) fetchSettings();
   }, [loginUser]);
@@ -141,7 +141,7 @@ const Settings = () => {
           .update({
             getNewQuestionNotification,
             getNewCommentNotification,
-            getNewanswerNotification,
+            getNewAnswerNotification,
           });
       } else {
         await db
@@ -152,7 +152,7 @@ const Settings = () => {
           .set({
             getNewQuestionNotification,
             getNewCommentNotification,
-            getNewanswerNotification,
+            getNewAnswerNotification,
           });
       }
       setHasSettingsDoc(true);
@@ -342,10 +342,10 @@ const Settings = () => {
                       </p>
                       <input
                         id="new-answer-notification"
-                        checked={getNewanswerNotification}
+                        checked={getNewAnswerNotification}
                         type="checkbox"
                         onChange={() =>
-                          setGetNewanswerNotification(!getNewanswerNotification)
+                          setGetNewAnswerNotification(!getNewAnswerNotification)
                         }
                         className="form-checkbox text-green-500 h-5 w-5"
                       />
