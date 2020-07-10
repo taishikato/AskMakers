@@ -30,6 +30,7 @@ export default async (
 
   const url = `https://askmakers.co/answers/${question!.slug}/${answer.id}`;
   const answerUserUrl = `https://askmakers.co/${answerUser!.username}`;
+  const questionUrl = `https://askmakers.co/questions/${question!.slug}`;
 
   for (const mail of mailList) {
     const data = {
@@ -45,7 +46,7 @@ export default async (
       <p style="text-align: center;"><img src="https://askmakers.co/askmakers-300.png" width="80px" style="border-radius: 9999px"/></p>
       <p style="font-size: 18px;font-weight: bold;line-height: 22.5px; text-align: center;">Hi, ${
         questionUserP!.customName
-      }! You have a new comment on AskMakers.</p>
+      }! You have a new answer on AskMakers.</p>
       <div style="padding-top: 10px;">
         <div style="background-color: #c6f6d5; border-left: 3px solid #48bb78; line-height: 1.4em; margin: 0 0 12px; max-width: 640px; padding: 12px 16px;">${
           answer.content
@@ -53,7 +54,7 @@ export default async (
         <div>
           This answer was posted by <a href="${answerUserUrl}">${
         answerUser!.customName
-      }</a> in <a href="${url}">your answer</a>.
+      }</a> in <a href="${questionUrl}">your question</a>.
         </div>
       </div>
       <div style="padding:38px 0">
