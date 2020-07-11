@@ -36,6 +36,9 @@ const Settings = () => {
   const [getNewAnswerNotification, setGetNewAnswerNotification] = useState(
     true
   );
+  const [getNewUpvoteNotification, setGetNewUpvoteNotification] = useState(
+    true
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
@@ -89,12 +92,14 @@ const Settings = () => {
         return;
       }
       const settings = settingsSnapShot.data();
-      if (settings.getNewQuestionNotification === undefined) return;
-      setGetNewQuestionNotification(settings.getNewQuestionNotification);
-      if (settings.getNewCommentNotification === undefined) return;
-      setGetNewCommentNotification(settings.getNewCommentNotification);
-      if (settings.getNewAnswerNotification === undefined) return;
-      setGetNewAnswerNotification(settings.getNewAnswerNotification);
+      if (settings.getNewQuestionNotification !== undefined)
+        setGetNewQuestionNotification(settings.getNewQuestionNotification);
+      if (settings.getNewCommentNotification !== undefined)
+        setGetNewCommentNotification(settings.getNewCommentNotification);
+      if (settings.getNewAnswerNotification !== undefined)
+        setGetNewAnswerNotification(settings.getNewAnswerNotification);
+      if (settings.getNewUpvoteNotification !== undefined)
+        setGetNewUpvoteNotification(settings.getNewUpvoteNotification);
     };
     if (loginUser.uid !== undefined) fetchSettings();
   }, [loginUser]);
@@ -142,6 +147,7 @@ const Settings = () => {
             getNewQuestionNotification,
             getNewCommentNotification,
             getNewAnswerNotification,
+            getNewUpvoteNotification,
           });
       } else {
         await db
@@ -153,6 +159,7 @@ const Settings = () => {
             getNewQuestionNotification,
             getNewCommentNotification,
             getNewAnswerNotification,
+            getNewUpvoteNotification,
           });
       }
       setHasSettingsDoc(true);
@@ -346,6 +353,27 @@ const Settings = () => {
                         type="checkbox"
                         onChange={() =>
                           setGetNewAnswerNotification(!getNewAnswerNotification)
+                        }
+                        className="form-checkbox text-green-500 h-5 w-5"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        className="font-semibold block"
+                        htmlFor="new-upvote-notification"
+                      >
+                        New Upvote Notification
+                      </label>
+                      <p className="text-sm mb-1">
+                        You get this notification when someone upvotes your
+                        answer.
+                      </p>
+                      <input
+                        id="new-upvote-notification"
+                        checked={getNewUpvoteNotification}
+                        type="checkbox"
+                        onChange={() =>
+                          setGetNewUpvoteNotification(!getNewUpvoteNotification)
                         }
                         className="form-checkbox text-green-500 h-5 w-5"
                       />

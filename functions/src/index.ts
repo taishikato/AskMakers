@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import algoliasearch from 'algoliasearch';
 import addGeneralQuestion from './addGeneralQuestion';
 import sendEmailNotification from './onAnswerCreated/sendEmailNotification';
+import onUpvoteCreatedService from './onUpvoteCreated/onUpvoteCreatedService';
 import asyncForEach from './asyncForEach';
 
 // Mailgun
@@ -167,6 +168,18 @@ exports.onCommentCreated = functions.firestore
         }
       });
     }
+  });
+
+/**
+ * Upvote新規追加
+ * メール通知送信
+ */
+exports.onUpvoteCreated = functions.firestore
+  .document('upvotes/{upvoteId}')
+  .onCreate(async (snap, context) => {
+    console.info('[info]: START onUpvoteCreated');
+    await onUpvoteCreatedService(db, mg, snap);
+    console.info('[info]: END onUpvoteCreated');
   });
 
 /**
