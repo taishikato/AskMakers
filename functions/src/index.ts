@@ -177,7 +177,9 @@ exports.onCommentCreated = functions.firestore
 exports.onUpvoteCreated = functions.firestore
   .document('upvotes/{upvoteId}')
   .onCreate(async (snap, context) => {
+    console.info('[info]: START onUpvoteCreated');
     await onUpvoteCreatedService(db, mg, snap);
+    console.info('[info]: END onUpvoteCreated');
   });
 
 /**
