@@ -33,7 +33,7 @@ export default async (
 
   const ifGetNotification = await checkIfGetEmailNotification(
     userS!.uid,
-    '',
+    'getNewUpvoteNotification',
     db
   );
 
