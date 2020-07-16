@@ -1,6 +1,7 @@
 import React from 'react';
 import Socials from './Socials';
 import NewsLetter from './NewsLetter';
+import Remotehour from './Remotehour';
 
 const WhoIsMaking = () => {
   return (
@@ -25,6 +26,7 @@ const WhoIsMaking = () => {
           />
         </div>
         <NewsLetter />
+        <Remotehour />
       </div>
     </section>
   );
