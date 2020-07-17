@@ -54,7 +54,7 @@ const CategoriesSlug = () => {
   }, [slug]);
   return (
     <Layout>
-      <div className="m-auto mt-8 w-7/12">
+      <div className="m-auto mt-8 w-11/12 md:w-7/12 lg:w-7/12">
         <h2 className="font-bold text-xl text-black mt-10 flex items-center">
           {slug}
         </h2>
