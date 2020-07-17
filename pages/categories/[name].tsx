@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Skeleton } from 'antd';
 import Layout from '../../components/Layout';
@@ -50,13 +49,13 @@ const CategoriesName = () => {
       setQuestionData(questionDataArray);
       setLoading(false);
     };
-    fetchQuestions();
+    if (name) fetchQuestions();
   }, [name]);
   return (
     <Layout>
       <div className="m-auto mt-8 w-7/12">
         <h2 className="font-bold text-xl text-black mt-10 flex items-center">
-          Grow
+          {name}
         </h2>
         {loading && (
           <>
@@ -74,7 +73,14 @@ const CategoriesName = () => {
           </>
         )}
 
-        {!loading && questionData.length === 0 && <>No quesitos yet</>}
+        {!loading && questionData.length === 0 && (
+          <div className="flex justify-center">
+            <div>
+              <img src="/no-question.svg" alt="No Question yet…" width="200" />
+              <p className="text-center font-light">No Question yet…</p>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
