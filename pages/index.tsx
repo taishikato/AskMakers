@@ -14,6 +14,7 @@ import WhoIsMaking from '../components/Top/WhoIsMaking';
 import RecentAnswer from '../components/RecentAnswer';
 import AnswerRanking from '../components/AnswerRanking';
 import asyncForEach from '../plugins/asyncForEach';
+import Categories from '../components/Top/Categories';
 import firebase from '../plugins/firebase';
 import 'firebase/firestore';
 
@@ -140,6 +141,7 @@ const Home: NextPage<Props> = () => {
           >
             <FeaturedMaker />
             <RecentAnswer />
+            <Categories />
             <ABoutMe />
             <div className="text-xs text-gray-600">
               <div className="mb-3">
