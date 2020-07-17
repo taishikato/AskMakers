@@ -42,6 +42,7 @@ const CategoriesSlug = () => {
             .where('questionId', '==', topicData.questionId)
             .get(),
         ]);
+        if (!questionSnapshot.exists) continue;
         const question = questionSnapshot.data();
         question.answerCount = answerSnapshot.size;
         questionDataArray.push({ question });
