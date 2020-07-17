@@ -164,7 +164,9 @@ const ContentCard: FC<Props> = ({ question }) => {
                 }
                 return (
                   <Tag color={color} key={index}>
-                    {topic}
+                    <Link href="/categories/[name]" as={`/categories/${topic}`}>
+                      <a>{topic}</a>
+                    </Link>
                   </Tag>
                 );
               })}

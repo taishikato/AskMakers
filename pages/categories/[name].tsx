@@ -51,7 +51,7 @@ const CategoriesName = () => {
       setLoading(false);
     };
     fetchQuestions();
-  }, []);
+  }, [name]);
   return (
     <Layout>
       <div className="m-auto mt-8 w-7/12">
