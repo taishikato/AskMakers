@@ -11,20 +11,20 @@ interface IQuestionsTopic {
   questionCreated: number;
 }
 
-const CategoriesName = () => {
+const CategoriesSlug = () => {
   const router = useRouter();
   const db = useContext(FirestoreContext);
   const [questionData, setQuestionData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { name } = router.query;
+  const { slug } = router.query;
 
   useEffect(() => {
     const fetchQuestions = async () => {
       setLoading(true);
       const snapshot = await db
         .collection('questionsTopic')
-        .where('topic', '==', name)
+        .where('topic', '==', slug)
         .orderBy('questionCreated', 'desc')
         .get();
       if (snapshot.empty) {
@@ -49,13 +49,13 @@ const CategoriesName = () => {
       setQuestionData(questionDataArray);
       setLoading(false);
     };
-    if (name) fetchQuestions();
-  }, [name]);
+    if (slug) fetchQuestions();
+  }, [slug]);
   return (
     <Layout>
       <div className="m-auto mt-8 w-7/12">
         <h2 className="font-bold text-xl text-black mt-10 flex items-center">
-          {name}
+          {slug}
         </h2>
         {loading && (
           <>
@@ -86,4 +86,4 @@ const CategoriesName = () => {
   );
 };
 
-export default CategoriesName;
+export default CategoriesSlug;
