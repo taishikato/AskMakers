@@ -10,6 +10,7 @@ import Hero from '../components/Hero';
 import FeaturedMaker from '../components/FeaturedMaker';
 import ContentCard from '../components/Common/ContentCard';
 import ABoutMe from '../components/Top/AboutMe';
+import PH from '../components/Top/PH';
 import WhoIsMaking from '../components/Top/WhoIsMaking';
 import RecentAnswer from '../components/RecentAnswer';
 import AnswerRanking from '../components/AnswerRanking';
@@ -143,6 +144,7 @@ const Home: NextPage<Props> = () => {
             <RecentAnswer />
             <Categories />
             <ABoutMe />
+            <PH />
             <div className="text-xs text-gray-600">
               <div className="mb-3">
                 <Link href="/">
