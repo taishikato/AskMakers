@@ -16,9 +16,10 @@ import { FirestoreContext } from '../../contexts/FirestoreContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faEdit, faRss } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import QuestionContext from '../../components/Common/QuestionContext';
 import NotFound from '../../components/Common/NotFound';
+import FollowButton from '../../components/QuestionsSlug/FollowButton';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
@@ -78,6 +79,11 @@ const QuestionsSlug = ({ question, answers }) => {
     router.push('/[username]', `/${loginUser.username}`);
   };
 
+  const handleFollowQuestion = (questionId: string, userId: string) => {
+    console.log(questionId);
+    console.log('handleFollowQuestion');
+  };
+
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
   const url = `https://askmakers.co${router.asPath}`;
   const description = 'Check out this question and post your answer!';
@@ -128,13 +134,11 @@ const QuestionsSlug = ({ question, answers }) => {
                       </a>
                     </li>
                     <li>
-                      <button className="px-2 py-1 text-gray-700 rounded-full flex items-center hover:bg-gray-100 focus:outline-none">
-                        <FontAwesomeIcon
-                          icon={faRss}
-                          className="h-4 w-4 mr-1"
-                        />
-                        Follow
-                      </button>
+                      <FollowButton
+                        handleFollowQuestion={() =>
+                          handleFollowQuestion(question.id, loginUser.uid)
+                        }
+                      />
                     </li>
                     {question.fromUserId === loginUser.uid && (
                       <>
