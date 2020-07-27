@@ -44,6 +44,15 @@ const deleteTopic = async (questionId: string): Promise<void> => {
   }
 };
 
+const fetchFollowInfo = async (questionId: string, userId: string) => {
+  const snapshot = await db
+    .collection(QuestionsFollowCollection)
+    .where('questionId', '==', questionId)
+    .where('userId', '==', userId)
+    .get();
+  return snapshot;
+};
+
 const QuestionsSlug = ({ question, answers }) => {
   const db = useContext(FirestoreContext);
   const router = useRouter();
@@ -58,16 +67,12 @@ const QuestionsSlug = ({ question, answers }) => {
   const shareUrl = `https://askmakers.co${router.asPath}`;
 
   useEffect(() => {
-    const fetchFollowInfo = async () => {
-      const snapshot = await db
-        .collection(QuestionsFollowCollection)
-        .where('questionId', '==', question.id)
-        .where('userId', '==', loginUser.uid)
-        .get();
+    const fetch = async () => {
+      const snapshot = await fetchFollowInfo(question.id, loginUser.uid);
       if (!snapshot.empty) setFollowing(true);
     };
-    if (question.id && isLogin) fetchFollowInfo();
-  }, [question.id]);
+    if (question.id && isLogin) fetch();
+  }, [question.id, loginUser.uid]);
 
   const handlePostAnswer = async () => {
     setIsPosting(true);
@@ -108,6 +113,15 @@ const QuestionsSlug = ({ question, answers }) => {
       created: getUnixTime(),
     });
     setFollowing(true);
+  };
+
+  const handleUnfollowQuestion = async (questionId: string, userId: string) => {
+    const snapshot = await fetchFollowInfo(questionId, userId);
+    if (snapshot.empty) return;
+    for (const doc of snapshot.docs) {
+      await db.collection(QuestionsFollowCollection).doc(doc.id).delete();
+    }
+    setFollowing(false);
   };
 
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
@@ -162,13 +176,13 @@ const QuestionsSlug = ({ question, answers }) => {
                     <li>
                       {following ? (
                         <FollowingButton
-                          handleFollowQuestion={() =>
-                            handleFollowQuestion(question.id, loginUser.uid)
+                          handleFunction={() =>
+                            handleUnfollowQuestion(question.id, loginUser.uid)
                           }
                         />
                       ) : (
                         <FollowButton
-                          handleFollowQuestion={() =>
+                          handleFunction={() =>
                             handleFollowQuestion(question.id, loginUser.uid)
                           }
                         />

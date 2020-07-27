@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRss } from '@fortawesome/free-solid-svg-icons';
 
 interface IProps {
-  handleFollowQuestion: () => void;
+  handleFunction: () => void;
 }
 
-const FollowingButton: FC<IProps> = ({ handleFollowQuestion }) => {
+const FollowingButton: FC<IProps> = ({ handleFunction }) => {
   return (
     <button
-      onClick={handleFollowQuestion}
+      onClick={handleFunction}
       className="px-2 py-1 text-blue-500 rounded-full flex items-center hover:bg-gray-100 focus:outline-none"
     >
       <FontAwesomeIcon icon={faRss} className="h-4 w-4 mr-1" />
