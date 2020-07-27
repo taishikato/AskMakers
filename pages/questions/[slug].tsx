@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -21,6 +21,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import QuestionContext from '../../components/Common/QuestionContext';
 import NotFound from '../../components/Common/NotFound';
 import FollowButton from '../../components/QuestionsSlug/FollowButton';
+import FollowingButton from '../../components/QuestionsSlug/FollowingButton';
 import Modal from 'react-modal';
 import SignUpModal from '../../components/Navbar/SignUpModal';
 import firebase from '../../plugins/firebase';
@@ -29,6 +30,8 @@ import 'firebase/firestore';
 const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
+
+const QuestionsFollowCollection = 'questionsFollow';
 
 const deleteTopic = async (questionId: string): Promise<void> => {
   const snapShot = await db
@@ -44,16 +47,27 @@ const deleteTopic = async (questionId: string): Promise<void> => {
 const QuestionsSlug = ({ question, answers }) => {
   const db = useContext(FirestoreContext);
   const router = useRouter();
-  const [answerValue, setAnswerValue] = React.useState('');
-  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
-    'write'
-  );
+  const [answerValue, setAnswerValue] = useState('');
+  const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
   const [isPosting, setIsPosting] = useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [following, setFollowing] = useState(false);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
+
+  useEffect(() => {
+    const fetchFollowInfo = async () => {
+      const snapshot = await db
+        .collection(QuestionsFollowCollection)
+        .where('questionId', '==', question.id)
+        .where('userId', '==', loginUser.uid)
+        .get();
+      if (!snapshot.empty) setFollowing(true);
+    };
+    if (question.id && isLogin) fetchFollowInfo();
+  }, [question.id]);
 
   const handlePostAnswer = async () => {
     setIsPosting(true);
@@ -88,11 +102,12 @@ const QuestionsSlug = ({ question, answers }) => {
       setIsSignupModalOpen(true);
       return;
     }
-    await db.collection('questionsFollow').add({
+    await db.collection(QuestionsFollowCollection).add({
       questionId,
       userId,
       created: getUnixTime(),
     });
+    setFollowing(true);
   };
 
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
@@ -145,11 +160,19 @@ const QuestionsSlug = ({ question, answers }) => {
                       </a>
                     </li>
                     <li>
-                      <FollowButton
-                        handleFollowQuestion={() =>
-                          handleFollowQuestion(question.id, loginUser.uid)
-                        }
-                      />
+                      {following ? (
+                        <FollowingButton
+                          handleFollowQuestion={() =>
+                            handleFollowQuestion(question.id, loginUser.uid)
+                          }
+                        />
+                      ) : (
+                        <FollowButton
+                          handleFollowQuestion={() =>
+                            handleFollowQuestion(question.id, loginUser.uid)
+                          }
+                        />
+                      )}
                     </li>
                     {question.fromUserId === loginUser.uid && (
                       <>
