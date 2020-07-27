@@ -1,3 +1,4 @@
+// import * as functions from 'firebase-functions';
 import * as mailgun from 'mailgun-js';
 
 export default async (
@@ -7,6 +8,16 @@ export default async (
   answerUser: any,
   question: any
 ) => {
+  // const answer = snap.data();
+
+  // 回答ユーザー、質問
+  // const [answerUserSnapshot, questionSnapshot] = await Promise.all([
+  //   db.collection('publicUsers').doc(answer.answerUserId).get(),
+  //   db.collection('questions').doc(answer.questionId).get(),
+  // ]);
+  // const answerUser = answerUserSnapshot.data();
+  // const question = questionSnapshot.data();
+
   const mailList = ['taishi.k0903@gmail.com'];
 
   // 質問ユーザー

@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import algoliasearch from 'algoliasearch';
 import addGeneralQuestion from './addGeneralQuestion';
-import sendEmailNotification from './onAnswerCreated/sendEmailNotification';
+import handleAnswerCreated from './onAnswerCreated/handleAnswerCreated';
 import onUpvoteCreatedService from './onUpvoteCreated/onUpvoteCreatedService';
 import asyncForEach from './asyncForEach';
 
@@ -189,7 +189,7 @@ exports.onUpvoteCreated = functions.firestore
 exports.onAnswerCreated = functions.firestore
   .document('answers/{answerId}')
   .onCreate(async (snap, context) => {
-    await sendEmailNotification(db, mg, snap);
+    await handleAnswerCreated(db, mg, snap);
   });
 
 /**
