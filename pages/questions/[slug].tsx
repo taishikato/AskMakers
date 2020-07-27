@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import getUnixTime from '../../plugins/getUnixTime';
 import Layout from '../../components/Layout';
 import asyncForEach from '../../plugins/asyncForEach';
 import postAnswer from '../../plugins/postAnswer';
@@ -20,6 +21,8 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import QuestionContext from '../../components/Common/QuestionContext';
 import NotFound from '../../components/Common/NotFound';
 import FollowButton from '../../components/QuestionsSlug/FollowButton';
+import Modal from 'react-modal';
+import SignUpModal from '../../components/Navbar/SignUpModal';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
@@ -45,9 +48,10 @@ const QuestionsSlug = ({ question, answers }) => {
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
     'write'
   );
-  const [isPosting, setIsPosting] = React.useState(false);
+  const [isPosting, setIsPosting] = useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
 
@@ -79,9 +83,16 @@ const QuestionsSlug = ({ question, answers }) => {
     router.push('/[username]', `/${loginUser.username}`);
   };
 
-  const handleFollowQuestion = (questionId: string, userId: string) => {
-    console.log(questionId);
-    console.log('handleFollowQuestion');
+  const handleFollowQuestion = async (questionId: string, userId: string) => {
+    if (!isLogin) {
+      setIsSignupModalOpen(true);
+      return;
+    }
+    await db.collection('questionsFollow').add({
+      questionId,
+      userId,
+      created: getUnixTime(),
+    });
   };
 
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
@@ -245,6 +256,31 @@ const QuestionsSlug = ({ question, answers }) => {
           `}</style>
         </>
       )}
+      <Modal
+        isOpen={isSignupModalOpen}
+        onRequestClose={() => setIsSignupModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            padding: '1.25rem',
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: '#f9f9f9',
+          },
+        }}
+      >
+        <SignUpModal />
+      </Modal>
     </Layout>
   );
 };
