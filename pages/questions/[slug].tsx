@@ -71,9 +71,20 @@ const QuestionsSlug = ({ question, answers }) => {
       const snapshot = await fetchFollowInfo(question.id, loginUser.uid);
       if (snapshot.empty) return;
       setFollowing(true);
-      setFollowingCount(snapshot.size);
     };
     if (question.id && isLogin) fetch();
+    const fetchCount = async () => {
+      const snapshot = await db
+        .collection(QUESTIONS_FOLLOW)
+        .where('questionId', '==', question.id)
+        .get();
+      if (snapshot.empty) return;
+      setFollowingCount(snapshot.size);
+    };
+    if (question.id && isLogin) {
+      fetch();
+      fetchCount();
+    }
   }, [question.id, loginUser.uid]);
 
   const handlePostAnswer = async () => {
