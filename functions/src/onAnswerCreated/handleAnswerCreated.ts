@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as mailgun from 'mailgun-js';
-import sendEmailNotification from './sendEmailNotification';
 import sendEmailNotificationToFollowers from './sendEmailNotificationToFollowers';
 
 export default async (
@@ -18,11 +17,6 @@ export default async (
   const answerUser = answerUserSnapshot.data();
   const question = questionSnapshot.data();
 
-  try {
-    await sendEmailNotification(db, mg, answer, answerUser, question);
-  } catch (err) {
-    console.error(err);
-  }
   try {
     await sendEmailNotificationToFollowers(
       db,

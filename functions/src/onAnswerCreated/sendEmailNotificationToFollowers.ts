@@ -24,6 +24,9 @@ export default async (
     const userP = userPSnapshot.data();
     const userS = userSSnapshot.data();
 
+    const ifGetNotification = await checkIfGetEmailNotification(userP!.uid, db);
+    if (!ifGetNotification) continue;
+
     const url = `https://askmakers.co/answers/${question.slug}/${answer.id}`;
     const answerUserUrl = `https://askmakers.co/${answerUser.username}`;
     const questionUrl = `https://askmakers.co/questions/${question.slug}`;
@@ -54,6 +57,9 @@ export default async (
       <div style="padding:38px 0">
         <div style="border-top: 1px solid hsl(0,0%,88%);"></div>
       </div>
+      <footer style="color: hsl(0,0%,50%);font-size: 13px; line-height: 18.75px; text-align: center;">
+        You can turn off the notification <a href="https://askmakers.co/settings">here</a>.
+      </footer>
       </div>`,
     };
     await mg.messages().send(data, (err: any, body: any) => {
@@ -95,6 +101,9 @@ const sendToAdmin = async (
       <div style="padding:38px 0">
         <div style="border-top: 1px solid hsl(0,0%,88%);"></div>
       </div>
+      <footer style="color: hsl(0,0%,50%);font-size: 13px; line-height: 18.75px; text-align: center;">
+        You can turn off the notification <a href="https://askmakers.co/settings">here</a>.
+      </footer>
       </div>`,
   };
   await mg.messages().send(data, (err: any, body: any) => {
@@ -103,4 +112,20 @@ const sendToAdmin = async (
       console.error(err);
     }
   });
+};
+
+const checkIfGetEmailNotification = async (
+  uid: string,
+  db: FirebaseFirestore.Firestore
+) => {
+  const settingSnapShot = await db
+    .collection('publicUsers')
+    .doc(uid)
+    .collection('settings')
+    .doc('notifications')
+    .get();
+  if (!settingSnapShot.exists) return true;
+  const settings = settingSnapShot.data();
+  if (settings!.getNewAnswerNotification === undefined) return true;
+  return settings!.getNewAnswerNotification === true;
 };
