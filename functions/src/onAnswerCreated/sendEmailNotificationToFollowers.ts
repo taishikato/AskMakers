@@ -8,47 +8,39 @@ export default async (
   answerUser: any,
   question: any
 ) => {
-  // const answer = snap.data();
+  const questionsFollowSnapshot = await db
+    .collection('questionsFollow')
+    .where('questionId', '==', question.id)
+    .get();
+  if (questionsFollowSnapshot.empty) return;
 
-  // 回答ユーザー、質問
-  // const [answerUserSnapshot, questionSnapshot] = await Promise.all([
-  //   db.collection('publicUsers').doc(answer.answerUserId).get(),
-  //   db.collection('questions').doc(answer.questionId).get(),
-  // ]);
-  // const answerUser = answerUserSnapshot.data();
-  // const question = questionSnapshot.data();
+  for (const doc of questionsFollowSnapshot.docs) {
+    const docData = doc.data();
+    // フォローしているユーザー
+    const [userPSnapshot, userSSnapshot] = await Promise.all([
+      db.collection('publicUsers').doc(docData.userId).get(),
+      db.collection('secretUsers').doc(docData.userId).get(),
+    ]);
+    const userP = userPSnapshot.data();
+    const userS = userSSnapshot.data();
 
-  const mailList = ['taishi.k0903@gmail.com'];
+    const url = `https://askmakers.co/answers/${question.slug}/${answer.id}`;
+    const answerUserUrl = `https://askmakers.co/${answerUser.username}`;
+    const questionUrl = `https://askmakers.co/questions/${question.slug}`;
 
-  // 質問ユーザー
-  const [questionUserPSnapshot, questionUserSSnapshot] = await Promise.all([
-    db.collection('publicUsers').doc(question.fromUserId).get(),
-    db.collection('secretUsers').doc(question.fromUserId).get(),
-  ]);
-  const questionUserP = questionUserPSnapshot.data();
-  const questionUserS = questionUserSSnapshot.data();
-
-  const ifGetNotification = await checkIfGetEmailNotification(
-    questionUserP!.uid,
-    db
-  );
-  if (ifGetNotification) mailList.push(questionUserS!.email);
-
-  const url = `https://askmakers.co/answers/${question.slug}/${answer.id}`;
-  const answerUserUrl = `https://askmakers.co/${answerUser.username}`;
-  const questionUrl = `https://askmakers.co/questions/${question.slug}`;
-
-  for (const mail of mailList) {
     const data = {
       from: 'AskMakers <community@mail.askmakers.co>',
-      to: [mail],
-      subject: `${answerUser.customName} answered your question 💡 | AskMakers`,
-      text: `${answerUser.customName} answered your question 💡 Please check it out! ${url}`,
+      to: [userS!.email],
+      subject: `${answerUser.customName} answered the question you are following 💡 | AskMakers`,
+      text: `${answerUser.customName} answered the question you are following 💡 Please check it out! ${url}`,
       html: `<div style="max-width:600px; margin: 0 auto;">
       <p style="text-align: center;"><img src="https://askmakers.co/askmakers-300.png" width="80px" style="border-radius: 9999px"/></p>
       <p style="font-size: 18px;font-weight: bold;line-height: 22.5px; text-align: center;">Hi, ${
-        questionUserP!.customName
-      }! You have a new answer on AskMakers.</p>
+        userP!.customName
+      }!<br />You have a new answer on a question you are following.</p>
+      <p style="margin: 0;font-size: 16px;font-weight: bold;line-height: 22.5px;">${
+        question.text
+      }</p>
       <div style="padding-top: 10px;">
         <div style="background-color: #c6f6d5; border-left: 3px solid #48bb78; line-height: 1.4em; margin: 0 0 12px; max-width: 640px; padding: 12px 16px;">${
           answer.content
@@ -56,15 +48,12 @@ export default async (
         <div>
           This answer was posted by <a href="${answerUserUrl}">${
         answerUser.customName
-      }</a> in <a href="${questionUrl}">your question</a>.
+      }</a> in <a href="${questionUrl}">${question.text}</a>.
         </div>
       </div>
       <div style="padding:38px 0">
         <div style="border-top: 1px solid hsl(0,0%,88%);"></div>
       </div>
-      <footer style="color: hsl(0,0%,50%);font-size: 13px; line-height: 18.75px; text-align: center;">
-        You can turn off the notification <a href="https://askmakers.co/settings">here</a>.
-      </footer>
       </div>`,
     };
     await mg.messages().send(data, (err: any, body: any) => {
@@ -74,20 +63,44 @@ export default async (
       }
     });
   }
+
+  await sendToAdmin(mg, answer, answerUser, question);
 };
 
-const checkIfGetEmailNotification = async (
-  uid: string,
-  db: FirebaseFirestore.Firestore
+const sendToAdmin = async (
+  mg: mailgun.Mailgun,
+  answer: any,
+  answerUser: any,
+  question: any
 ) => {
-  const settingSnapShot = await db
-    .collection('publicUsers')
-    .doc(uid)
-    .collection('settings')
-    .doc('notifications')
-    .get();
-  if (!settingSnapShot.exists) return true;
-  const settings = settingSnapShot.data();
-  if (settings!.getNewAnswerNotification === undefined) return true;
-  return settings!.getNewAnswerNotification === true;
+  const url = `https://askmakers.co/answers/${question.slug}/${answer.id}`;
+  const answerUserUrl = `https://askmakers.co/${answerUser.username}`;
+  const questionUrl = `https://askmakers.co/questions/${question.slug}`;
+
+  const data = {
+    from: 'AskMakers <community@mail.askmakers.co>',
+    to: ['taishi.k0903@gmail.com'],
+    subject: `${answerUser.customName} answered the question you are following 💡 | AskMakers`,
+    text: `${answerUser.customName} answered the question you are following 💡 Please check it out! ${url}`,
+    html: `<div style="max-width:600px; margin: 0 auto;">
+      <p style="text-align: center;"><img src="https://askmakers.co/askmakers-300.png" width="80px" style="border-radius: 9999px"/></p>
+      <p style="font-size: 18px;font-weight: bold;line-height: 22.5px; text-align: center;">Hi, Taishi Kato! You have a new answer on a question you are following.</p>
+      <p style="margin: 0;font-size: 16px;font-weight: bold;line-height: 22.5px;">${question.text}</p>
+      <div style="padding-top: 10px;">
+        <div style="background-color: #c6f6d5; border-left: 3px solid #48bb78; line-height: 1.4em; margin: 0 0 12px; max-width: 640px; padding: 12px 16px;">${answer.content}</div>
+        <div>
+          This answer was posted by <a href="${answerUserUrl}">${answerUser.customName}</a> in <a href="${questionUrl}">${question.text}</a>.
+        </div>
+      </div>
+      <div style="padding:38px 0">
+        <div style="border-top: 1px solid hsl(0,0%,88%);"></div>
+      </div>
+      </div>`,
+  };
+  await mg.messages().send(data, (err: any, body: any) => {
+    console.log(body);
+    if (err) {
+      console.error(err);
+    }
+  });
 };
