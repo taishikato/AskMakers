@@ -63,13 +63,16 @@ const QuestionsSlug = ({ question, answers }) => {
   const isLogin = useSelector((state) => state.isLogin);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [following, setFollowing] = useState(false);
+  const [followingCount, setFollowingCount] = useState(0);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
 
   useEffect(() => {
     const fetch = async () => {
       const snapshot = await fetchFollowInfo(question.id, loginUser.uid);
-      if (!snapshot.empty) setFollowing(true);
+      if (snapshot.empty) return;
+      setFollowing(true);
+      setFollowingCount(snapshot.size);
     };
     if (question.id && isLogin) fetch();
   }, [question.id, loginUser.uid]);
@@ -113,6 +116,7 @@ const QuestionsSlug = ({ question, answers }) => {
       created: getUnixTime(),
     });
     setFollowing(true);
+    setFollowingCount((prev) => (prev += 1));
   };
 
   const handleUnfollowQuestion = async (questionId: string, userId: string) => {
@@ -122,6 +126,7 @@ const QuestionsSlug = ({ question, answers }) => {
       await db.collection(QuestionsFollowCollection).doc(doc.id).delete();
     }
     setFollowing(false);
+    setFollowingCount((prev) => (prev -= 1));
   };
 
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
@@ -179,12 +184,14 @@ const QuestionsSlug = ({ question, answers }) => {
                           handleFunction={() =>
                             handleUnfollowQuestion(question.id, loginUser.uid)
                           }
+                          followingCount={followingCount}
                         />
                       ) : (
                         <FollowButton
                           handleFunction={() =>
                             handleFollowQuestion(question.id, loginUser.uid)
                           }
+                          followingCount={followingCount}
                         />
                       )}
                     </li>
