@@ -24,14 +24,13 @@ import FollowButton from '../../components/QuestionsSlug/FollowButton';
 import FollowingButton from '../../components/QuestionsSlug/FollowingButton';
 import Modal from 'react-modal';
 import SignUpModal from '../../components/Navbar/SignUpModal';
+import { QUESTIONS_FOLLOW } from '../../consts/FirestoreCollections';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
 const db = firebase.firestore();
 
 const mdParser = new MarkdownIt();
-
-const QuestionsFollowCollection = 'questionsFollow';
 
 const deleteTopic = async (questionId: string): Promise<void> => {
   const snapShot = await db
@@ -46,7 +45,7 @@ const deleteTopic = async (questionId: string): Promise<void> => {
 
 const fetchFollowInfo = async (questionId: string, userId: string) => {
   const snapshot = await db
-    .collection(QuestionsFollowCollection)
+    .collection(QUESTIONS_FOLLOW)
     .where('questionId', '==', questionId)
     .where('userId', '==', userId)
     .get();
@@ -110,7 +109,7 @@ const QuestionsSlug = ({ question, answers }) => {
       setIsSignupModalOpen(true);
       return;
     }
-    await db.collection(QuestionsFollowCollection).add({
+    await db.collection(QUESTIONS_FOLLOW).add({
       questionId,
       userId,
       created: getUnixTime(),
@@ -123,7 +122,7 @@ const QuestionsSlug = ({ question, answers }) => {
     const snapshot = await fetchFollowInfo(questionId, userId);
     if (snapshot.empty) return;
     for (const doc of snapshot.docs) {
-      await db.collection(QuestionsFollowCollection).doc(doc.id).delete();
+      await db.collection(QUESTIONS_FOLLOW).doc(doc.id).delete();
     }
     setFollowing(false);
     setFollowingCount((prev) => (prev -= 1));
