@@ -344,8 +344,8 @@ const Settings = () => {
                         New Answer Notification
                       </label>
                       <p className="text-sm mb-1">
-                        You get this notification when someone answers your
-                        question.
+                        You get this notification when someone answers the
+                        question you are following.
                       </p>
                       <input
                         id="new-answer-notification"

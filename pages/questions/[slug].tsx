@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import getUnixTime from '../../plugins/getUnixTime';
 import Layout from '../../components/Layout';
 import asyncForEach from '../../plugins/asyncForEach';
 import postAnswer from '../../plugins/postAnswer';
@@ -19,6 +20,11 @@ import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import QuestionContext from '../../components/Common/QuestionContext';
 import NotFound from '../../components/Common/NotFound';
+import FollowButton from '../../components/QuestionsSlug/FollowButton';
+import FollowingButton from '../../components/QuestionsSlug/FollowingButton';
+import Modal from 'react-modal';
+import SignUpModal from '../../components/Navbar/SignUpModal';
+import { QUESTIONS_FOLLOW } from '../../consts/FirestoreCollections';
 import firebase from '../../plugins/firebase';
 import 'firebase/firestore';
 
@@ -37,18 +43,38 @@ const deleteTopic = async (questionId: string): Promise<void> => {
   }
 };
 
+const fetchFollowInfo = async (questionId: string, userId: string) => {
+  const snapshot = await db
+    .collection(QUESTIONS_FOLLOW)
+    .where('questionId', '==', questionId)
+    .where('userId', '==', userId)
+    .get();
+  return snapshot;
+};
+
 const QuestionsSlug = ({ question, answers }) => {
   const db = useContext(FirestoreContext);
   const router = useRouter();
-  const [answerValue, setAnswerValue] = React.useState('');
-  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
-    'write'
-  );
-  const [isPosting, setIsPosting] = React.useState(false);
+  const [answerValue, setAnswerValue] = useState('');
+  const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
+  const [isPosting, setIsPosting] = useState(false);
   const loginUser = useSelector((state) => state.loginUser);
   const isLogin = useSelector((state) => state.isLogin);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [following, setFollowing] = useState(false);
+  const [followingCount, setFollowingCount] = useState(0);
 
   const shareUrl = `https://askmakers.co${router.asPath}`;
+
+  useEffect(() => {
+    const fetch = async () => {
+      const snapshot = await fetchFollowInfo(question.id, loginUser.uid);
+      if (snapshot.empty) return;
+      setFollowing(true);
+      setFollowingCount(snapshot.size);
+    };
+    if (question.id && isLogin) fetch();
+  }, [question.id, loginUser.uid]);
 
   const handlePostAnswer = async () => {
     setIsPosting(true);
@@ -76,6 +102,30 @@ const QuestionsSlug = ({ question, answers }) => {
     await db.collection('questions').doc(question.id).delete();
     await deleteTopic(question.id);
     router.push('/[username]', `/${loginUser.username}`);
+  };
+
+  const handleFollowQuestion = async (questionId: string, userId: string) => {
+    if (!isLogin) {
+      setIsSignupModalOpen(true);
+      return;
+    }
+    await db.collection(QUESTIONS_FOLLOW).add({
+      questionId,
+      userId,
+      created: getUnixTime(),
+    });
+    setFollowing(true);
+    setFollowingCount((prev) => (prev += 1));
+  };
+
+  const handleUnfollowQuestion = async (questionId: string, userId: string) => {
+    const snapshot = await fetchFollowInfo(questionId, userId);
+    if (snapshot.empty) return;
+    for (const doc of snapshot.docs) {
+      await db.collection(QUESTIONS_FOLLOW).doc(doc.id).delete();
+    }
+    setFollowing(false);
+    setFollowingCount((prev) => (prev -= 1));
   };
 
   const title = `${question.text} | AskMakers - Ask experienced makers questions`;
@@ -112,11 +162,7 @@ const QuestionsSlug = ({ question, answers }) => {
                         target="_blank"
                         className="twitter-share"
                       >
-                        <FontAwesomeIcon
-                          icon={faTwitter}
-                          size="xs"
-                          className="h-5 w-5"
-                        />
+                        <FontAwesomeIcon icon={faTwitter} className="h-5 w-5" />
                       </a>
                     </li>
                     <li className="mr-3">
@@ -127,10 +173,26 @@ const QuestionsSlug = ({ question, answers }) => {
                       >
                         <FontAwesomeIcon
                           icon={faFacebook}
-                          size="xs"
                           className="h-5 w-5"
                         />
                       </a>
+                    </li>
+                    <li>
+                      {following ? (
+                        <FollowingButton
+                          handleFunction={() =>
+                            handleUnfollowQuestion(question.id, loginUser.uid)
+                          }
+                          followingCount={followingCount}
+                        />
+                      ) : (
+                        <FollowButton
+                          handleFunction={() =>
+                            handleFollowQuestion(question.id, loginUser.uid)
+                          }
+                          followingCount={followingCount}
+                        />
+                      )}
                     </li>
                     {question.fromUserId === loginUser.uid && (
                       <>
@@ -237,6 +299,31 @@ const QuestionsSlug = ({ question, answers }) => {
           `}</style>
         </>
       )}
+      <Modal
+        isOpen={isSignupModalOpen}
+        onRequestClose={() => setIsSignupModalOpen(false)}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            zIndex: 100000,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          },
+          content: {
+            padding: '1.25rem',
+            width: '600px',
+            maxWidth: '100%',
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            bottom: 'none',
+            transform: 'translateY(-50%)translateX(-50%)',
+            border: 'none',
+            backgroundColor: '#f9f9f9',
+          },
+        }}
+      >
+        <SignUpModal />
+      </Modal>
     </Layout>
   );
 };

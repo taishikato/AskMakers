@@ -26,6 +26,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if onlyIdentityUser(userId);
     }
+    match /comments/{commentId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
     match /questions/{questionId} {
       allow read: if true;
       allow write: if isLogin();
@@ -35,6 +39,10 @@ service cloud.firestore {
       allow write: if isLogin();
     }
     match /questionsTopic/{questionsTopicId} {
+      allow read: if true;
+      allow write: if isLogin();
+    }
+    match /questionsFollow/{questionsFollowId} {
       allow read: if true;
       allow write: if isLogin();
     }
