@@ -12,6 +12,7 @@ import MarkdownIt from 'markdown-it';
 import { Checkbox, message } from 'antd';
 import { FirestoreContext } from '../contexts/FirestoreContextProvider';
 import topicOptions from '../consts/topicOptions';
+import followQuestion from '../utils/AskQuestion/followQuestion';
 
 const mdParser = new MarkdownIt();
 
@@ -56,6 +57,7 @@ const AskQuestion = () => {
           });
         }
       }
+      await followQuestion(db, id, loginUser.uid);
       message.success('Submitted successfully');
       router.push('/questions/[slug]', `/questions/${slug}`);
     } catch (err) {
