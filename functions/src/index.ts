@@ -5,6 +5,8 @@ import addGeneralQuestion from './addGeneralQuestion';
 import handleAnswerCreated from './onAnswerCreated/handleAnswerCreated';
 import onUpvoteCreatedService from './onUpvoteCreated/onUpvoteCreatedService';
 import asyncForEach from './asyncForEach';
+// import { JSDOM } from 'jsdom';
+import * as sharp from 'sharp';
 
 // Mailgun
 import * as mailgun from 'mailgun-js';
@@ -266,3 +268,27 @@ exports.onQuestionUpdated = functions.firestore
     alIndex.saveObject(saveData);
     console.info('[info]: Updated a question on Algolia');
   });
+
+exports.generateOGP = functions.https.onRequest(async (req: any, res: any) => {
+  const svgString = Buffer.from(
+    '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="800px" height="600px" viewBox="0 0 800 600" enable-background="new 0 0 800 600" xml:space="preserve">  <g id="111"> <rect x="130" y= "130" height="320" width="550" id="rect1" fill="blue" stroke="blue" >Hello</rect></g></svg>'
+  );
+  try {
+    const imageBuffer = await sharp(svgString).png().toBuffer();
+    const imageByteArray = new Uint8Array(imageBuffer);
+    const bucket = admin.storage().bucket();
+    const file = bucket.file(`ogp/test.png`);
+    await file.save(imageByteArray, {
+      metadata: { contentType: 'image/png' },
+    });
+    const urls = await file.getSignedUrl({
+      action: 'read',
+      expires: '03-09-2500',
+    });
+    const url = urls[0];
+    return res.status(200).send({ url });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err);
+  }
+});

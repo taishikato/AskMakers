@@ -18,10 +18,14 @@
     "algoliasearch": "^4.0.1",
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
-    "mailgun-js": "^0.22.0"
+    "jsdom": "^16.3.0",
+    "mailgun-js": "^0.22.0",
+    "sharp": "^0.25.4"
   },
   "devDependencies": {
+    "@types/jsdom": "^16.2.3",
     "@types/mailgun-js": "^0.22.7",
+    "@types/sharp": "^0.25.1",
     "firebase-functions-test": "^0.1.6",
     "tslint": "^6.1.2",
     "typescript": "^3.9.5"
