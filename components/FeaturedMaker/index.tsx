@@ -95,6 +95,24 @@ const FeaturedMaker: React.FC<Props> = () => {
           </div>
         }
       />
+      <SideUser
+        classes="py-2"
+        name="Pete"
+        username="petecodes"
+        picture="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/oyHc73gkvPgjXe8oV5GNsrGhOTH2?alt=media&token=ad9f7d1a-8132-40bb-9cfb-6ff1c4ca2efe"
+        intro={
+          <div>
+            Maker of{' '}
+            <a
+              href="https://www.nocsdegree.com/"
+              target="_blank"
+              className="text-blue-500"
+            >
+              No CS Degree
+            </a>
+          </div>
+        }
+      />
     </Card>
   );
 };
