@@ -7,6 +7,9 @@ import onUpvoteCreatedService from './onUpvoteCreated/onUpvoteCreatedService';
 import asyncForEach from './asyncForEach';
 // import { JSDOM } from 'jsdom';
 import * as sharp from 'sharp';
+// import questionOgpSvg from './generateOgp/questionOgpSvg';
+import formatText from './generateOgp/formatText';
+import formatSvg from './generateOgp/formatSvg';
 
 // Mailgun
 import * as mailgun from 'mailgun-js';
@@ -270,9 +273,10 @@ exports.onQuestionUpdated = functions.firestore
   });
 
 exports.generateOGP = functions.https.onRequest(async (req: any, res: any) => {
-  const svgString = Buffer.from(
-    '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="800px" height="600px" viewBox="0 0 800 600" enable-background="new 0 0 800 600" xml:space="preserve">  <g id="111"> <rect x="130" y= "130" height="320" width="550" id="rect1" fill="blue" stroke="blue" >Hello</rect></g></svg>'
-  );
+  // 23 x 5 = 115
+  const formatedText = formatText(req.query.text);
+  const formatedSvgString = formatSvg(formatedText);
+  const svgString = Buffer.from(formatedSvgString);
   try {
     const imageBuffer = await sharp(svgString).png().toBuffer();
     const imageByteArray = new Uint8Array(imageBuffer);
