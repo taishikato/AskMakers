@@ -10,7 +10,7 @@ const PickedUpAnswer = () => {
             <Link href="/[username]" as="/mijustin">
               <a>
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/users%2FNOmUokm7wWgWi9Pdfz9hvry4j3k2.jpg?alt=media&token=6692a94c-d6c3-4ed6-ad89-4ba816b3dae7"
+                  src="https://firebasestorage.googleapis.com/v0/b/ask-makers.appspot.com/o/users%2FNOmUokm7wWgWi9Pdfz9hvry4j3k2.png?alt=media&token=2b85658e-2d89-41f3-b0b2-3223d3141733"
                   className="w8 h-8 rounded-full"
                 />
               </a>
