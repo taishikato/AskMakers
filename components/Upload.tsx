@@ -24,6 +24,12 @@ const Uplaod: NextPage<Props> = (props) => {
     </div>
   );
 
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess('ok');
+    }, 0);
+  };
+
   return (
     <>
       <label className="font-semibold block mb-2">{label}</label>
@@ -33,7 +39,7 @@ const Uplaod: NextPage<Props> = (props) => {
         className="avatar-uploader"
         showUploadList={false}
         beforeUpload={beforeUpload}
-        action=""
+        customRequest={dummyRequest}
         onChange={handleChange}
       >
         {imageUrl ? (
