@@ -17,6 +17,7 @@
 
 # misc
 .DS_Store
+set_env.sh
 
 # debug
 npm-debug.log*
