@@ -115,9 +115,10 @@ const Home: NextPage<Props> = () => {
               </>
             ) : (
               <>
-                {quesionsContainer.map((question, index) => (
-                  <ContentCard question={question} key={index} />
-                ))}
+                {quesionsContainer.map((question, index) => {
+                  if (question.question.text === '') return null;
+                  return <ContentCard question={question} key={index} />;
+                })}
                 {isLoadingMoreQuestions ? (
                   <button
                     className="block m-auto rounded-full bg-green-200 py-3 px-6 text-white font-semibold text-lg"
