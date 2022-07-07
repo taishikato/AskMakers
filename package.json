@@ -22,7 +22,7 @@
     "dotenv": "^8.2.0",
     "firebase": "^7.7.0",
     "markdown-it": "^10.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "next": "9.3.2",
     "next-ga": "^2.3.4",
     "next-offline": "^4.0.6",
